@@ -1,5 +1,9 @@
 import dotenv from 'dotenv';
 import express, { json } from 'express';
+//import testDatabaseConnection from './testing/test.js';
+
+// Testear conexion a la base de datos
+//testDatabaseConnection();
 
 dotenv.config();  // Cargar variables de entorno
 
