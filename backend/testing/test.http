@@ -1,16 +1,15 @@
 # Obtener todos los usuarios
-GET http://localhost:3000/api/users
+GET http://localhost:3001/api/clients
 Content-Type: application/json
 
 ###
 
 # Crear un nuevo usuario
-POST http://localhost:3000/api/users
+POST http://localhost:3001/api/clients
 Content-Type: application/json
 
 {
-    "name": "Juan",
-    "lastname": "Nuñez",
-    "email": "juan.nunez.99@hotmail.com",
+    "name": "Diego Alejandro",
+    "email": "diego.mazas@gmail.com",
     "password": "contraseña"
 }

@@ -1,22 +1,18 @@
 import dotenv from 'dotenv';
 import express, { json } from 'express';
-//import testDatabaseConnection from './testing/test.js';
-
-// Testear conexion a la base de datos
-//testDatabaseConnection();
 
 dotenv.config();  // Cargar variables de entorno
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 app.disable('x-powered-by');
 
 // Middlewares
 app.use(json());
 
 // Routes
-import userRoutes from './routes/userRoutes.js';
-app.use('/api/users', userRoutes);
+import clientsRoutes from './routes/clientsRoutes.js';
+app.use('/api/clients', clientsRoutes);
 
 // Error handling
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
