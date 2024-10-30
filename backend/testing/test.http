@@ -1,10 +1,10 @@
-# Obtener todos los usuarios
+# Obtener todos los clientes
 GET http://localhost:3001/api/clients
 Content-Type: application/json
 
 ###
 
-# Crear un nuevo usuario
+# Crear un nuevo cliente
 POST http://localhost:3001/api/clients
 Content-Type: application/json
 

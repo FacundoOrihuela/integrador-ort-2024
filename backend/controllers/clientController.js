@@ -3,7 +3,6 @@ import pool from '../config/db.js';
 // Obtener todos los usuarios
 const getClients = async (req, res) => {
     try {
-        // Consulta para obtener todos los usuarios
         const [rows] = await pool.query('SELECT id, name, email, created FROM client');
         res.json({ message: 'Lista de clientes', data: rows });
     } catch (error) {
@@ -16,7 +15,6 @@ const getClients = async (req, res) => {
 const createClients = async (req, res) => {
     const { name, email, password } = req.body;
     try {
-        // Insertar el nuevo usuario
         const [result] = await pool.query(
             'INSERT INTO client (name, email, password) VALUES (?, ?, ?)',
             [name, email, password]
