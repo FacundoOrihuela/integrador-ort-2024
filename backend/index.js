@@ -12,7 +12,12 @@ app.use(json());
 
 // Routes
 import clientsRoutes from './routes/clientsRoutes.js';
+import administratorRoutes from './routes/administratorRoutes.js';
+import teacherRoutes from './routes/teacherRoutes.js';
+
 app.use('/api/clients', clientsRoutes);
+app.use('/api/administrators', administratorRoutes);
+app.use('/api/teachers', teacherRoutes);
 
 // Error handling
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
@@ -23,6 +28,3 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
-
-
-
