@@ -69,13 +69,8 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 
----
-
-## Installing Tailwind CSS
-
-To add **Tailwind CSS** to this project, follow these steps:
-
-1. **Install Tailwind CSS** and its required dependencies:
-   ```bash
-   npm install -D tailwindcss postcss autoprefixer
-   npx tailwindcss init
+npm install -D tailwindcss postcss autoprefixer
+npm install react-t
+npm install @mui/material @emotion/react @emotion/styled
+npm install react-toastify
+npm install react-router-dom
