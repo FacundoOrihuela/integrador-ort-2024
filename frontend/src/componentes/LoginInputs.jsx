@@ -72,18 +72,21 @@ const LoginInputs = () => {
     };
 
     return (
-        <form className="flex flex-col items-center">
-            <div className="mb-2 w-1/2">
-                <label htmlFor={usuario} className="block text-gray-700 text-sm font-medium mb-1">Usuario</label>
-                <input type="text" className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 input-transparente" ref={campoUser} id={usuario} onChange={comprobarCampoUsuario} />
-            </div>
-            <div className="mb-3 w-1/2">
-                <label htmlFor={pass} className="block text-gray-700 text-sm font-medium mb-1">Contraseña</label>
-                <input type="password" className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 input-transparente" ref={campoPass} id={pass} onChange={comprobarCampoPass} />
-            </div>
-            <input type="button" className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 w-1/4" value="Login" onClick={loginHandler} disabled={usuarioCampo === 0 || passCampo === 0} />
-            <Link to="/register" className="mt-2 text-blue-500 hover:text-blue-600 text-sm font-medium">Registrarse</Link>
-        </form>
+        <div className="flex justify-center mt-12">
+            <form className="flex flex-col items-center">
+                <div className="mb-2 w-1/2">
+                    <label htmlFor={usuario} className="block text-gray-700 text-sm font-medium mb-1">Usuario</label>
+                    <input type="text" className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 input-transparente" ref={campoUser} id={usuario} onChange={comprobarCampoUsuario} />
+                </div>
+                <div className="mb-3 w-1/2">
+                    <label htmlFor={pass} className="block text-gray-700 text-sm font-medium mb-1">Contraseña</label>
+                    <input type="password" className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 input-transparente" ref={campoPass} id={pass} onChange={comprobarCampoPass} />
+                </div>
+                    <input type="button" className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 w-1/4" value="Login" onClick={loginHandler} disabled={usuarioCampo === 0 || passCampo === 0} />
+                    <Link to="/register" className="mt-2 text-blue-500 hover:text-blue-600 text-sm font-medium">Registrarse</Link>
+            </form>
+        </div>
+        
     );
 }
 

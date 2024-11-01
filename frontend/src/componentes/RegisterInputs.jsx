@@ -54,7 +54,7 @@ const RegisterInputs = () => {
         localStorage.setItem("idUsuarioLogueado", id);
     }
     return (
-        <div>
+        <div className='flex justify-center mt-12'>
             <form className="flex flex-col items-center justify-center self-end">
                 <div className="mb-2 w-1/2">
                     <label htmlFor={user} className="block text-gray-700 text-sm font-medium mb-1">Usuario</label>
