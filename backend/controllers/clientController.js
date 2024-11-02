@@ -1,3 +1,5 @@
+import crypto from 'crypto';
+import { sendVerificationEmail } from '../utils/mailer.js';
 import pool from '../config/db.js';
 
 // Obtener todos los clientes
@@ -15,13 +17,20 @@ const getClients = async (req, res) => {
 const createClient = async (req, res) => {
     const { name, email, password } = req.body;
     try {
+        // Generar el token de verificación
+        const verificationToken = crypto.randomBytes(32).toString('hex');
+
+        // Guardar el cliente en la base de datos
         const [result] = await pool.query(
-            'INSERT INTO client (name, email, password) VALUES (?, ?, ?)',
-            [name, email, password]
+            'INSERT INTO client (name, email, password, verificationToken, isVerified) VALUES (?, ?, ?, ?, ?)',
+            [name, email, password, verificationToken, false]
         );
 
+        // Enviar el correo de verificación
+        await sendVerificationEmail(email, verificationToken);
+
         res.json({ 
-            message: `Cliente ${name} creado con éxito`, 
+            message: `Cliente ${name} creado con éxito. Verifica tu correo electrónico para activar la cuenta.`,
             data: { id: result.insertId, name, email, created: new Date() } 
         });
     } catch (error) {
@@ -64,4 +73,24 @@ const deleteClient = async (req, res) => {
     }
 };
 
-export { getClients, createClient, updateClient, deleteClient };
+// Verificar un cliente
+const verifyClient = async (req, res) => {
+    const { token } = req.query;
+
+    try {
+        const [client] = await pool.query('SELECT * FROM client WHERE verificationToken = ?', [token]);
+
+        if (client.length === 0) {
+            return res.status(400).json({ message: 'Token inválido o cliente ya verificado.' });
+        }
+
+        await pool.query('UPDATE client SET isVerified = ?, verificationToken = NULL WHERE id = ?', [true, client[0].id]);
+
+        res.json({ message: 'Cuenta verificada con éxito. Ahora puedes iniciar sesión.' });
+    } catch (error) {
+        console.error('Error al verificar el cliente:', error);
+        res.status(500).json({ message: 'Error al verificar el cliente', error: error.message });
+    }
+};
+
+export { getClients, createClient, updateClient, deleteClient, verifyClient };

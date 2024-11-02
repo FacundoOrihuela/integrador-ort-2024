@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getClients, createClient, updateClient, deleteClient } from '../controllers/clientController.js';
+import { getClients, createClient, updateClient, deleteClient, verifyClient } from '../controllers/clientController.js';
 import validateRegisterMiddleware from '../middlewares/validateRegisterMiddleware.js';
 
 const router = Router();
@@ -9,5 +9,6 @@ router.get('/', getClients);  // Obtener todos los clientes
 router.post('/', validateRegisterMiddleware, createClient);  // Crear un nuevo cliente
 router.put('/:id', validateRegisterMiddleware, updateClient);  // Actualizar un cliente
 router.delete('/:id', deleteClient);  // Eliminar un cliente
+router.get('/verify-email', verifyClient); // Verificar el correo electrónico
 
 export default router;

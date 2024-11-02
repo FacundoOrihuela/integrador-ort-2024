@@ -11,9 +11,9 @@ POST http://localhost:3001/api/clients
 Content-Type: application/json
 
 {
-    "name": "Diego Alejandro 3",
-    "email": "diego.mazas2@adsa.com",
-    "password": "Contraseña12"
+    "name": "prueba mailer 3",
+    "email": "tayet.nunez@gmail.com",
+    "password": "Contraseña123"
 }
 
 ###
