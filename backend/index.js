@@ -1,11 +1,14 @@
 import dotenv from 'dotenv';
 import express, { json } from 'express';
+import cors from 'cors';
 
 dotenv.config();  // Cargar variables de entorno
 
 const app = express();
 const port = process.env.PORT || 5000;
 app.disable('x-powered-by');
+
+app.use(cors({ origin: 'http://localhost:3000' }));
 
 // Middlewares
 app.use(json());
