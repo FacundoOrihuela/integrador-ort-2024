@@ -5,9 +5,8 @@ import { guardarSesionId, guardarSesionToken } from "../features/loginSlice";
 import { toast } from 'react-toastify';
 import { Button } from '@mui/material';
 import '../index.css';
-
 const RegisterInputs = () => {
-    const URLBASE = "https://babytracker.develotion.com/";
+    const URLBASE = "http://localhost:3001/api/clients";
     const user = useId();
     const pass = useId();
     const dispatch = useDispatch();
@@ -23,13 +22,18 @@ const RegisterInputs = () => {
         }
         hacerRegistro(nuevoRegistro);
     }
+
     const hacerRegistro = nuevoRegistro => {
-        fetch(URLBASE + 'usuarios.php', {
+        fetch(URLBASE, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(nuevoRegistro)
+            body: {
+                "name": "prueba mailer 3",
+                "email": "tayet.nunez@gmail.com",
+                "password": "Contraseña123"
+            }
         })
             .then(function (response) {
                 return response.json();
@@ -57,7 +61,7 @@ const RegisterInputs = () => {
         <div className='flex justify-center mt-12'>
             <form className="flex flex-col items-center justify-center self-end">
                 <div className="mb-2 w-1/2">
-                    <label htmlFor={user} className="block text-gray-700 text-sm font-medium mb-1">Usuario</label>
+                    <label htmlFor={user} className="block text-gray-700 text-sm font-medium mb-1">Email</label>
                     <input type="text" className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 input-transparente" ref={campoUser} id={user} />
                 </div>
                 <div className="mb-3 w-1/2">
