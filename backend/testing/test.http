@@ -11,8 +11,8 @@ POST http://localhost:3001/api/clients
 Content-Type: application/json
 
 {
-    "name": "prueba mailer 10",
-    "email": "tayet.nunez@gmail.com",
+    "name": "Facundinho",
+    "email": "orihuelafacundo@gmail.com",
     "password": "Contraseña123"
 }
 
