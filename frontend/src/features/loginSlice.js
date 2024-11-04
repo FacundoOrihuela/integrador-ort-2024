@@ -9,16 +9,16 @@ export const loginSlice = createSlice({
     name: "login",
     initialState,
     reducers: {
-        guardarSesionId: (state, actions) => {
+        saveSessionId: (state, actions) => {
             state.cuentaId = actions.payload;
         },
-        guardarSesionToken: (state, action) => {
+        saveSessionToken: (state, action) => {
             state.tokken = action.payload;
         },
-        guardarUrlBase: (state, action) => {
+        saveBaseUrl: (state, action) => {
             state.URLBASE = action.payload;
         }
     }
 })
-export const { guardarSesionId, guardarSesionToken, guardarUrlBase } = loginSlice.actions;
+export const { saveSessionId, saveSessionToken, saveBaseUrl } = loginSlice.actions;
 export default loginSlice.reducer;

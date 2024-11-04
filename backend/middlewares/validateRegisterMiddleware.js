@@ -8,7 +8,7 @@ const validateRegisterMiddleware = (req, res, next) => {
     }
 
     if (!validatePassword(password)) {
-        return res.status(400).json({ message: 'La contraseña debe tener al menos 8 caracteres, 3 números y una mayúscula' });
+        return res.status(400).json({ message: 'La contraseña debe tener al menos 8 caracteres, 1 números y una mayúscula' });
     }
 
     next();

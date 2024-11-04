@@ -1,73 +1,57 @@
 import { useEffect, useId, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { guardarSesionId, guardarSesionToken, guardarUrlBase } from "../features/loginSlice";
+import { useDispatch } from "react-redux";
+import { saveSessionId, saveSessionToken } from "../features/loginSlice";
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from "react-router-dom";
 
 const LoginInputs = () => {
-    const URLBASE = "https://babytracker.develotion.com/";
-    const campoUser = useRef();
-    const campoPass = useRef();
+    const URL_BASE = "http://localhost:3001/api/clients/login";
+    const emailField = useRef(), passField = useRef();
     const dispatch = useDispatch();
-    const usuario = useId();
-    const pass = useId();
+    const email = useId(), pass = useId();
     const navigate = useNavigate();
-    const [usuarioCampo, setUsuarioCampo] = useState(0);
-    const [passCampo, setPassCampo] = useState(0);
+    const [emailFieldLength, setEmailFieldLength] = useState(0);
+    const [passFieldLength, setPassFieldLength] = useState(0);
+    const [showPassword, setShowPassword] = useState(false);
 
-    useEffect(() => {
-        comprobarCampos();
-    }, []);
-
-    const comprobarCampos = () => {
-        comprobarCampoUsuario();
-        comprobarCampoPass();
-    };
-
-    const comprobarCampoUsuario = () => {
-        setUsuarioCampo(campoUser.current.value.length);
-    };
-
-    const comprobarCampoPass = () => {
-        setPassCampo(campoPass.current.value.length);
+    useEffect(() => { checkFields(); }, []);
+    
+    const checkFields = () => {
+        setEmailFieldLength(emailField.current.value.length);
+        setPassFieldLength(passField.current.value.length);
     };
 
     const loginHandler = () => {
-        let usu = campoUser.current.value;
-        let pass = campoPass.current.value;
-        let datosLogin = {
-            usuario: usu,
-            password: pass
-        };
-        hacerLogin(datosLogin);
+        const email = emailField.current.value.trim(), pass = passField.current.value.trim();
+        if (!email) return toast.error("El email es un campo obligatorio.");
+        if (!pass) return toast.error("La contraseña es un campo obligatorio.");
+        executeLogin({ username: email, password: pass });
     };
 
-    const hacerLogin = datosUsu => {
-        fetch(URLBASE + 'login.php', {
+    const executeLogin = loginData => {
+        fetch(URL_BASE, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(datosUsu)
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(loginData)
         })
-            .then(resp => {
-                if (resp.status !== 200) /* throw "Algo salió mal" */;
-                return resp.json();
-            })
-            .then(data => {
-                if (data.mensaje !== undefined) {
-                    toast.error(data.mensaje);
-                } else {
-                    iniciarSesion(data);
-                    navigate("/dashboard");
-                }
-            })
+        .then(resp => {
+            if (!resp.ok) throw new Error("Algo salió mal");
+            return resp.json();
+        })
+        .then(data => {
+            if (data.message) toast.error(data.message);
+            else { startSession(data); navigate("/principal"); }
+        })
+        .catch(error => {
+            console.error("Error al iniciar sesión:", error);
+            toast.error("Ocurrió un error. Inténtalo nuevamente.");
+        });
     };
 
-    const iniciarSesion = ({ id, apiKey }) => {
-        dispatch(guardarSesionId(id));
-        dispatch(guardarSesionToken(apiKey));
-        localStorage.setItem("APPBebesToken", apiKey);
+    const startSession = ({ id, token }) => {
+        dispatch(saveSessionId(id));
+        dispatch(saveSessionToken(token));
+        localStorage.setItem("APPBebesToken", token);
         localStorage.setItem("idUsuarioLogueado", id);
     };
 
@@ -75,19 +59,21 @@ const LoginInputs = () => {
         <div className="flex justify-center mt-12">
             <form className="flex flex-col items-center">
                 <div className="mb-2 w-1/2">
-                    <label htmlFor={usuario} className="block text-gray-700 text-sm font-medium mb-1">Usuario</label>
-                    <input type="text" className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 input-transparente" ref={campoUser} id={usuario} onChange={comprobarCampoUsuario} />
+                    <label htmlFor={email} className="block text-gray-700 text-sm font-medium mb-1">Email</label>
+                    <input type="text" className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" ref={emailField} id={email} onChange={checkFields} />
                 </div>
-                <div className="mb-3 w-1/2">
+                <div className="relative mb-3 w-1/2">
                     <label htmlFor={pass} className="block text-gray-700 text-sm font-medium mb-1">Contraseña</label>
-                    <input type="password" className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 input-transparente" ref={campoPass} id={pass} onChange={comprobarCampoPass} />
+                    <input type={showPassword ? "text" : "password"} className="w-full border border-gray-300 rounded-md p-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500" ref={passField} id={pass} onChange={checkFields} />
+                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 translate-y-0.5">
+                        <img src={showPassword ? "/svg/eyeClosed.svg" : "/svg/eyeOpen.svg"} alt={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"} className="w-6 h-6" />
+                    </button>
                 </div>
-                    <input type="button" className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 w-1/4" value="Login" onClick={loginHandler} disabled={usuarioCampo === 0 || passCampo === 0} />
-                    <Link to="/register" className="mt-2 text-blue-500 hover:text-blue-600 text-sm font-medium">Registrarse</Link>
+                <input type="button" className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-1/4" value="Login" onClick={loginHandler} disabled={emailFieldLength === 0 || passFieldLength === 0} />
+                <Link to="/register" className="mt-2 text-blue-500 hover:text-blue-600 text-sm font-medium">Registrarse</Link>
             </form>
         </div>
-        
     );
-}
+};
 
 export default LoginInputs;
