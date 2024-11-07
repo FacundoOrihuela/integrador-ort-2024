@@ -1,6 +1,10 @@
+import express from 'express';
 import dotenv from 'dotenv';
-import express, { json } from 'express';
 import cors from 'cors';
+import clientsRoutes from './routes/clientsRoutes.js';
+import administratorRoutes from './routes/administratorRoutes.js';
+import teacherRoutes from './routes/teacherRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 
 dotenv.config();  // Cargar variables de entorno
 
@@ -11,23 +15,20 @@ app.disable('x-powered-by');
 app.use(cors());
 
 // Middlewares
-app.use(json());
+app.use(express.json());
 
 // Routes
-import clientsRoutes from './routes/clientsRoutes.js';
-import administratorRoutes from './routes/administratorRoutes.js';
-import teacherRoutes from './routes/teacherRoutes.js';
-
 app.use('/api/clients', clientsRoutes);
 app.use('/api/administrators', administratorRoutes);
 app.use('/api/teachers', teacherRoutes);
+app.use('/api/auth', authRoutes);
 
 // Error handling
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: 'Error interno del servidor', error: err.message });
 });
 
 // Iniciar el servidor
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+    console.log(`Servidor corriendo en http://localhost:${port}`);
 });

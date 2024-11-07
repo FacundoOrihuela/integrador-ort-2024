@@ -18,6 +18,18 @@ Content-Type: application/json
 
 ###
 
+# Iniciar sesión como cliente
+POST http://localhost:3001/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "orihuelafacundo@gmail.com",
+    "password": "Contraseña123",
+    "role": "client"
+}
+
+###
+
 # Actualizar un cliente
 PUT http://localhost:3001/api/clients/1
 Content-Type: application/json
@@ -51,13 +63,25 @@ Content-Type: application/json
 {
     "name": "Admin User",
     "email": "admin.user@gmail.com",
-    "password": "admin_password"
+    "password": "Admin_password123"
+}
+
+###
+
+# Iniciar sesión como administrador
+POST http://localhost:3001/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "admin.user@gmail.com",
+    "password": "Admin_password123",
+    "role": "administrator"
 }
 
 ###
 
 # Actualizar un administrador
-PUT http://localhost:3001/api/administrators/1
+PUT http://localhost:3001/api/administrators/4
 Content-Type: application/json
 
 {
@@ -69,7 +93,7 @@ Content-Type: application/json
 ###
 
 # Eliminar un administrador
-DELETE http://localhost:3001/api/administrators/1
+DELETE http://localhost:3001/api/administrators/4
 Content-Type: application/json
 
 ###
@@ -89,9 +113,21 @@ Content-Type: application/json
 {
     "name": "Teacher User",
     "email": "teacher.user@gmail.com",
-    "password": "teacher_password",
+    "password": "Teacher_password1",
     "specialty": "Mathematics",
     "description": "Experienced math teacher"
+}
+
+###
+
+# Iniciar sesión como profesor
+POST http://localhost:3001/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "teacher.user@gmail.com",
+    "password": "Teacher_password1",
+    "role": "teacher"
 }
 
 ###

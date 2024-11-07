@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs';
 import pool from '../config/db.js';
 
 // Obtener todos los administradores
@@ -15,9 +16,12 @@ const getAdministrators = async (req, res) => {
 const createAdministrator = async (req, res) => {
     const { name, email, password } = req.body;
     try {
+        // Hashear la contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const [result] = await pool.query(
             'INSERT INTO administrator (name, email, password) VALUES (?, ?, ?)',
-            [name, email, password]
+            [name, email, hashedPassword]
         );
 
         res.json({ 
@@ -35,9 +39,12 @@ const updateAdministrator = async (req, res) => {
     const { id } = req.params;
     const { name, email, password } = req.body;
     try {
+        // Hashear la nueva contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const [result] = await pool.query(
             'UPDATE administrator SET name = ?, email = ?, password = ? WHERE id = ?',
-            [name, email, password, id]
+            [name, email, hashedPassword, id]
         );
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: `Administrador con id ${id} no encontrado` });

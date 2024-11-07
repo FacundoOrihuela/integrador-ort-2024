@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs';
 import pool from '../config/db.js';
 
 // Obtener todos los profesores
@@ -15,9 +16,12 @@ const getTeachers = async (req, res) => {
 const createTeacher = async (req, res) => {
     const { name, email, password, specialty, description } = req.body;
     try {
+        // Hashear la contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const [result] = await pool.query(
             'INSERT INTO teacher (name, email, password, specialty, description) VALUES (?, ?, ?, ?, ?)',
-            [name, email, password, specialty, description]
+            [name, email, hashedPassword, specialty, description]
         );
 
         res.json({ 
@@ -35,9 +39,12 @@ const updateTeacher = async (req, res) => {
     const { id } = req.params;
     const { name, email, password, specialty, description } = req.body;
     try {
+        // Hashear la nueva contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const [result] = await pool.query(
             'UPDATE teacher SET name = ?, email = ?, password = ?, specialty = ?, description = ? WHERE id = ?',
-            [name, email, password, specialty, description, id]
+            [name, email, hashedPassword, specialty, description, id]
         );
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: `Profesor con id ${id} no encontrado` });

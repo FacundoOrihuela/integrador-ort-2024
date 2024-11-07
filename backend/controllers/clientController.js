@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import bcrypt from 'bcryptjs';
 import { sendVerificationEmail } from '../utils/mailer.js';
 import pool from '../config/db.js';
 
@@ -20,10 +21,13 @@ const createClient = async (req, res) => {
         // Generar el token de verificación
         const verificationToken = crypto.randomBytes(32).toString('hex');
 
+        // Hashear la contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         // Guardar el cliente en la base de datos
         const [result] = await pool.query(
             'INSERT INTO client (name, email, password, verificationToken, isVerified) VALUES (?, ?, ?, ?, ?)',
-            [name, email, password, verificationToken, false]
+            [name, email, hashedPassword, verificationToken, false]
         );
 
         // Enviar el correo de verificación
@@ -44,9 +48,12 @@ const updateClient = async (req, res) => {
     const { id } = req.params;
     const { name, email, password } = req.body;
     try {
+        // Hashear la nueva contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const [result] = await pool.query(
             'UPDATE client SET name = ?, email = ?, password = ? WHERE id = ?',
-            [name, email, password, id]
+            [name, email, hashedPassword, id]
         );
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: `Cliente con id ${id} no encontrado` });
