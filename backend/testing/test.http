@@ -6,13 +6,19 @@ Content-Type: application/json
 
 ###
 
+# Obtener un cliente por email
+GET http://localhost:3001/api/clients/tayet.nunez@gmail.com
+Content-Type: application/json
+
+###
+
 # Crear un nuevo cliente
 POST http://localhost:3001/api/clients
 Content-Type: application/json
 
 {
-    "name": "Facundinho",
-    "email": "orihuelafacundo@gmail.com",
+    "name": "Juan",
+    "email": "tayet.nunez@gmail.com",
     "password": "Contraseña123"
 }
 
@@ -23,7 +29,7 @@ POST http://localhost:3001/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "orihuelafacundo@gmail.com",
+    "email": "tayet.nunez@gmail.com",
     "password": "Contraseña123",
     "role": "client"
 }
@@ -52,6 +58,12 @@ Content-Type: application/json
 
 # Obtener todos los administradores
 GET http://localhost:3001/api/administrators
+Content-Type: application/json
+
+###
+
+# Obtener un administrador por email
+GET http://localhost:3001/api/administrators/admin.user@gmail.com
 Content-Type: application/json
 
 ###
@@ -102,6 +114,12 @@ Content-Type: application/json
 
 # Obtener todos los profesores
 GET http://localhost:3001/api/teachers
+Content-Type: application/json
+
+###
+
+# Obtener un profesor por email
+GET http://localhost:3001/api/teachers/teacher.user@gmail.com
 Content-Type: application/json
 
 ###

@@ -1,29 +1,30 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import pool from '../config/db.js';
+import Client from '../models/Client.js';
+import Teacher from '../models/Teacher.js';
+import Administrator from '../models/Administrator.js';
 
 const login = async (req, res) => {
     const { email, password, role } = req.body;
 
     try {
-        let table;
-        if (role === 'client') {
-            table = 'client';
-        } else if (role === 'teacher') {
-            table = 'teacher';
-        } else if (role === 'administrator') {
-            table = 'administrator';
-        } else {
+        const validRoles = ['client', 'teacher', 'administrator'];
+
+        if (!validRoles.includes(role)) {
             return res.status(400).json({ message: 'Rol no válido' });
         }
 
-        const [users] = await pool.query(`SELECT * FROM ${table} WHERE email = ?`, [email]);
+        const UserModel = role === 'client' ? Client : role === 'teacher' ? Teacher : Administrator;
 
-        if (users.length === 0) {
+        const user = await UserModel.findOne({ where: { email } });
+
+        if (!user) {
             return res.status(401).json({ message: 'Correo electrónico o contraseña incorrectos' });
         }
 
-        const user = users[0];
+        if (role === 'client' && !user.isVerified) {
+            return res.status(403).json({ message: 'Cuenta no verificada. Por favor, verifica tu correo electrónico.' });
+        }
 
         const isMatch = await bcrypt.compare(password, user.password);
 
