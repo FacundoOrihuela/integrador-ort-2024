@@ -1,0 +1,41 @@
+# ADMINISTRATOR OPERATIONS
+
+# Obtener todos los administradores
+GET http://localhost:3001/api/administrators
+Content-Type: application/json
+
+###
+
+# Obtener un administrador por email
+GET http://localhost:3001/api/administrators/admin.user@gmail.com
+Content-Type: application/json
+
+###
+
+# Crear un nuevo administrador
+POST http://localhost:3001/api/administrators
+Content-Type: application/json
+
+{
+    "name": "Admin User",
+    "email": "admin.user@gmail.com",
+    "password": "Admin_password123"
+}
+
+###
+
+# Actualizar un administrador
+PUT http://localhost:3001/api/administrators/4
+Content-Type: application/json
+
+{
+    "name": "Admin User Updated",
+    "email": "admin.user.updated@gmail.com",
+    "password": "New_admin_password123"
+}
+
+###
+
+# Eliminar un administrador
+DELETE http://localhost:3001/api/administrators/4
+Content-Type: application/json

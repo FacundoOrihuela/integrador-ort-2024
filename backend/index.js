@@ -5,6 +5,7 @@ import clientsRoutes from './routes/clientsRoutes.js';
 import administratorRoutes from './routes/administratorRoutes.js';
 import teacherRoutes from './routes/teacherRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import passwordRoutes from './routes/passwordRoutes.js';
 import sequelize from './config/database.js';
 
 dotenv.config();  // Cargar variables de entorno
@@ -23,6 +24,7 @@ app.use('/api/clients', clientsRoutes);
 app.use('/api/administrators', administratorRoutes);
 app.use('/api/teachers', teacherRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/password', passwordRoutes);
 
 // Error handling
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars

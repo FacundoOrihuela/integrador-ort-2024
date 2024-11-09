@@ -7,7 +7,7 @@ import Client from '../models/Client.js';
 const getClients = async (req, res) => {
     try {
         const clients = await Client.findAll({
-            attributes: ['id', 'name', 'email', 'createdAt', 'isVerified'],
+            attributes: ['id', 'name', 'email', 'created', 'isVerified'],
         });
         res.json({ message: 'Lista de clientes', data: clients });
     } catch (error) {
@@ -55,7 +55,7 @@ const createClient = async (req, res) => {
 
         res.json({ 
             message: `Cliente ${name} creado con éxito. Verifica tu correo electrónico para activar la cuenta.`,
-            data: { id: client.id, name, email, createdAt: client.createdAt } 
+            data: { id: client.id, name, email, created: client.created } 
         });
     } catch (error) {
         console.error('Error al crear el cliente:', error);

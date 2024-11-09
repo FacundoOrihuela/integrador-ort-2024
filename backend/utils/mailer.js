@@ -25,3 +25,15 @@ export const sendVerificationEmail = async (email, token) => {
         html: `<a href="${verificationUrl}">Verifica tu cuenta</a>`, // versión HTML
     });
 };
+
+export const sendPasswordResetEmail = async (email, token) => {
+    const resetUrl = `http://localhost:${process.env.PORT}/reset-password?token=${token}`;
+
+    await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: 'Recupera tu contraseña',
+        text: `Haz clic en el siguiente enlace para recuperar tu contraseña: ${resetUrl}`,
+        html: `<a href="${resetUrl}">Recupera tu contraseña</a>`, // versión HTML
+    });
+};

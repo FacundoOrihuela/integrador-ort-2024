@@ -6,10 +6,10 @@ const router = Router();
 
 // Definir rutas
 router.get('/', getClients);  // Obtener todos los clientes
+router.get('/verify-email', verifyClient); // Verificar el correo electrónico
 router.get('/:email', getClientByEmail);  // Obtener un cliente por email
 router.post('/', validateRegisterMiddleware, createClient);  // Crear un nuevo cliente
 router.put('/:id', validateRegisterMiddleware, updateClient);  // Actualizar un cliente
 router.delete('/:id', deleteClient);  // Eliminar un cliente
-router.get('/verify-email', verifyClient); // Verificar el correo electrónico
 
 export default router;

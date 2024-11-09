@@ -5,7 +5,7 @@ import Teacher from '../models/Teacher.js';
 const getTeachers = async (req, res) => {
     try {
         const teachers = await Teacher.findAll({
-            attributes: ['id', 'name', 'email', 'createdAt', 'specialty', 'description'],
+            attributes: ['id', 'name', 'email', 'created', 'specialty', 'description', 'isVerified'],
         });
         res.json({ message: 'Lista de profesores', data: teachers });
     } catch (error) {
@@ -46,7 +46,7 @@ const createTeacher = async (req, res) => {
 
         res.json({ 
             message: `Profesor ${name} creado con éxito`, 
-            data: { id: teacher.id, name, email, createdAt: teacher.createdAt, specialty, description } 
+            data: { id: teacher.id, name, email, created: teacher.created, specialty, description } 
         });
     } catch (error) {
         console.error('Error al crear el profesor:', error);

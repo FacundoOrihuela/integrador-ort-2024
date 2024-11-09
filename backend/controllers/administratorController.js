@@ -5,7 +5,7 @@ import Administrator from '../models/Administrator.js';
 const getAdministrators = async (req, res) => {
     try {
         const administrators = await Administrator.findAll({
-            attributes: ['id', 'name', 'email', 'createdAt'],
+            attributes: ['id', 'name', 'email', 'created', 'isVerified'],
         });
         res.json({ message: 'Lista de administradores', data: administrators });
     } catch (error) {
@@ -44,7 +44,7 @@ const createAdministrator = async (req, res) => {
 
         res.json({ 
             message: `Administrador ${name} creado con éxito`, 
-            data: { id: administrator.id, name, email, createdAt: administrator.createdAt } 
+            data: { id: administrator.id, name, email, created: administrator.created } 
         });
     } catch (error) {
         console.error('Error al crear el administrador:', error);

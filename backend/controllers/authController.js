@@ -32,6 +32,9 @@ const login = async (req, res) => {
             return res.status(401).json({ message: 'Correo electrónico o contraseña incorrectos' });
         }
 
+        user.isActive = true;
+        await user.save();
+
         const token = jwt.sign({ id: user.id, email: user.email, role }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         res.json({ message: 'Inicio de sesión exitoso', token });
@@ -41,4 +44,32 @@ const login = async (req, res) => {
     }
 };
 
-export { login };
+const logout = async (req, res) => {
+    const { email, role } = req.body;
+
+    try {
+        const validRoles = ['client', 'teacher', 'administrator'];
+
+        if (!validRoles.includes(role)) {
+            return res.status(400).json({ message: 'Rol no válido' });
+        }
+
+        const UserModel = role === 'client' ? Client : role === 'teacher' ? Teacher : Administrator;
+
+        const user = await UserModel.findOne({ where: { email } });
+
+        if (!user) {
+            return res.status(401).json({ message: 'Usuario no encontrado' });
+        }
+
+        user.isActive = false;
+        await user.save();
+
+        res.json({ message: 'Cierre de sesión exitoso' });
+    } catch (error) {
+        console.error('Error al cerrar sesión:', error);
+        res.status(500).json({ message: 'Error al cerrar sesión', error: error.message });
+    }
+};
+
+export { login, logout };
