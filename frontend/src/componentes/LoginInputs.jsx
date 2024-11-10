@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { Link, useNavigate } from "react-router-dom";
 
 const LoginInputs = () => {
-    const URL_BASE = "http://localhost:3001/api/clients/login";
+    const URL_BASE = "http://localhost:3001/api/auth/login";
     const emailField = useRef(), passField = useRef();
     const dispatch = useDispatch();
     const email = useId(), pass = useId();
@@ -25,7 +25,7 @@ const LoginInputs = () => {
         const email = emailField.current.value.trim(), pass = passField.current.value.trim();
         if (!email) return toast.error("El email es un campo obligatorio.");
         if (!pass) return toast.error("La contraseña es un campo obligatorio.");
-        executeLogin({ username: email, password: pass });
+        executeLogin({ email: email, password: pass, role: "client" });
     };
 
     const executeLogin = loginData => {
