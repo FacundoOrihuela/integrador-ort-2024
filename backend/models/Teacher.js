@@ -25,8 +25,8 @@ const Teacher = sequelize.define('Teacher', {
         allowNull: true,
     },
     created: {
-        type: DataTypes.STRING(45),
-        defaultValue: 'CURRENT_TIMESTAMP',
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
     },
     specialty: {
         type: DataTypes.STRING(45),

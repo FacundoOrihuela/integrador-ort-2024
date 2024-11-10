@@ -25,8 +25,8 @@ const Administrator = sequelize.define('Administrator', {
         allowNull: true,
     },
     created: {
-        type: DataTypes.STRING(45),
-        defaultValue: 'CURRENT_TIMESTAMP',
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
     },
     verificationToken: {
         type: DataTypes.STRING(255),

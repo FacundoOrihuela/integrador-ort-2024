@@ -6,8 +6,7 @@ Content-Type: application/json
 
 {
     "email": "tayet.nunez@gmail.com",
-    "password": "Contraseña123",
-    "role": "client"
+    "password": "Contraseña123"
 }
 
 ###
@@ -17,8 +16,7 @@ POST http://localhost:3001/api/auth/logout
 Content-Type: application/json
 
 {
-    "email": "tayet.nunez@gmail.com",
-    "role": "client"
+    "email": "tayet.nunez@gmail.com"
 }
 
 ###
@@ -29,8 +27,7 @@ Content-Type: application/json
 
 {
     "email": "admin.user@gmail.com",
-    "password": "Admin_password123",
-    "role": "administrator"
+    "password": "Admin_password123"
 }
 
 ###
@@ -40,8 +37,7 @@ POST http://localhost:3001/api/auth/logout
 Content-Type: application/json
 
 {
-    "email": "admin.user@gmail.com",
-    "role": "administrator"
+    "email": "admin.user@gmail.com"
 }
 
 ###
@@ -52,8 +48,7 @@ Content-Type: application/json
 
 {
     "email": "teacher.user@gmail.com",
-    "password": "Teacher_password1",
-    "role": "teacher"
+    "password": "Teacher_password1"
 }
 
 ###
@@ -63,6 +58,5 @@ POST http://localhost:3001/api/auth/logout
 Content-Type: application/json
 
 {
-    "email": "teacher.user@gmail.com",
-    "role": "teacher"
+    "email": "teacher.user@gmail.com"
 }

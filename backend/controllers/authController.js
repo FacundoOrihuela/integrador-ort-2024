@@ -5,18 +5,21 @@ import Teacher from '../models/Teacher.js';
 import Administrator from '../models/Administrator.js';
 
 const login = async (req, res) => {
-    const { email, password, role } = req.body;
+    const { email, password } = req.body;
 
     try {
-        const validRoles = ['client', 'teacher', 'administrator'];
+        let user = await Client.findOne({ where: { email } });
+        let role = 'client';
 
-        if (!validRoles.includes(role)) {
-            return res.status(400).json({ message: 'Rol no válido' });
+        if (!user) {
+            user = await Teacher.findOne({ where: { email } });
+            role = 'teacher';
         }
 
-        const UserModel = role === 'client' ? Client : role === 'teacher' ? Teacher : Administrator;
-
-        const user = await UserModel.findOne({ where: { email } });
+        if (!user) {
+            user = await Administrator.findOne({ where: { email } });
+            role = 'administrator';
+        }
 
         if (!user) {
             return res.status(401).json({ message: 'Correo electrónico o contraseña incorrectos' });
@@ -45,18 +48,17 @@ const login = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-    const { email, role } = req.body;
+    const { email } = req.body;
 
     try {
-        const validRoles = ['client', 'teacher', 'administrator'];
-
-        if (!validRoles.includes(role)) {
-            return res.status(400).json({ message: 'Rol no válido' });
+        let user = await Client.findOne({ where: { email } });
+        if (!user) {
+            user = await Teacher.findOne({ where: { email } });
         }
 
-        const UserModel = role === 'client' ? Client : role === 'teacher' ? Teacher : Administrator;
-
-        const user = await UserModel.findOne({ where: { email } });
+        if (!user) {
+            user = await Administrator.findOne({ where: { email } });
+        }
 
         if (!user) {
             return res.status(401).json({ message: 'Usuario no encontrado' });
