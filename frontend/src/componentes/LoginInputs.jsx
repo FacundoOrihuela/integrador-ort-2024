@@ -25,7 +25,7 @@ const LoginInputs = () => {
         const email = emailField.current.value.trim(), pass = passField.current.value.trim();
         if (!email) return toast.error("El email es un campo obligatorio.");
         if (!pass) return toast.error("La contraseña es un campo obligatorio.");
-        executeLogin({ email: email, password: pass, role: "client" });
+        executeLogin({ email: email, password: pass});
     };
 
     const executeLogin = loginData => {
@@ -51,7 +51,7 @@ const LoginInputs = () => {
     const startSession = ({ id, token }) => {
         dispatch(saveSessionId(id));
         dispatch(saveSessionToken(token));
-        localStorage.setItem("APPBebesToken", token);
+        localStorage.setItem("token", token);
         localStorage.setItem("idUsuarioLogueado", id);
     };
 
