@@ -6,18 +6,18 @@ import Teacher from '../models/Teacher.js';
 import Administrator from '../models/Administrator.js';
 
 const requestPasswordReset = async (req, res) => {
-    const { email, role } = req.body;
+    const { email } = req.body;
 
     try {
-        const validRoles = ['client', 'teacher', 'administrator'];
+        let user = await Client.findOne({ where: { email } });
 
-        if (!validRoles.includes(role)) {
-            return res.status(400).json({ message: 'Rol no válido' });
+        if (!user) {
+            user = await Teacher.findOne({ where: { email } });
         }
 
-        const UserModel = role === 'client' ? Client : role === 'teacher' ? Teacher : Administrator;
-
-        const user = await UserModel.findOne({ where: { email } });
+        if (!user) {
+            user = await Administrator.findOne({ where: { email } });
+        }
 
         if (!user) {
             return res.status(404).json({ message: `Usuario con email ${email} no encontrado` });
@@ -37,18 +37,18 @@ const requestPasswordReset = async (req, res) => {
 };
 
 const resetPassword = async (req, res) => {
-    const { token, password, role } = req.body;
+    const { token, password } = req.body;
 
     try {
-        const validRoles = ['client', 'teacher', 'administrator'];
+        let user = await Client.findOne({ where: { passwordResetToken: token } });
 
-        if (!validRoles.includes(role)) {
-            return res.status(400).json({ message: 'Rol no válido' });
+        if (!user) {
+            user = await Teacher.findOne({ where: { passwordResetToken: token } });
         }
 
-        const UserModel = role === 'client' ? Client : role === 'teacher' ? Teacher : Administrator;
-
-        const user = await UserModel.findOne({ where: { passwordResetToken: token } });
+        if (!user) {
+            user = await Administrator.findOne({ where: { passwordResetToken: token } });
+        }
 
         if (!user) {
             return res.status(400).json({ message: 'Token inválido o expirado' });
