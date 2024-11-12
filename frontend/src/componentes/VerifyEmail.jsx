@@ -11,35 +11,37 @@ const VerifyEmail = () => {
   const navigate = useNavigate();
   
   useEffect(() => {
-      const params = new URLSearchParams(window.location.search);
-      const token = params.get('token');
-      setToken(token);
-    
-      if (token) {
-        verify(token);
-      }
-    }, []);
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    setToken(token);
+  }, []);
 
-    const verify = () => {
-      fetch(`http://localhost:3001/api/clients/verify-email?token=${token}`, {
-          method: 'GET',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-      })
-      .then(resp => {
-          if (!resp.ok) throw new Error("Algo salió mal");
-          return resp.json();
-      })
-      .then(data => {
-              toast.success("Validado con éxito");
-              navigate("/");
-          }
-      )
-      .catch(error => {
-          console.error("Error al registrar:", error);
-          toast.error("Ocurrió un error. Inténtalo nuevamente.");
-      });
+  useEffect(() => {
+    if (token) {
+      verify();
+    }
+  }, [token])
+
+  const verify = () => {
+    fetch(`http://localhost:3001/api/clients/verify-email?token=${token}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+    .then(resp => {
+        if (!resp.ok) throw new Error("Algo salió mal");
+        return resp.json();
+    })
+    .then(data => {
+            toast.success("Validado con éxito");
+            navigate("/");
+        }
+    )
+    .catch(error => {
+        console.error("Error al registrar:", error);
+        toast.error("Ocurrió un error. Inténtalo nuevamente.");
+    });
   };
       
   return (

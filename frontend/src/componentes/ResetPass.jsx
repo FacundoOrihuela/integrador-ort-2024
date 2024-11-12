@@ -69,6 +69,7 @@ const ResetPass = () => {
         })
         .then(data => {
                 toast.success("Cambio de contraseña exitoso");
+                navigate("/");
             }
         )
         .catch(error => {
