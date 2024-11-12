@@ -8,17 +8,44 @@ import '../index.css';
 
 const VerifyEmail = () => {
   const [token, setToken] = useState('');
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get('token');
+      setToken(token);
+    
+      if (token) {
+        verify(token);
+      }
+    }, []);
 
-    useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const token = params.get('token');
-        setToken(token);
-      }, []);
-
+    const verify = () => {
+      fetch(`http://localhost:3001/api/clients/verify-email?token=${token}`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+      })
+      .then(resp => {
+          if (!resp.ok) throw new Error("Algo salió mal");
+          return resp.json();
+      })
+      .then(data => {
+              toast.success("Validado con éxito");
+              navigate("/");
+          }
+      )
+      .catch(error => {
+          console.error("Error al registrar:", error);
+          toast.error("Ocurrió un error. Inténtalo nuevamente.");
+      });
+  };
+      
   return (
     <div>
-        <h1>Email verificado con éxito!</h1>
-        <Link to="/" className="mt-3 text-blue-500 hover:text-blue-600 text-sm font-medium">Login</Link>
+        <h1>Error en la verificación</h1>
+        <Link to="/" className="mt-3 text-blue-500 hover:text-blue-600 text-sm font-medium">Atrás</Link>
     </div>
   )
 }
