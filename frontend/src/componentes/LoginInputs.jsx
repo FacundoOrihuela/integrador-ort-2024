@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import { Link, useNavigate } from "react-router-dom";
 
 const LoginInputs = () => {
-    const URL_BASE = "http://localhost:3001/api/auth/login";
     const emailField = useRef(), passField = useRef();
     const dispatch = useDispatch();
     const email = useId(), pass = useId();
@@ -29,7 +28,7 @@ const LoginInputs = () => {
     };
 
     const executeLogin = loginData => {
-        fetch(URL_BASE, {
+        fetch("http://localhost:3001/api/auth/login", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(loginData)
@@ -39,8 +38,7 @@ const LoginInputs = () => {
             return resp.json();
         })
         .then(data => {
-            if (data.message) toast.error(data.message);
-            else { startSession(data); navigate("/principal"); }
+            startSession(data.token); navigate("/principal");
         })
         .catch(error => {
             console.error("Error al iniciar sesión:", error);
@@ -48,11 +46,9 @@ const LoginInputs = () => {
         });
     };
 
-    const startSession = ({ id, token }) => {
-        dispatch(saveSessionId(id));
+    const startSession = (token) => {
         dispatch(saveSessionToken(token));
         localStorage.setItem("token", token);
-        localStorage.setItem("idUsuarioLogueado", id);
     };
 
     return (
@@ -71,6 +67,7 @@ const LoginInputs = () => {
                 </div>
                 <input type="button" className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-1/4" value="Login" onClick={loginHandler} disabled={emailFieldLength === 0 || passFieldLength === 0} />
                 <Link to="/register" className="mt-2 text-blue-500 hover:text-blue-600 text-sm font-medium">Registrarse</Link>
+                <Link to="/forgotPassword" className="mt-1 text-blue-600 hover:text-blue-900 text-sm font-small">¿Olvidaste tu contraseña?</Link>
             </form>
         </div>
     );

@@ -1,16 +1,15 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { saveSessionId, saveSessionToken } from '../features/loginSlice';
+import { saveSessionToken } from '../features/loginSlice';
 
 const Principal = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        dispatch(saveSessionId(null));
         dispatch(saveSessionToken(null));
-        localStorage.removeItem("APPBebesToken");
+        localStorage.removeItem("token"); 
         localStorage.removeItem("idUsuarioLogueado");
 
         navigate("/");

@@ -9,9 +9,6 @@ export const loginSlice = createSlice({
     name: "login",
     initialState,
     reducers: {
-        saveSessionId: (state, actions) => {
-            state.cuentaId = actions.payload;
-        },
         saveSessionToken: (state, action) => {
             state.tokken = action.payload;
         },
@@ -20,5 +17,5 @@ export const loginSlice = createSlice({
         }
     }
 })
-export const { saveSessionId, saveSessionToken, saveBaseUrl } = loginSlice.actions;
+export const { saveSessionToken, saveBaseUrl } = loginSlice.actions;
 export default loginSlice.reducer;
