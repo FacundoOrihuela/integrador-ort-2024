@@ -53,11 +53,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       .join(" | ")
 
     const description =
-      product_categories[product_categories.length - 1].description ??
-      `${title} category.`
+      product_categories[product_categories.length - 1].description ?? 
+      `${title} categoría.`
 
     return {
-      title: `${title} | Medusa Store`,
+      title: `${title} | Tfieret Store`,
       description,
       alternates: {
         canonical: `${params.category.join("/")}`,

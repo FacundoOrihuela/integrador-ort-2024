@@ -10,11 +10,11 @@ import CountrySelect from "../country-select"
 import { HttpTypes } from "@medusajs/types"
 
 const SideMenuItems = {
-  Home: "/",
-  Store: "/store",
-  Search: "/search",
-  Account: "/account",
-  Cart: "/cart",
+  Inicio: "/",
+  Tienda: "/store",
+  Buscar: "/search",
+  Cuenta: "/account",
+  Carrito: "/cart",
 }
 
 const SideMenu = ({ regions }: { regions: HttpTypes.StoreRegion[] | null }) => {
@@ -31,7 +31,7 @@ const SideMenu = ({ regions }: { regions: HttpTypes.StoreRegion[] | null }) => {
                   data-testid="nav-menu-button"
                   className="relative h-full flex items-center transition-all ease-out duration-200 focus:outline-none hover:text-ui-fg-base"
                 >
-                  Menu
+                  Menú
                 </Popover.Button>
               </div>
 

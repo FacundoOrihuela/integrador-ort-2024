@@ -10,7 +10,7 @@ const Hero = () => {
             level="h1"
             className="text-3xl leading-10 text-ui-fg-base font-normal"
           >
-            Ecommerce Starter Template
+            Ecommerce Tiferet
           </Heading>
           <Heading
             level="h2"
@@ -24,7 +24,7 @@ const Hero = () => {
           target="_blank"
         >
           <Button variant="secondary">
-            View on GitHub
+            Ver en Github
             <Github />
           </Button>
         </a>

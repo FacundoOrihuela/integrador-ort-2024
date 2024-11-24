@@ -23,19 +23,19 @@ const StripeWrapper: React.FC<StripeWrapperProps> = ({
 
   if (!stripeKey) {
     throw new Error(
-      "Stripe key is missing. Set NEXT_PUBLIC_STRIPE_KEY environment variable."
+      "Falta la clave de Stripe. Establece la variable de entorno NEXT_PUBLIC_STRIPE_KEY."
     )
   }
 
   if (!stripePromise) {
     throw new Error(
-      "Stripe promise is missing. Make sure you have provided a valid Stripe key."
+      "Falta la promesa de Stripe. Asegúrate de haber proporcionado una clave de Stripe válida."
     )
   }
 
   if (!paymentSession?.data?.client_secret) {
     throw new Error(
-      "Stripe client secret is missing. Cannot initialize Stripe."
+      "Falta el secreto del cliente de Stripe. No se puede inicializar Stripe."
     )
   }
 

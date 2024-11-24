@@ -59,7 +59,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
         />
       )
     default:
-      return <Button disabled>Select a payment method</Button>
+      return <Button disabled>Selecciona un método de pago</Button>
   }
 }
 
@@ -77,7 +77,7 @@ const GiftCardPaymentButton = () => {
       isLoading={submitting}
       data-testid="submit-order-button"
     >
-      Place order
+      Realizar pedido
     </Button>
   )
 }
@@ -179,7 +179,7 @@ const StripePaymentButton = ({
         isLoading={submitting}
         data-testid={dataTestId}
       >
-        Place order
+        Realizar pedido
       </Button>
       <ErrorMessage
         error={errorMessage}
@@ -223,13 +223,13 @@ const PayPalPaymentButton = ({
       ?.authorize()
       .then((authorization) => {
         if (authorization.status !== "COMPLETED") {
-          setErrorMessage(`An error occurred, status: ${authorization.status}`)
+          setErrorMessage(`Ocurrió un error, estado: ${authorization.status}`)
           return
         }
         onPaymentCompleted()
       })
       .catch(() => {
-        setErrorMessage(`An unknown error occurred, please try again.`)
+        setErrorMessage(`Ocurrió un error desconocido, por favor intenta nuevamente.`)
         setSubmitting(false)
       })
   }
@@ -288,7 +288,7 @@ const ManualTestPaymentButton = ({ notReady }: { notReady: boolean }) => {
         size="large"
         data-testid="submit-order-button"
       >
-        Place order
+        Realizar pedido
       </Button>
       <ErrorMessage
         error={errorMessage}

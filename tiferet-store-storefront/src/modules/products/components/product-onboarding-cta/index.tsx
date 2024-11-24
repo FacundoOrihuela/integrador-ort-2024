@@ -12,13 +12,13 @@ const ProductOnboardingCta = () => {
     <Container className="max-w-4xl h-full bg-ui-bg-subtle w-full p-8">
       <div className="flex flex-col gap-y-4 center">
         <Text className="text-ui-fg-base text-xl">
-          Your demo product was successfully created! 🎉
+          ¡Tu producto de demostración fue creado exitosamente! 🎉
         </Text>
         <Text className="text-ui-fg-subtle text-small-regular">
-          You can now continue setting up your store in the admin.
+          Ahora puedes continuar configurando tu tienda en el administrador.
         </Text>
         <a href="http://localhost:7001/a/orders?onboarding_step=create_order_nextjs">
-          <Button className="w-full">Continue setup in admin</Button>
+          <Button className="w-full">Continuar configuración en el administrador</Button>
         </a>
       </div>
     </Container>
