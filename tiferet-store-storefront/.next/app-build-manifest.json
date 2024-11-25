@@ -1,21 +1,5 @@
 {
   "pages": {
-    "/not-found": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/not-found.js"
-    ],
-    "/_not-found/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/_not-found/page.js"
-    ],
-    "/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/layout.css",
-      "static/chunks/app/layout.js"
-    ],
     "/[countryCode]/(main)/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -31,75 +15,21 @@
       "static/chunks/main-app.js",
       "static/chunks/app/[countryCode]/(main)/not-found.js"
     ],
+    "/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/layout.css",
+      "static/chunks/app/layout.js"
+    ],
+    "/not-found": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/not-found.js"
+    ],
     "/[countryCode]/(main)/store/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/[countryCode]/(main)/store/page.js"
-    ],
-    "/[countryCode]/(main)/products/[handle]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/[countryCode]/(main)/products/[handle]/page.js"
-    ],
-    "/[countryCode]/(main)/search/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/[countryCode]/(main)/search/page.js"
-    ],
-    "/[countryCode]/(main)/cart/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/[countryCode]/(main)/cart/page.js"
-    ],
-    "/[countryCode]/(main)/cart/loading": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/[countryCode]/(main)/cart/loading.js"
-    ],
-    "/[countryCode]/(main)/cart/not-found": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/[countryCode]/(main)/cart/not-found.js"
-    ],
-    "/[countryCode]/(checkout)/checkout/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/[countryCode]/(checkout)/checkout/page.js"
-    ],
-    "/[countryCode]/(checkout)/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/[countryCode]/(checkout)/layout.js"
-    ],
-    "/[countryCode]/(checkout)/not-found": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/[countryCode]/(checkout)/not-found.js"
-    ],
-    "/[countryCode]/(main)/account/@dashboard/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/[countryCode]/(main)/account/@dashboard/page.js"
-    ],
-    "/[countryCode]/(main)/account/@dashboard/loading": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/[countryCode]/(main)/account/@dashboard/loading.js"
-    ],
-    "/[countryCode]/(main)/account/@login/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/[countryCode]/(main)/account/@login/page.js"
-    ],
-    "/[countryCode]/(main)/account/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/[countryCode]/(main)/account/layout.js"
-    ],
-    "/[countryCode]/(main)/account/loading": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/[countryCode]/(main)/account/loading.js"
     ]
   }
 }
