@@ -13,20 +13,19 @@ const Product = sequelize.define('Product', {
         allowNull: false,
     },
     description: {
-        type: DataTypes.STRING(45),
+        type: DataTypes.STRING(255),
         allowNull: true,
     },
     price: {
-        type: DataTypes.DECIMAL(10, 0),
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
     },
     stock: {
         type: DataTypes.INTEGER,
-        allowNull: true,
-    },
-    category_id: {
-        type: DataTypes.INTEGER,
         allowNull: false,
+    },
+    categoryId: {
+        type: DataTypes.INTEGER,
         references: {
             model: Category,
             key: 'id',
@@ -36,5 +35,7 @@ const Product = sequelize.define('Product', {
     tableName: 'product',
     timestamps: false,
 });
+
+Product.belongsTo(Category, { foreignKey: 'categoryId' });
 
 export default Product;
