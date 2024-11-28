@@ -10,11 +10,14 @@ COPY package*.json ./
 # Instalar dependencias
 RUN npm install
 
+# Instalar nodemon para desarrollo
+RUN npm install -g nodemon
+
 # Copiar el resto del código de la aplicación
 COPY . .
 
 # Exponer el puerto en el que la aplicación se ejecutará
 EXPOSE 3001
 
-# Comando para ejecutar la aplicación
-CMD ["npm", "start"]
+# Usar nodemon para reiniciar automáticamente el backend en desarrollo
+CMD ["nodemon", "index.js"]
