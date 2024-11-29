@@ -1,19 +1,23 @@
-#root{
+#root {
     height: 100%;
     width: 100%;
-}
-:root{
+  }
+  
+  :root {
     --primary-color: orange;
-}
-body,
-html {
+  }
+  
+  body,
+  html {
     height: 100%;
     width: 100%;
     margin: 0;
     padding: 0;
-}
-
-#login{
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Login */
+  #login {
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -23,7 +27,164 @@ html {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-}
-.container{
+  }
+  
+  .container {
     max-width: 100% !important;
-}
+  }
+  
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: fixed; /* Fijar el header */
+    width: 100%;
+    top: 0;
+    z-index: 100; /* Aseguramos que esté por encima de otros elementos */
+  }
+  
+  .header-left {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .header-link {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+  
+  .header-link:hover {
+    color: var(--primary-color);
+  }
+  
+  .header-right {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .header-button {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 1.5rem;
+  }
+  
+  .header-button:hover {
+    background-color: #ddd;
+  }
+  
+  /* Sidebar */
+  .sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #f4f4f4;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 50; /* Por debajo del header */
+    top: 60px; /* Para que no se solape con el header */
+  }
+  
+  .sidebar-header {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 30px;
+  }
+  
+  .sidebar-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .sidebar-email {
+    font-size: 1rem;
+    color: #777;
+  }
+  
+  .sidebar-links {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .sidebar-link {
+    text-decoration: none;
+    color: #333;
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+  
+  .sidebar-link:hover {
+    color: var(--primary-color);
+  }
+  
+  /* Evento */
+  .evento-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    margin-left: 270px; /* Para que no se solape con el Sidebar */
+    margin-top: 80px; /* Para que no se solape con el Header */
+  }
+  
+  .evento-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .evento-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+  }
+  
+  .evento-image {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto; /* Esto asegura que la imagen se centre horizontalmente */
+  }
+  
+  .evento-info {
+    text-align: center;
+    padding-top: 10px;
+  }
+  
+  .evento-link {
+    text-decoration: none;
+    color: white;
+    background-color: var(--primary-color);
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+  
+  .evento-link:hover {
+    background-color: #e87a31;
+  }
+  
