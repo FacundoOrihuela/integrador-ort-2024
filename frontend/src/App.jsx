@@ -1,5 +1,5 @@
 import './estilos.css'
-import Login from './componentes/Login'
+import Login from './componentes/Login/Login'
 import Register from './componentes/Register'
 import { Provider } from 'react-redux'
 import { store } from './store/store'
