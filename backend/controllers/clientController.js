@@ -2,12 +2,16 @@ import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import { sendVerificationEmail } from '../utils/mailer.js';
 import Client from '../models/Client.js';
+import User from '../models/User.js';
 
 // Obtener todos los clientes
 const getClients = async (req, res) => {
     try {
         const clients = await Client.findAll({
-            attributes: ['id', 'name', 'email', 'created', 'isVerified'],
+            include: {
+                model: User,
+                attributes: ['id', 'name', 'email', 'created', 'isVerified'],
+            },
         });
         res.json({ message: 'Lista de clientes', data: clients });
     } catch (error) {
@@ -20,7 +24,13 @@ const getClients = async (req, res) => {
 const getClientByEmail = async (req, res) => {
     const { email } = req.params;
     try {
-        const client = await Client.findOne({ where: { email } });
+        const client = await Client.findOne({
+            include: {
+                model: User,
+                where: { email },
+                attributes: ['id', 'name', 'email', 'created', 'isVerified'],
+            },
+        });
         if (!client) {
             return res.status(404).json({ message: `Cliente con email ${email} no encontrado` });
         }
@@ -41,8 +51,9 @@ const createClient = async (req, res) => {
         // Hashear la contraseña
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Guardar el cliente en la base de datos
-        const client = await Client.create({
+        // Crear el usuario
+        const user = await User.create({
+            userType: 'client',
             name,
             email,
             password: hashedPassword,
@@ -50,12 +61,17 @@ const createClient = async (req, res) => {
             isVerified: false,
         });
 
+        // Crear el cliente
+        await Client.create({
+            userId: user.id,
+        });
+
         // Enviar el correo de verificación
         await sendVerificationEmail(email, verificationToken);
 
         res.json({ 
             message: `Cliente ${name} creado con éxito. Verifica tu correo electrónico para activar la cuenta.`,
-            data: { id: client.id, name, email, created: client.created } 
+            data: { id: user.id, name, email, created: user.created } 
         });
     } catch (error) {
         console.error('Error al crear el cliente:', error);
@@ -71,13 +87,14 @@ const updateClient = async (req, res) => {
         // Hashear la nueva contraseña
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const [updated] = await Client.update(
+        // Actualizar el usuario
+        const [userUpdated] = await User.update(
             { name, email, password: hashedPassword },
             { where: { id } }
         );
 
-        if (updated === 0) {
-            return res.status(404).json({ message: `Cliente con id ${id} no encontrado` });
+        if (userUpdated === 0) {
+            return res.status(404).json({ message: `Usuario con id ${id} no encontrado` });
         }
 
         res.json({ message: `Cliente ${id} actualizado con éxito` });
@@ -91,11 +108,13 @@ const updateClient = async (req, res) => {
 const deleteClient = async (req, res) => {
     const { id } = req.params;
     try {
-        const deleted = await Client.destroy({ where: { id } });
+        const clientDeleted = await Client.destroy({ where: { userId: id } });
 
-        if (deleted === 0) {
+        if (clientDeleted === 0) {
             return res.status(404).json({ message: `Cliente con id ${id} no encontrado` });
         }
+
+        await User.destroy({ where: { id } });
 
         res.json({ message: `Cliente ${id} eliminado con éxito` });
     } catch (error) {
@@ -109,15 +128,15 @@ const verifyClient = async (req, res) => {
     const { token } = req.query;
 
     try {
-        const client = await Client.findOne({ where: { verificationToken: token } });
+        const user = await User.findOne({ where: { verificationToken: token } });
 
-        if (!client) {
+        if (!user) {
             return res.status(400).json({ message: 'Token inválido o cliente ya verificado.' });
         }
 
-        client.isVerified = true;
-        client.verificationToken = null;
-        await client.save();
+        user.isVerified = true;
+        user.verificationToken = null;
+        await user.save();
 
         res.json({ message: 'Cuenta verificada con éxito. Ahora puedes iniciar sesión.' });
     } catch (error) {

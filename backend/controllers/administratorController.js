@@ -1,11 +1,15 @@
 import bcrypt from 'bcryptjs';
 import Administrator from '../models/Administrator.js';
+import User from '../models/User.js';
 
 // Obtener todos los administradores
 const getAdministrators = async (req, res) => {
     try {
         const administrators = await Administrator.findAll({
-            attributes: ['id', 'name', 'email', 'created', 'isVerified'],
+            include: {
+                model: User,
+                attributes: ['id', 'name', 'email', 'created', 'isVerified'],
+            },
         });
         res.json({ message: 'Lista de administradores', data: administrators });
     } catch (error) {
@@ -18,7 +22,13 @@ const getAdministrators = async (req, res) => {
 const getAdministratorByEmail = async (req, res) => {
     const { email } = req.params;
     try {
-        const administrator = await Administrator.findOne({ where: { email } });
+        const administrator = await Administrator.findOne({
+            include: {
+                model: User,
+                where: { email },
+                attributes: ['id', 'name', 'email', 'created', 'isVerified'],
+            },
+        });
         if (!administrator) {
             return res.status(404).json({ message: `Administrador con email ${email} no encontrado` });
         }
@@ -36,15 +46,22 @@ const createAdministrator = async (req, res) => {
         // Hashear la contraseña
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const administrator = await Administrator.create({
+        // Crear el usuario
+        const user = await User.create({
+            userType: 'administrator',
             name,
             email,
             password: hashedPassword,
         });
 
+        // Crear el administrador
+        await Administrator.create({
+            userId: user.id,
+        });
+
         res.json({ 
             message: `Administrador ${name} creado con éxito`, 
-            data: { id: administrator.id, name, email, created: administrator.created } 
+            data: { id: user.id, name, email, created: user.created } 
         });
     } catch (error) {
         console.error('Error al crear el administrador:', error);
@@ -60,13 +77,14 @@ const updateAdministrator = async (req, res) => {
         // Hashear la nueva contraseña
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const [updated] = await Administrator.update(
+        // Actualizar el usuario
+        const [userUpdated] = await User.update(
             { name, email, password: hashedPassword },
             { where: { id } }
         );
 
-        if (updated === 0) {
-            return res.status(404).json({ message: `Administrador con id ${id} no encontrado` });
+        if (userUpdated === 0) {
+            return res.status(404).json({ message: `Usuario con id ${id} no encontrado` });
         }
 
         res.json({ message: `Administrador ${id} actualizado con éxito` });
@@ -80,11 +98,13 @@ const updateAdministrator = async (req, res) => {
 const deleteAdministrator = async (req, res) => {
     const { id } = req.params;
     try {
-        const deleted = await Administrator.destroy({ where: { id } });
+        const administratorDeleted = await Administrator.destroy({ where: { userId: id } });
 
-        if (deleted === 0) {
+        if (administratorDeleted === 0) {
             return res.status(404).json({ message: `Administrador con id ${id} no encontrado` });
         }
+
+        await User.destroy({ where: { id } });
 
         res.json({ message: `Administrador ${id} eliminado con éxito` });
     } catch (error) {

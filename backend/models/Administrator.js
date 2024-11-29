@@ -1,52 +1,22 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
+import User from './User.js';
 
 const Administrator = sequelize.define('Administrator', {
-    id: {
+    userId: {
         type: DataTypes.INTEGER,
-        autoIncrement: true,
         primaryKey: true,
-    },
-    name: {
-        type: DataTypes.STRING(45),
-        allowNull: false,
-    },
-    email: {
-        type: DataTypes.STRING(45),
-        allowNull: false,
-        unique: true,
-    },
-    password: {
-        type: DataTypes.STRING(255),
-        allowNull: true,
-    },
-    photo: {
-        type: DataTypes.STRING(45),
-        allowNull: true,
-    },
-    created: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-    },
-    verificationToken: {
-        type: DataTypes.STRING(255),
-        allowNull: true,
-    },
-    isVerified: {
-        type: DataTypes.TINYINT(1),
-        defaultValue: 0,
-    },
-    passwordResetToken: {
-        type: DataTypes.STRING(255),
-        allowNull: true,
-    },
-    isActive: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
+        references: {
+            model: User,
+            key: 'id',
+        },
     },
 }, {
     tableName: 'administrator',
     timestamps: false,
 });
+
+Administrator.belongsTo(User, { foreignKey: 'userId' });
+User.hasOne(Administrator, { foreignKey: 'userId', constraints: false, scope: { userType: 'administrator' } });
 
 export default Administrator;

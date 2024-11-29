@@ -1,11 +1,15 @@
 import bcrypt from 'bcryptjs';
 import Teacher from '../models/Teacher.js';
+import User from '../models/User.js';
 
 // Obtener todos los profesores
 const getTeachers = async (req, res) => {
     try {
         const teachers = await Teacher.findAll({
-            attributes: ['id', 'name', 'email', 'created', 'specialty', 'description', 'isVerified'],
+            include: {
+                model: User,
+                attributes: ['id', 'name', 'email', 'created', 'isVerified'],
+            },
         });
         res.json({ message: 'Lista de profesores', data: teachers });
     } catch (error) {
@@ -18,7 +22,13 @@ const getTeachers = async (req, res) => {
 const getTeacherByEmail = async (req, res) => {
     const { email } = req.params;
     try {
-        const teacher = await Teacher.findOne({ where: { email } });
+        const teacher = await Teacher.findOne({
+            include: {
+                model: User,
+                where: { email },
+                attributes: ['id', 'name', 'email', 'created', 'isVerified'],
+            },
+        });
         if (!teacher) {
             return res.status(404).json({ message: `Profesor con email ${email} no encontrado` });
         }
@@ -36,17 +46,24 @@ const createTeacher = async (req, res) => {
         // Hashear la contraseña
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const teacher = await Teacher.create({
+        // Crear el usuario
+        const user = await User.create({
+            userType: 'teacher',
             name,
             email,
             password: hashedPassword,
+        });
+
+        // Crear el profesor
+        await Teacher.create({
+            userId: user.id,
             specialty,
             description,
         });
 
         res.json({ 
             message: `Profesor ${name} creado con éxito`, 
-            data: { id: teacher.id, name, email, created: teacher.created, specialty, description } 
+            data: { id: user.id, name, email, created: user.created, specialty, description } 
         });
     } catch (error) {
         console.error('Error al crear el profesor:', error);
@@ -62,12 +79,23 @@ const updateTeacher = async (req, res) => {
         // Hashear la nueva contraseña
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const [updated] = await Teacher.update(
-            { name, email, password: hashedPassword, specialty, description },
+        // Actualizar el usuario
+        const [userUpdated] = await User.update(
+            { name, email, password: hashedPassword },
             { where: { id } }
         );
 
-        if (updated === 0) {
+        if (userUpdated === 0) {
+            return res.status(404).json({ message: `Usuario con id ${id} no encontrado` });
+        }
+
+        // Actualizar el profesor
+        const [teacherUpdated] = await Teacher.update(
+            { specialty, description },
+            { where: { userId: id } }
+        );
+
+        if (teacherUpdated === 0) {
             return res.status(404).json({ message: `Profesor con id ${id} no encontrado` });
         }
 
@@ -82,11 +110,13 @@ const updateTeacher = async (req, res) => {
 const deleteTeacher = async (req, res) => {
     const { id } = req.params;
     try {
-        const deleted = await Teacher.destroy({ where: { id } });
+        const teacherDeleted = await Teacher.destroy({ where: { userId: id } });
 
-        if (deleted === 0) {
+        if (teacherDeleted === 0) {
             return res.status(404).json({ message: `Profesor con id ${id} no encontrado` });
         }
+
+        await User.destroy({ where: { id } });
 
         res.json({ message: `Profesor ${id} eliminado con éxito` });
     } catch (error) {
