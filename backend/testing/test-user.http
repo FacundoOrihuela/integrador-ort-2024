@@ -1,0 +1,8 @@
+# USER OPERATIONS
+
+# Obtener los detalles del usuario autenticado
+GET http://localhost:3001/api/user/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJ0YXlldC5udW5lekBnbWFpbC5jb20iLCJyb2xlIjoiY2xpZW50IiwiaWF0IjoxNzMzMDA5NTMxLCJleHAiOjE3MzMwMTMxMzF9.QMqIbRnIeSLDDGlEW6afJyOAp5R11dRLqd_3pW5eGr0
+Content-Type: application/json
+
+###

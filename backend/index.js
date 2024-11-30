@@ -8,9 +8,10 @@ import authRoutes from './routes/authRoutes.js';
 import passwordRoutes from './routes/passwordRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import productRoutes from './routes/productRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 import sequelize from './config/database.js';
 
-dotenv.config();  // Cargar variables de entorno
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -29,6 +30,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/password', passwordRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/user', userRoutes);
 
 // Error handling
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
@@ -38,7 +40,6 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
 // Sincronizar modelos con la base de datos
 sequelize.sync().then(() => {
     console.log('Base de datos sincronizada');
-    // Iniciar el servidor
     app.listen(port, () => {
         console.log(`Servidor corriendo en http://localhost:${port}`);
     });
