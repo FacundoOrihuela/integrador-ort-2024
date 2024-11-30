@@ -39,7 +39,7 @@
     justify-content: space-between;
     align-items: center;
     background-color: #fff;
-    padding: 15px;
+    padding: 15px 60px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: fixed; /* Fijar el header */
     width: 100%;
@@ -57,6 +57,7 @@
     color: #333;
     font-weight: bold;
     font-size: 1.2rem;
+    cursor: pointer;
   }
   
   .header-link:hover {
@@ -88,7 +89,7 @@
     top: 0;
     left: 0;
     background-color: #f4f4f4;
-    padding: 20px;
+    padding:70px 20px;
     display: flex;
     flex-direction: column;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
@@ -132,7 +133,7 @@
   }
   
   /* Evento */
-  .evento-container {
+  .event-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -141,13 +142,13 @@
     margin-top: 80px; /* Para que no se solape con el Header */
   }
   
-  .evento-title {
+  .event-title {
     font-size: 2rem;
     margin-bottom: 20px;
     text-align: center;
   }
   
-  .evento-card {
+  .event-card {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -161,7 +162,7 @@
     padding: 20px;
   }
   
-  .evento-image {
+  .event-image {
     width: 100%;
     max-width: 300px;
     height: auto;
@@ -170,12 +171,12 @@
     margin: 0 auto; /* Esto asegura que la imagen se centre horizontalmente */
   }
   
-  .evento-info {
+  .event-info {
     text-align: center;
     padding-top: 10px;
   }
   
-  .evento-link {
+  .event-link {
     text-decoration: none;
     color: white;
     background-color: var(--primary-color);
@@ -184,7 +185,7 @@
     margin-top: 10px;
   }
   
-  .evento-link:hover {
+  .event-link:hover {
     background-color: #e87a31;
   }
   

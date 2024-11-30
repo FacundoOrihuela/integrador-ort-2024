@@ -1,18 +1,19 @@
 import './estilos.css'
-import Login from './componentes/Login/Login'
-import Register from './componentes/Register'
+import Login from './components/login/Login'
+import Register from './components/Register'
 import { Provider } from 'react-redux'
 import { store } from './store/store'
 import 'react-toastify/dist/ReactToastify.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import NotFound from './componentes/NotFound'
+import NotFound from './components/NotFound'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Principal from './componentes/Principal'
-import VerifyEmail from './componentes/VerifyEmail'
-import ForgotPass from './componentes/ForgotPass'
-import ResetPass from './componentes/ResetPass'
-import ProductList from './componentes/ProductList';
+import Principal from './components/Principal'
+import VerifyEmail from './components/VerifyEmail'
+import ForgotPass from './components/ForgotPass'
+import ResetPass from './components/ResetPass'
+import Event from './components/event/Event'
+import ProductList from './components/ProductList';
 function App() {
   return (
     <>
@@ -26,7 +27,8 @@ function App() {
             <Route path="/verifyEmail" element={<VerifyEmail/>} />
             <Route path="/forgotPassword" element={<ForgotPass/>} />
             <Route path="/reset-password" element={<ResetPass/>} />
-            <Route path="/products" element={<ProductList />} /> {/* Añade la ruta para la lista de productos */}
+            <Route path="/products" element={<ProductList />} />
+            <Route path="/events" element={<Event/>} />
 
           </Routes>
           <ToastContainer />
