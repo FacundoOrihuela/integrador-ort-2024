@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import { store } from './store/store'
 import 'react-toastify/dist/ReactToastify.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import NoEncontrado from './componentes/NoEncontrado'
+import NotFound from './componentes/NotFound'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Principal from './componentes/Principal'
@@ -21,7 +21,7 @@ function App() {
             <Route path="/" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/principal" element={<Principal/>} />
-            <Route path="*" element={<NoEncontrado/>} />
+            <Route path="*" element={<NotFound/>} />
             <Route path="/verifyEmail" element={<VerifyEmail/>} />
             <Route path="/forgotPassword" element={<ForgotPass/>} />
             <Route path="/reset-password" element={<ResetPass/>} />
