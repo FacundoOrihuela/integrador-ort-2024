@@ -12,6 +12,7 @@ import Principal from './componentes/Principal'
 import VerifyEmail from './componentes/VerifyEmail'
 import ForgotPass from './componentes/ForgotPass'
 import ResetPass from './componentes/ResetPass'
+import ProductList from './componentes/ProductList';
 function App() {
   return (
     <>
@@ -25,7 +26,8 @@ function App() {
             <Route path="/verifyEmail" element={<VerifyEmail/>} />
             <Route path="/forgotPassword" element={<ForgotPass/>} />
             <Route path="/reset-password" element={<ResetPass/>} />
-            
+            <Route path="/products" element={<ProductList />} /> {/* Añade la ruta para la lista de productos */}
+
           </Routes>
           <ToastContainer />
         </BrowserRouter>

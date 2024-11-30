@@ -1,32 +1,15 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
+import User from './User.js';
 
 const Teacher = sequelize.define('Teacher', {
-    id: {
+    userId: {
         type: DataTypes.INTEGER,
-        autoIncrement: true,
         primaryKey: true,
-    },
-    name: {
-        type: DataTypes.STRING(45),
-        allowNull: false,
-    },
-    email: {
-        type: DataTypes.STRING(45),
-        allowNull: false,
-        unique: true,
-    },
-    password: {
-        type: DataTypes.STRING(255),
-        allowNull: true,
-    },
-    photo: {
-        type: DataTypes.STRING(45),
-        allowNull: true,
-    },
-    created: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
+        references: {
+            model: User,
+            key: 'id',
+        },
     },
     specialty: {
         type: DataTypes.STRING(45),
@@ -36,25 +19,12 @@ const Teacher = sequelize.define('Teacher', {
         type: DataTypes.STRING(500),
         allowNull: true,
     },
-    verificationToken: {
-        type: DataTypes.STRING(255),
-        allowNull: true,
-    },
-    isVerified: {
-        type: DataTypes.TINYINT(1),
-        defaultValue: 0,
-    },
-    passwordResetToken: {
-        type: DataTypes.STRING(255),
-        allowNull: true,
-    },
-    isActive: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-    },
 }, {
     tableName: 'teacher',
-    timestamps: false,     
+    timestamps: false,
 });
+
+Teacher.belongsTo(User, { foreignKey: 'userId' });
+User.hasOne(Teacher, { foreignKey: 'userId', constraints: false, scope: { userType: 'teacher' } });
 
 export default Teacher;
