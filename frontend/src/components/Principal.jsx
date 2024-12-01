@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import Event from "./event/Event";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { UserContext } from "../context/UserContext";

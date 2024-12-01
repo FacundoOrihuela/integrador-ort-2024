@@ -1,20 +1,27 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect, useContext } from 'react';
 import { UserContext } from "../context/UserContext";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 
 const AdminPanel = () => {
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
-
+    
     useEffect(() => {
+        if (user === null) {
+            return;
+        }
         if (!user || user.userType !== "administrator") {
             navigate("../*");
         }
     }, [user, navigate]);
 
-  return (
-    <div>AdminPanel</div>
-  )
-}
+    if (user === null) {
+        return <div>Cargando...</div>;
+    }
 
-export default AdminPanel
+    return (
+        <div>AdminPanel</div>
+    );
+};
+
+export default AdminPanel;
