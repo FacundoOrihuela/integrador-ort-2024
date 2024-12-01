@@ -21,7 +21,7 @@ const Principal = () => {
             return response.json();
         })
         .then((data) => {
-            console.log(data.user)
+           
             setUser(data.user);
         })
         .catch((err) => {
