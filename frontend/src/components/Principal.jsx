@@ -12,7 +12,7 @@ const Principal = () => {
             <h1 style={{ justifyContent: "center", alignItems: "center", padding: "150px" }}>
                 Bienvenido {user ? user.name : ""}
             </h1>
-            <Header />
+            <Header user={user}/>
             <Sidebar />
         </div>
     );

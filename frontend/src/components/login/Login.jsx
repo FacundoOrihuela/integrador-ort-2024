@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 
 const Login = () => {
     const navigate = useNavigate();
+    
     useEffect(() => {
         if (window.localStorage.getItem("idUsuarioLogueado") !== null) navigate("/principal")
     }, [])

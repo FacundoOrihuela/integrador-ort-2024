@@ -188,4 +188,7 @@
   .event-link:hover {
     background-color: #e87a31;
   }
+  .empty{
+    display: none;
+  }
   

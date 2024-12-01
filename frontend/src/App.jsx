@@ -15,6 +15,7 @@ import ResetPass from './components/ResetPass'
 import Event from './components/event/Event'
 import ProductList from './components/ProductList';
 import { UserProvider } from './context/UserContext';
+import AdminPanel from './components/AdminPanel'
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
             <Route path="/reset-password" element={<ResetPass />} />
             <Route path="/products" element={<ProductList />} />
             <Route path="/events" element={<Event />} />
+            <Route path="/admin-panel" element={<AdminPanel/>} />
           </Routes>
           <ToastContainer />
         </BrowserRouter>
