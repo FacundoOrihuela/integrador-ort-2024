@@ -1,9 +1,10 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, useContext } from "react";
 import { useDispatch } from "react-redux";
 import { saveSessionToken } from "../../features/loginSlice";
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from "react-router-dom";
 import styles from './login.module.css';
+import { UserContext } from "../../context/UserContext";
 
 const LoginInputs = () => {
     const emailField = useRef(), passField = useRef();
@@ -13,6 +14,7 @@ const LoginInputs = () => {
     const [emailFieldLength, setEmailFieldLength] = useState(0);
     const [passFieldLength, setPassFieldLength] = useState(0);
     const [showPassword, setShowPassword] = useState(false);
+    const { fetchUser } = useContext(UserContext);
 
     useEffect(() => { checkFields(); }, []);
     
@@ -25,7 +27,7 @@ const LoginInputs = () => {
         const email = emailField.current.value.trim(), pass = passField.current.value.trim();
         if (!email) return toast.error("El email es un campo obligatorio.");
         if (!pass) return toast.error("La contraseña es un campo obligatorio.");
-        executeLogin({ email: email, password: pass});
+        executeLogin({ email: email, password: pass });
     };
 
     const executeLogin = loginData => {
@@ -39,7 +41,9 @@ const LoginInputs = () => {
             return resp.json();
         })
         .then(data => {
-            startSession(data.token); navigate("/principal");
+            startSession(data.token);
+            fetchUser(); // Actualizar el estado del usuario
+            navigate("/principal");
         })
         .catch(error => {
             console.error("Error al iniciar sesión:", error);
@@ -52,9 +56,15 @@ const LoginInputs = () => {
         localStorage.setItem("token", token);
     };
 
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            loginHandler();
+        }
+    };
+
     return (
         <div className="flex justify-center mt-12 min-h-screen overflow-hidden">
-            <form className="flex flex-col items-center justify-center p-5 w-full max-w-lg border border-black bg-white shadow-lg h-auto max-h-[90vh] rounded-xl gap-2 box-border overflow-hidden transform transition-all duration-300 ease-in-out">
+            <form className="flex flex-col items-center justify-center p-5 w-full max-w-lg border border-black bg-white shadow-lg h-auto max-h-[90vh] rounded-xl gap-2 box-border overflow-hidden transform transition-all duration-300 ease-in-out" onKeyDown={handleKeyDown}>
                 <figure className="w-1/2 p-4 mb-6">
                     <img src='/svg/Logo.png' alt="logo-tiferet" className="w-full" />
                 </figure>

@@ -9,12 +9,13 @@ import passwordRoutes from './routes/passwordRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import membershipRoutes from './routes/membershipRoutes.js';
 import sequelize from './config/database.js';
 
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3001;
 app.disable('x-powered-by');
 
 app.use(cors());
@@ -31,6 +32,7 @@ app.use('/api/password', passwordRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/memberships', membershipRoutes);
 
 // Error handling
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars

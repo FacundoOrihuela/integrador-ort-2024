@@ -14,26 +14,28 @@ import ForgotPass from './components/ForgotPass'
 import ResetPass from './components/ResetPass'
 import Event from './components/event/Event'
 import ProductList from './components/ProductList';
+import { UserProvider } from './context/UserContext';
+
 function App() {
   return (
-    <>
+    <UserProvider>
       <Provider store={store}>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/principal" element={<Principal/>} />
-            <Route path="*" element={<NotFound/>} />
-            <Route path="/verifyEmail" element={<VerifyEmail/>} />
-            <Route path="/forgotPassword" element={<ForgotPass/>} />
-            <Route path="/reset-password" element={<ResetPass/>} />
+            <Route path="/principal" element={<Principal />} />
+            <Route path="*" element={<NotFound />} />
+            <Route path="/verifyEmail" element={<VerifyEmail />} />
+            <Route path="/forgotPassword" element={<ForgotPass />} />
+            <Route path="/reset-password" element={<ResetPass />} />
             <Route path="/products" element={<ProductList />} />
-            <Route path="/events" element={<Event/>} />
+            <Route path="/events" element={<Event />} />
           </Routes>
           <ToastContainer />
         </BrowserRouter>
       </Provider>
-    </>
+    </UserProvider>
   )
 }
 

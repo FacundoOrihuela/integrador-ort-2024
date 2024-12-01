@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 
 const Sidebar = () => {
+  const { user } = useContext(UserContext);
+
   return (
     <div className="sidebar">
       <div className="sidebar-header">
         <p className="sidebar-logo">Tiferet</p>
-        <p className="sidebar-email">orihuelafacundo@gmail.com</p>
+        <p className="sidebar-email">{user ? user.email : "Cargando..."}</p>
       </div>
       <div className="sidebar-links">
         <Link to="/eventos" className="sidebar-link">Eventos</Link>
