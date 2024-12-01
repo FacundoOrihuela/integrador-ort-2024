@@ -2,8 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     cuentaId: 0,
-    tokken: "",
-    URLBASE: ""
+    tokken: ""
+
 }
 export const loginSlice = createSlice({
     name: "login",
@@ -11,11 +11,9 @@ export const loginSlice = createSlice({
     reducers: {
         saveSessionToken: (state, action) => {
             state.tokken = action.payload;
-        },
-        saveBaseUrl: (state, action) => {
-            state.URLBASE = action.payload;
         }
+        
     }
 })
-export const { saveSessionToken, saveBaseUrl } = loginSlice.actions;
+export const { saveSessionToken } = loginSlice.actions;
 export default loginSlice.reducer;

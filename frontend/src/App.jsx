@@ -29,7 +29,6 @@ function App() {
             <Route path="/reset-password" element={<ResetPass/>} />
             <Route path="/products" element={<ProductList />} />
             <Route path="/events" element={<Event/>} />
-
           </Routes>
           <ToastContainer />
         </BrowserRouter>
