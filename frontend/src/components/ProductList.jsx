@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts } from '../features/productSlice';
+import Header from "./Header";
+import Sidebar from "./Sidebar";
 
 const ProductList = () => {
     const dispatch = useDispatch();
@@ -21,7 +23,8 @@ const ProductList = () => {
     }
 
     return (
-        <div className="product-list">
+        <div>
+            <div style={{ justifyContent: "center", alignItems: "center", padding: "150px" }} className="product-list">
             {items.map((product) => (
                 <div key={product.id} className="product-item">
                     <h2>{product.name}</h2>
@@ -29,7 +32,12 @@ const ProductList = () => {
                     <p>Price: ${product.price}</p>
                 </div>
             ))}
+             
+            </div>
+            <Header />
+            <Sidebar />  
         </div>
+        
     );
 };
 
