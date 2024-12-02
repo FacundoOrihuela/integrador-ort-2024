@@ -31,7 +31,6 @@ const Header = () => {
         )}
       </div>
       <div className="header-right">
-        <button className="header-button">❤️</button>
         <button className="header-button">🛒</button>
         <button className="header-button">🔒</button>
       </div>
