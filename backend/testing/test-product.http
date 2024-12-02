@@ -1,39 +1,21 @@
-# PRODUCT OPERATIONS
-
-# Obtener todos los productos
-GET http://localhost:3001/api/products
-Content-Type: application/json
-
-###
-
-# Crear un nuevo producto
+# Crear un nuevo producto con imagen
 POST http://localhost:3001/api/products
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="product"
 Content-Type: application/json
 
 {
-    "name": "Smartphone",
-    "description": "Latest model smartphone",
-    "price": 699,
+    "name": "Nuevo Producto",
+    "description": "Descripción del nuevo producto",
+    "price": 100,
     "stock": 50,
-    "category_id": 2
+    "categoryId": 1
 }
+--boundary
+Content-Disposition: form-data; name="image"; filename="images.jpg"
+Content-Type: image/jpeg
 
-###
-
-# Actualizar un producto
-PUT http://localhost:3001/api/products/2
-Content-Type: application/json
-
-{
-    "name": "Updated Smartphone",
-    "description": "Updated description for smartphone",
-    "price": 749,
-    "stock": 45,
-    "category_id": 2
-}
-
-###
-
-# Eliminar un producto
-DELETE http://localhost:3001/api/products/2
-Content-Type: application/json
+< D:/Descargas/tiferet-images/images.jpg
+--boundary--

@@ -24,7 +24,7 @@ const Membership = sequelize.define('Membership', {
         allowNull: false,
     },
 }, {
-    tableName: 'memberships',
+    tableName: 'membership',
     timestamps: false,
 });
 

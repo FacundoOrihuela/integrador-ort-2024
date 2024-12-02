@@ -1,21 +1,22 @@
-import './estilos.css'
-import Login from './components/login/Login'
-import Register from './components/Register'
-import { Provider } from 'react-redux'
-import { store } from './store/store'
+import './estilos.css';
+import Login from './components/login/Login';
+import Register from './components/Register';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 import 'react-toastify/dist/ReactToastify.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import NotFound from './components/NotFound'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import NotFound from './components/NotFound';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Principal from './components/Principal'
-import VerifyEmail from './components/VerifyEmail'
-import ForgotPass from './components/ForgotPass'
-import ResetPass from './components/ResetPass'
-import Event from './components/event/Event'
-import ProductList from './components/ProductList';
+import Principal from './components/Principal';
+import VerifyEmail from './components/VerifyEmail';
+import ForgotPass from './components/ForgotPass';
+import ResetPass from './components/ResetPass';
+import Event from './components/event/Event';
+import ProductPage from './components/ecommerce/ProductPage';
 import { UserProvider } from './context/UserContext';
-import AdminPanel from './components/AdminPanel'
+import AdminPanel from './components/AdminPanel';
+import ProductFormPage from './components/ecommerce/ProductFormPage';
 
 function App() {
   return (
@@ -30,15 +31,16 @@ function App() {
             <Route path="/verifyEmail" element={<VerifyEmail />} />
             <Route path="/forgotPassword" element={<ForgotPass />} />
             <Route path="/reset-password" element={<ResetPass />} />
-            <Route path="/productos" element={<ProductList />} />
+            <Route path="/store" element={<ProductPage />} />
             <Route path="/events" element={<Event />} />
-            <Route path="/admin-panel" element={<AdminPanel/>} />
+            <Route path="/admin-panel" element={<AdminPanel />} />
+            <Route path="/create-product" element={<ProductFormPage />} />
           </Routes>
           <ToastContainer />
         </BrowserRouter>
       </Provider>
     </UserProvider>
-  )
+  );
 }
 
-export default App
+export default App;

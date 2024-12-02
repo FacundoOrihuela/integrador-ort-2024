@@ -1,6 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import clientsRoutes from './routes/clientsRoutes.js';
 import administratorRoutes from './routes/administratorRoutes.js';
 import teacherRoutes from './routes/teacherRoutes.js';
@@ -23,6 +25,12 @@ app.use(cors());
 // Middlewares
 app.use(express.json());
 
+// Obtener la ruta del directorio actual
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Servir archivos estáticos desde el directorio uploads
+
 // Routes
 app.use('/api/clients', clientsRoutes);
 app.use('/api/administrators', administratorRoutes);
@@ -40,7 +48,7 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
 });
 
 // Sincronizar modelos con la base de datos
-sequelize.sync().then(() => {
+sequelize.sync({ alter: true }).then(() => {
     console.log('Base de datos sincronizada');
     app.listen(port, () => {
         console.log(`Servidor corriendo en http://localhost:${port}`);

@@ -25,7 +25,7 @@ const Header = () => {
         <Link to="/somos" className="header-link">Somos</Link>
         <Link to="/events" className="header-link">Eventos</Link>
         <Link to="/productos" className="header-link">Productos</Link>
-        <Link to="/tienda-online" className="header-link">Tienda Online</Link>
+        <Link to="/store" className="header-link">Tienda Online</Link>
         {user && user.userType === "administrator" && (
           <Link to="/admin-panel" className="header-link">Panel Administrativo</Link>
         )}
