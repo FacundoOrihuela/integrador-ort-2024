@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { saveSessionToken } from "../../features/loginSlice";
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from "react-router-dom";
-import styles from './login.module.css';
 import { UserContext } from "../../context/UserContext";
 
 const LoginInputs = () => {
@@ -14,10 +13,11 @@ const LoginInputs = () => {
     const [emailFieldLength, setEmailFieldLength] = useState(0);
     const [passFieldLength, setPassFieldLength] = useState(0);
     const [showPassword, setShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // Estado de carga
     const { fetchUser } = useContext(UserContext);
 
     useEffect(() => { checkFields(); }, []);
-    
+
     const checkFields = () => {
         setEmailFieldLength(emailField.current.value.length);
         setPassFieldLength(passField.current.value.length);
@@ -30,25 +30,31 @@ const LoginInputs = () => {
         executeLogin({ email: email, password: pass });
     };
 
-    const executeLogin = loginData => {
-        fetch("http://localhost:3001/api/auth/login", {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(loginData)
-        })
-        .then(resp => {
-            if (!resp.ok) throw new Error("Algo salió mal");
-            return resp.json();
-        })
-        .then(data => {
-            startSession(data.token);
-            fetchUser(); // Actualizar el estado del usuario
-            navigate("/principal");
-        })
-        .catch(error => {
-            console.error("Error al iniciar sesión:", error);
-            toast.error("Ocurrió un error. Inténtalo nuevamente.");
-        });
+    const executeLogin = (loginData) => {
+        setIsLoading(true); // Activar estado de carga // CHANGES
+        setTimeout(() => { // Simulando la espera de unos segundos
+            fetch("http://localhost:3001/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(loginData),
+            })
+                .then((resp) => {
+                    if (!resp.ok) throw new Error("Algo salió mal");
+                    return resp.json();
+                })
+                .then((data) => {
+                    startSession(data.token);
+                    fetchUser(); // Actualizar el estado del usuario
+                    navigate("/principal");
+                })
+                .catch((error) => {
+                    console.error("Error al iniciar sesión:", error);
+                    toast.error("Ocurrió un error. Inténtalo nuevamente.");
+                })
+                .finally(() => {
+                    setIsLoading(false); // Desactivar el estado de carga
+                });
+        }, 1500); // Retraso de 1.5 segundos
     };
 
     const startSession = (token) => {
@@ -79,7 +85,24 @@ const LoginInputs = () => {
                         <img src={showPassword ? "/svg/eyeClosed.svg" : "/svg/eyeOpen.svg"} alt={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"} className="w-6 h-6" />
                     </button>
                 </div>
-                <input type="button" className="px-4 py-2 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 w-1/3 text-sm" value="Login" onClick={loginHandler} disabled={emailFieldLength === 0 || passFieldLength === 0} />
+
+                {/* Botón con Indicador de Carga */}
+                <button 
+                    type="button" 
+                    className={`px-4 py-2 font-semibold rounded-md w-1/3 text-sm ${isLoading ? "bg-gray-400 text-white cursor-not-allowed" : "bg-orange-500 text-white hover:bg-orange-600 focus:ring-2 focus:ring-orange-500"}`}
+                    onClick={loginHandler} 
+                    disabled={isLoading || emailFieldLength === 0 || passFieldLength === 0}
+                >
+                    {isLoading ? (
+                        <div className="flex justify-center items-center">
+                            <div className="w-4 h-4 border-2 border-t-2 border-orange-500 border-solid rounded-full animate-spin"></div>
+                            <span className="ml-2">Cargando...</span>
+                        </div>
+                    ) : (
+                        "Login"
+                    )}
+                </button>
+
                 <Link to="/register" className="mt-2 text-orange-500 hover:text-orange-600 text-xs font-medium">Registrarse</Link>
                 <Link to="/forgotPassword" className="mt-1 text-orange-600 hover:text-orange-900 text-xs font-small">¿Olvidaste tu contraseña?</Link>
             </form>
