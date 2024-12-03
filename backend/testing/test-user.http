@@ -6,3 +6,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 Content-Type: application/json
 
 ###
+
+# Obtener la lista de todos los usuarios
+GET http://localhost:3001/api/user/all
+Content-Type: application/json
+
+###
