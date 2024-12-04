@@ -42,4 +42,39 @@ const getUserDetails = async (req, res) => {
     }
 };
 
-export { getUserDetails };
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.findAll({
+            attributes: ['id', 'name', 'email', 'userType', 'photo', 'created', 'isVerified'],
+        });
+
+        const userDetails = await Promise.all(users.map(async (user) => {
+            let userData;
+            if (user.userType === 'client') {
+                userData = await Client.findOne({ where: { userId: user.id } });
+            } else if (user.userType === 'teacher') {
+                userData = await Teacher.findOne({ where: { userId: user.id } });
+            } else if (user.userType === 'administrator') {
+                userData = await Administrator.findOne({ where: { userId: user.id } });
+            }
+
+            return {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                userType: user.userType,
+                photo: user.photo,
+                created: user.created,
+                isVerified: user.isVerified,
+                ...userData?.toJSON(),
+            };
+        }));
+
+        res.json({ users: userDetails });
+    } catch (error) {
+        console.error('Error al obtener la lista de usuarios:', error);
+        res.status(500).json({ message: 'Error interno del servidor', error: error.message });
+    }
+};
+
+export { getUserDetails, getAllUsers };
