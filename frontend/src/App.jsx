@@ -15,7 +15,7 @@ import ResetPass from './components/ResetPass';
 import Event from './components/event/Event';
 import ProductPage from './components/ecommerce/ProductPage';
 import { UserProvider } from './context/UserContext';
-import AdminPanel from './components/AdminPanel';
+import AdminPanel from './components/adminPanel/AdminPanel';
 import ProductFormPage from './components/ecommerce/ProductFormPage';
 
 function App() {

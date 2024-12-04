@@ -3,13 +3,11 @@ import { Link } from 'react-router-dom';
 import psicoterapia from '../img/psicoterapia.png';
 import yoga from '../img/yoga.png';
 import Header from '../Header';
-import Sidebar from '../Sidebar';
 
 const Event = () => {
   return (
     <div>
       <Header/>
-      <Sidebar/>
     
       <div className="event-container">
         <h2 className="event-title">EVENTOS</h2>
