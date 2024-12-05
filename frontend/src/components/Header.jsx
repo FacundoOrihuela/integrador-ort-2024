@@ -1,57 +1,30 @@
-import React, { useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { saveSessionToken } from "../features/loginSlice";
-import { UserContext } from "../context/UserContext";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { FaUserCircle } from 'react-icons/fa';
+import logoImg from "../components/img/logo.png"; 
 
 const Header = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { user } = useContext(UserContext);
-
-  const handleLogout = () => {
-    dispatch(saveSessionToken(null));
-    localStorage.removeItem("token");
-    localStorage.removeItem("idUsuarioLogueado");
-    navigate("/");
-  };
-
-
-  return (
-    <div className="header">
-      <div className="header-link" onClick={handleLogout}>
-        Cerrar sesión
-      </div>
-      <div className="header-left">
-        <Link to="/principal" className="header-link">
-          Home
-        </Link>
-        <Link to="/somos" className="header-link">
-          Somos
-        </Link>
-        <Link to="/events" className="header-link">
-          Eventos
-        </Link>
-        <Link to="/productos" className="header-link">
-          Productos
-        </Link>
-        <Link to="/store" className="header-link">
-          Tienda Online
-        </Link>
-
-        {user && user.userType === "administrator" && (
-          <Link to="/admin-panel" className="header-link">
-            Panel Administrativo
-          </Link>
-        )}
-      </div>
-      <div className="header-right">
-        <button className="header-button">🛒</button>
-        <button className="header-button">🔒</button>
-      </div>
-    </div>
-  );
+    return (
+        <header className="bg-white shadow-md">
+            <div className="container mx-auto flex justify-between items-center py-6 px-8">
+                <div className="flex items-center">
+                    <img src={logoImg} alt="Logo" className="h-14 w-14"/>
+                    <span className="ml-3 text-2xl font-bold text-orange-600">Tiféret</span>
+                </div>
+                <nav className="space-x-6">
+                    <Link to="/" className="text-black hover:text-orange-600 text-lg">Home</Link>
+                    <Link to="/somos" className="text-black hover:text-orange-600 text-lg">Somos</Link>
+                    <Link to="/events" className="text-black hover:text-orange-600 text-lg">Actividades</Link> 
+                    <Link to="/grupos" className="text-black hover:text-orange-600 text-lg">Grupos</Link>
+                    <Link to="/tienda" className="text-black hover:text-orange-600 text-lg">Tienda</Link>
+                    <Link to="/aula" className="text-black hover:text-orange-600 text-lg">Aula virtual</Link>
+                </nav>
+                <div>
+                    <FaUserCircle className="text-orange-600 text-3xl"/>
+                </div>
+            </div>
+        </header>
+    );
 };
 
 export default Header;

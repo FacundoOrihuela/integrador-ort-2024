@@ -12,6 +12,7 @@ const UserList = () => {
         "Content-Type": "application/json",
       },
     })
+  
       .then((response) => {
         if (!response.ok) {
           throw new Error("Error al obtener los clientes");
@@ -19,7 +20,6 @@ const UserList = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data.users);
         setUsers(data.users);
         setLoading(false);
       })
@@ -54,8 +54,8 @@ const UserList = () => {
       <ul>
         {users.map((user) => (
           <li key={user.id}>
-            <p> Nombre: {user.name}</p>
-            <p>Email: {user.email}</p>
+            <p> <span className="font-bold"> Nombre:</span> {user.name}</p>
+            <p><span className="font-bold"> Email:</span> {user.email}</p>
             <br />
           </li>
         ))}

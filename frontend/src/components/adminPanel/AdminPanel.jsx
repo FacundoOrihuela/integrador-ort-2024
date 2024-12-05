@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../Header";
 import UserList from "./UsersList";
 import CreateMemberships from "./CreateMemberships";
+import MembershipList from "./MembershipList";
 
 const AdminPanel = () => {
   const { user } = useContext(UserContext);
@@ -26,6 +27,7 @@ const AdminPanel = () => {
     <div className="mt-20">
       <UserList />
       <CreateMemberships />
+      <MembershipList/>
       <Header />
     </div>
   );
