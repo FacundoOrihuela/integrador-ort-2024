@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Sidebar = ({ categories, featuredProducts }) => {
+const Sidebar = ({ categories, featuredProducts, className }) => {
   return (
-    <aside className="fixed top-[60px] left-0 h-[calc(100vh-60px)] w-[17%] bg-gray-100 p-[70px_20px] flex flex-col shadow-md z-50">
+    <aside className={`h-[calc(100vh-60px)] bg-gray-100 p-[70px_20px] flex flex-col shadow-md z-50 ${className}`}>
       {/* Header */}
       <div className="flex flex-col gap-1 mb-8">
         <h1 className="text-xl font-bold text-gray-800">Sidebar Logo</h1>
@@ -33,24 +33,22 @@ const Sidebar = ({ categories, featuredProducts }) => {
             max="700"
             className="w-full"
           />
-          <button className="bg-blue-500 text-white px-4 py-2 rounded">
-            FILTRAR
-          </button>
+          <button className="bg-blue-500 text-white px-4 py-2 rounded">FILTRAR</button>
         </div>
       </div>
       {/* Productos destacados */}
       <div className="mt-8">
         <h2 className="text-lg font-bold mb-4">PRODUCTOS DESTACADOS</h2>
-        <ul className="flex flex-col gap-4">
+        <ul className="space-y-4">
           {featuredProducts.map((product) => (
             <li key={product.id} className="flex items-center space-x-4">
-              <img
-                src={`http://localhost:3001${product.image}`}
-                alt={product.name}
-                className="w-16 h-16 object-cover"
+              <img 
+                src={`http://localhost:3001${product.image}`} 
+                alt={product.name} 
+                className="w-16 h-16 object-cover" 
               />
               <div>
-                <p className="text-gray-800">{product.name}</p>
+                <p>{product.name}</p>
                 <p className="text-orange-500 font-bold">{product.price}</p>
               </div>
             </li>

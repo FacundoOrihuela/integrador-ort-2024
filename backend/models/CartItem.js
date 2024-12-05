@@ -1,27 +1,23 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
-import Order from './Order.js';
-import Product from './Product.js';
 
-const OrderItem = sequelize.define('OrderItem', {
+const CartItem = sequelize.define('CartItem', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
     },
-    orderId: {
+    cartId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
         references: {
-            model: Order,
+            model: 'cart',
             key: 'id',
         },
     },
     productId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
         references: {
-            model: Product,
+            model: 'product',
             key: 'id',
         },
     },
@@ -29,13 +25,13 @@ const OrderItem = sequelize.define('OrderItem', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    price: {
-        type: DataTypes.DECIMAL(10, 2),
+    priceAtAddition: {
+        type: DataTypes.FLOAT,
         allowNull: false,
     },
 }, {
-    tableName: 'order_item',
+    tableName: 'cart_item',
     timestamps: false,
 });
 
-export default OrderItem;
+export default CartItem;
