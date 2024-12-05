@@ -1,18 +1,14 @@
-import React, { useContext } from "react";
+import { Link } from "react-router-dom";
 import Header from "./Header";
-import { UserContext } from "../context/UserContext";
-import yogaImg from "../components/img/yoga.png"; 
-import portadaImg from "../components/img/Portada.png"; 
-import kabalaImg from "../components/img/kabala.png"; 
-import meditarImg from "../components/img/meditar.png"; 
-import circulosImg from "../components/img/circulos.png"; 
-import integracionesImg from "../components/img/integraciones.png"; 
-import psicoterapiaImg from "../components/img/psicoterapias.png"; 
-import fotoHomeImg from "../components/img/fotoHome.png"; 
-
+import portadaImg from "../components/img/Portada.png";
+import kabalaImg from "../components/img/kabala.png";
+import meditarImg from "../components/img/meditar.png";
+import circulosImg from "../components/img/circulos.png";
+import integracionesImg from "../components/img/integraciones.png";
+import psicoterapiaImg from "../components/img/psicoterapias.png";
+import fotoHomeImg from "../components/img/fotoHome.png";
 
 const Principal = () => {
-    const { user } = useContext(UserContext);
 
     return (
         <div>
@@ -20,24 +16,34 @@ const Principal = () => {
             <section className="bg-gray-100 py-8">
                 <div className="container mx-auto flex justify-center space-x-8">
                     <div className="text-center">
-                        <img src={kabalaImg} alt="Kabalá Viva" className="mx-auto" />
-                        <p className="mt-2">Kabalá Viva</p>
+                        <Link to="/kabala">
+                            <img src={kabalaImg} alt="Kabalá Viva" className="mx-auto cursor-pointer" />
+                            <p className="mt-2">Kabalá Viva</p>
+                        </Link>
                     </div>
                     <div className="text-center">
-                        <img src={meditarImg} alt="Círculos" className="mx-auto" />
-                        <p className="mt-2">Círculos</p>
+                        <Link to="/circulos">
+                            <img src={meditarImg} alt="Círculos" className="mx-auto cursor-pointer" />
+                            <p className="mt-2">Círculos</p>
+                        </Link>
                     </div>
                     <div className="text-center">
-                        <img src={circulosImg} alt="Yoga y Meditación" className="mx-auto" />
-                        <p className="mt-2">Yoga y Meditación</p>
+                        <Link to="/yoga">
+                            <img src={circulosImg} alt="Yoga y Meditación" className="mx-auto cursor-pointer" />
+                            <p className="mt-2">Yoga y Meditación</p>
+                        </Link>
                     </div>
                     <div className="text-center">
-                        <img src={integracionesImg} alt="Integraciones" className="mx-auto" />
-                        <p className="mt-2">Integraciones</p>
+                        <Link to="/integraciones">
+                            <img src={integracionesImg} alt="Integraciones" className="mx-auto cursor-pointer" />
+                            <p className="mt-2">Integraciones</p>
+                        </Link>
                     </div>
                     <div className="text-center">
-                        <img src={psicoterapiaImg} alt="Psicoterapias" className="mx-auto" />
-                        <p className="mt-2">Psicoterapias</p>
+                        <Link to="/psicoterapias">
+                            <img src={psicoterapiaImg} alt="Psicoterapias" className="mx-auto cursor-pointer" />
+                            <p className="mt-2">Psicoterapias</p>
+                        </Link>
                     </div>
                 </div>
             </section>

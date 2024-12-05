@@ -1,143 +1,77 @@
 #root {
-    height: 100%;
-    width: 100%;
-  }
-  
-  :root {
-    --primary-color: orange;
-  }
-  
-  body,
-  html {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-  }
-  
-  /* Login */
-  #login {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-image: url('../public/svg/pexels-asadphoto-457882.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-  }
-  
-  .container {
-    max-width: 100% !important;
-  }
-  
-  /* Header */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #fff;
-    padding: 15px 60px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: fixed; /* Fijar el header */
-    width: 100%;
-    top: 0;
-    z-index: 100; /* Aseguramos que esté por encima de otros elementos */
-  }
-  
-  .header-left {
-    display: flex;
-    gap: 20px;
-  }
-  
-  .header-link {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-    font-size: 1.2rem;
-    cursor: pointer;
-  }
-  
-  .header-link:hover {
-    color: var(--primary-color);
-  }
-  
-  .header-right {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .header-button {
-    background-color: #f0f0f0;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    font-size: 1.5rem;
-  }
-  
-  .header-button:hover {
-    background-color: #ddd;
-  }
-  
- 
-  /* Evento */
-  .event-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    margin-top: 80px; /* Para que no se solape con el Header */
-  }
-  
-  .event-title {
-    font-size: 2rem;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
-  .event-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
-    width: 80%;
-    max-width: 500px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-    padding: 20px;
-  }
-  
-  .event-image {
-    width: 100%;
-    max-width: 300px;
-    height: auto;
-    object-fit: contain;
-    display: block;
-    margin: 0 auto; /* Esto asegura que la imagen se centre horizontalmente */
-  }
-  
-  .event-info {
-    text-align: center;
-    padding-top: 10px;
-  }
-  
-  .event-link {
-    text-decoration: none;
-    color: white;
-    background-color: var(--primary-color);
-    padding: 10px 20px;
-    border-radius: 5px;
-    margin-top: 10px;
-  }
-  
-  .event-link:hover {
-    background-color: #e87a31;
-  }
-  .empty{
-    display: none;
-  }
-  
+  height: 100%;
+  width: 100%;
+}
+
+:root {
+  --primary-color: orange;
+}
+
+body,
+html {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* Evento */
+.event-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  margin-top: 80px; /* Para que no se solape con el Header */
+}
+
+.event-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.event-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  width: 80%;
+  max-width: 500px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  padding: 20px;
+}
+
+.event-image {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto; 
+}
+
+.event-info {
+  text-align: center;
+  padding-top: 10px;
+}
+
+.event-link {
+  text-decoration: none;
+  color: white;
+  background-color: var(--primary-color);
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.event-link:hover {
+  background-color: #e87a31;
+}
+
+.empty {
+  display: none;
+}
