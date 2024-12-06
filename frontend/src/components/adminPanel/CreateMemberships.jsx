@@ -94,7 +94,7 @@ const CreateMemberships = () => {
         </div>
         <button
           onClick={handleCreateMembership}
-          className="w-full bg-orange-500 text-white p-2 rounded mt-4 hover:bg-orange-600"
+          className="w-full bg-colors-1 text-white p-2 rounded mt-4 hover:bg-colors-1"
         >
           Crear Membresía
         </button>

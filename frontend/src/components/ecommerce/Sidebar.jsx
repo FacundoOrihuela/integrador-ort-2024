@@ -49,7 +49,7 @@ const Sidebar = ({ categories, featuredProducts, className }) => {
               />
               <div>
                 <p>{product.name}</p>
-                <p className="text-orange-500 font-bold">{product.price}</p>
+                <p className="text-colors-1 font-bold">{product.price}</p>
               </div>
             </li>
           ))}

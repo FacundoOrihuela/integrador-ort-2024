@@ -13,39 +13,43 @@ const Principal = () => {
     return (
         <div>
             <Header />
-            <section className="bg-gray-100 py-8">
-                <div className="container mx-auto flex justify-center space-x-8">
-                    <div className="text-center">
-                        <Link to="/kabala">
-                            <img src={kabalaImg} alt="Kabalá Viva" className="mx-auto cursor-pointer" />
-                            <p className="mt-2">Kabalá Viva</p>
-                        </Link>
+            <section className="bg-gray py-8">
+            <div className="container w-[50%] mx-auto flex justify-center space-x-8">
+                <Link to="/kabala" className="text-center flex flex-col items-center">
+                    <div className="bg-white rounded-full w-[100px] h-[100px] flex justify-center items-center">
+                        <img src={kabalaImg} alt="Kabalá Viva" className="mx-auto cursor-pointer rounded-full w-[70%] h-[70%]" />
                     </div>
-                    <div className="text-center">
-                        <Link to="/circulos">
-                            <img src={meditarImg} alt="Círculos" className="mx-auto cursor-pointer" />
-                            <p className="mt-2">Círculos</p>
-                        </Link>
+                    <p className="mt-2">Kabalá Viva</p>
+                </Link>
+
+                <Link to="/circulos" className="text-center flex flex-col items-center">
+                    <div className="bg-white rounded-full w-[100px] h-[100px] flex justify-center items-center">
+                        <img src={meditarImg} alt="Círculos" className="mx-auto cursor-pointer rounded-full w-[70%] h-[70%]" />
                     </div>
-                    <div className="text-center">
-                        <Link to="/yoga">
-                            <img src={circulosImg} alt="Yoga y Meditación" className="mx-auto cursor-pointer" />
-                            <p className="mt-2">Yoga y Meditación</p>
-                        </Link>
+                    <p className="mt-2">Círculos</p>
+                </Link>
+
+                <Link to="/yoga" className="text-center flex flex-col items-center">
+                    <div className="bg-white rounded-full w-[100px] h-[100px] flex justify-center items-center">
+                        <img src={circulosImg} alt="Yoga y Meditación" className="mx-auto cursor-pointer rounded-full w-[70%] h-[70%]" />
                     </div>
-                    <div className="text-center">
-                        <Link to="/integraciones">
-                            <img src={integracionesImg} alt="Integraciones" className="mx-auto cursor-pointer" />
-                            <p className="mt-2">Integraciones</p>
-                        </Link>
+                    <p className="mt-2">Yoga y Meditación</p>
+                </Link>
+
+                <Link to="/integraciones" className="text-center flex flex-col items-center">
+                    <div className="bg-white rounded-full w-[100px] h-[100px] flex justify-center items-center">
+                        <img src={integracionesImg} alt="Integraciones" className="mx-auto cursor-pointer rounded-full w-[70%] h-[70%]" />
                     </div>
-                    <div className="text-center">
-                        <Link to="/psicoterapias">
-                            <img src={psicoterapiaImg} alt="Psicoterapias" className="mx-auto cursor-pointer" />
-                            <p className="mt-2">Psicoterapias</p>
-                        </Link>
+                    <p className="mt-2">Integraciones</p>
+                </Link>
+
+                <Link to="/psicoterapias" className="text-center flex flex-col items-center">
+                    <div className="bg-white rounded-full w-[100px] h-[100px] flex justify-center items-center">
+                        <img src={psicoterapiaImg} alt="Psicoterapias" className="mx-auto cursor-pointer rounded-full w-[70%] h-[70%]" />
                     </div>
-                </div>
+                    <p className="mt-2">Psicoterapias</p>
+                </Link>
+            </div>
             </section>
             <section className="relative">
                 <img

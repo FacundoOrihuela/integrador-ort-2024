@@ -14,11 +14,11 @@ const Login = () => {
 
     return (
         <section
-            className="flex justify-center items-center h-screen w-screen bg-cover"
+            className="flex justify-center items-center h-screen w-screen bg-cover bg-colors-1"
             style={{
-                backgroundImage: `url(${fondoImg})`, // Uso correcto de la imagen importada
-                backgroundPosition: 'right', // Mueve la imagen a la derecha
-                backgroundSize: 'cover', // Asegura que la imagen cubra el área
+                backgroundImage: `url(${fondoImg})`,
+                backgroundPosition: 'right', 
+                backgroundSize: 'cover',                            
             }}
         >
             <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">

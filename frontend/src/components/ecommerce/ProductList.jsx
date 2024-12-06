@@ -21,7 +21,7 @@ const ProductList = ({ products, className }) => {
               className="w-full h-48 object-cover mb-4" 
             />
             <h3 className="text-lg font-bold">{product.name}</h3>
-            <p className="text-orange-500 font-bold">{product.price}</p>
+            <p className="text-colors-1 font-bold">{product.price}</p>
             <button 
               onClick={() => addToCart(product)} 
               className="bg-blue-500 text-white px-4 py-2 rounded"

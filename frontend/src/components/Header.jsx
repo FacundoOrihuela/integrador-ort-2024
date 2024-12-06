@@ -10,15 +10,13 @@ const Header = () => {
   const [showCart, setShowCart] = useState(false);
 
   return (
-    <header className="bg-orange-600 shadow-md">
+    <header className="bg-colors-1 shadow-md">
       <div className="container mx-auto flex justify-between items-center py-6 px-8">
         <div className="flex items-center">
           <img src={logoImg} alt="Logo" className="h-14 w-14 rounded-full" />{" "}
-          {/* Logo redondo */}
-          <span className="ml-3 text-2xl font-bold text-black">Tiféret</span>
         </div>
         <nav className="space-x-6">
-          <Link to="/" className="text-black hover:text-gray-700 text-lg">
+          <Link to="/principal" className="text-black hover:text-gray-700 text-lg">
             Home
           </Link>
           <Link to="/somos" className="text-black hover:text-gray-700 text-lg">
