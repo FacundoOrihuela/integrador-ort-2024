@@ -1,23 +1,13 @@
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import { sendPasswordResetEmail } from '../utils/mailer.js';
-import Client from '../models/Client.js';
-import Teacher from '../models/Teacher.js';
-import Administrator from '../models/Administrator.js';
+import User from '../models/User.js';
 
 const requestPasswordReset = async (req, res) => {
     const { email } = req.body;
 
     try {
-        let user = await Client.findOne({ where: { email } });
-
-        if (!user) {
-            user = await Teacher.findOne({ where: { email } });
-        }
-
-        if (!user) {
-            user = await Administrator.findOne({ where: { email } });
-        }
+        const user = await User.findOne({ where: { email } });
 
         if (!user) {
             return res.status(404).json({ message: `Usuario con email ${email} no encontrado` });
@@ -40,15 +30,7 @@ const resetPassword = async (req, res) => {
     const { token, password } = req.body;
 
     try {
-        let user = await Client.findOne({ where: { passwordResetToken: token } });
-
-        if (!user) {
-            user = await Teacher.findOne({ where: { passwordResetToken: token } });
-        }
-
-        if (!user) {
-            user = await Administrator.findOne({ where: { passwordResetToken: token } });
-        }
+        const user = await User.findOne({ where: { passwordResetToken: token } });
 
         if (!user) {
             return res.status(400).json({ message: 'Token inválido o expirado' });
