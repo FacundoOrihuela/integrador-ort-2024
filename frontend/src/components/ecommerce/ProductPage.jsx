@@ -30,7 +30,7 @@ const ProductPage = () => {
     return (
         <CartProvider>
             <div>
-                <Header />
+                <Header store/>
                 <div className="container mx-auto p-4 mt-16 flex">
                     <Sidebar
                         categories={categories}
