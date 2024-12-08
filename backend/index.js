@@ -30,6 +30,8 @@ import productRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import membershipRoutes from './routes/membershipRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
+import eventRoutes from './routes/EventRoutes.js';
+import eventRegistrationRoutes from './routes/EventRegistrationRoutes.js';
 
 app.use('/api/clients', clientsRoutes);
 app.use('/api/administrators', administratorRoutes);
@@ -41,6 +43,8 @@ app.use('/api/products', productRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/memberships', membershipRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/events', eventRoutes);
+app.use('/api/event-registrations', eventRegistrationRoutes);
 
 // Error handling
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
