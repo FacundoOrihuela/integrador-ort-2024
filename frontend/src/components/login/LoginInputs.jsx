@@ -79,7 +79,7 @@ const LoginInputs = () => {
             onKeyDown={handleKeyDown}
         >
             <figure className="w-1/2 p-4 mb-6">
-                <img src='/svg/Logo.png' alt="logo-tiferet" className="w-full" />
+                <img src='/svg/Logo.png' alt="logo-Tiféret" className="w-full" />
             </figure>
             <div className="w-full max-w-sm mb-4">
                 <label htmlFor={email} className="block text-gray-700 text-sm font-medium mb-1">Ingrese su correo electrónico</label>

@@ -94,7 +94,7 @@ const RegisterInputs = () => {
     return (
         <form className="my-8 flex flex-col items-center justify-center p-6 w-full max-w-md border border-gray-300 bg-white shadow-md h-auto max-h-[97vh] rounded-lg gap-4 box-border transform transition-transform duration-300 ease-in-out" onSubmit={handleRegister}>
             <figure className="w-1/3 mb-4">
-                <img src='/svg/Logo.png' alt="logo-tiferet" className="w-full" />
+                <img src='/svg/Logo.png' alt="logo-Tiféret" className="w-full" />
             </figure>
             <div className="w-full">
                 <label htmlFor={user} className="block text-gray-600 text-sm font-medium mb-2">Nombre</label>

@@ -24,11 +24,12 @@ const AdminPanel = () => {
   }
 
   return (
-    <div className="mt-20">
+    <div>
+      <Header />
       <UserList />
       <CreateMemberships />
       <MembershipList/>
-      <Header />
+      
     </div>
   );
 };
