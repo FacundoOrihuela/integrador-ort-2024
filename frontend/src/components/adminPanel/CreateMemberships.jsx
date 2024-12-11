@@ -4,8 +4,8 @@ const CreateMemberships = () => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    price: 0,
-    duration: 0,
+    price: '',
+    duration: '',
   });
   const [message, setMessage] = useState("");
 

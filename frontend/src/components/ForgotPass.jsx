@@ -60,10 +60,10 @@ const ForgotPass = () => {
     <form className="flex flex-col items-center justify-center self-end" onSubmit={handleReset}>
         <div className="mb-2 w-1/2">
             <label htmlFor={email} className="block text-gray-700 text-sm font-medium mb-1">Email</label>
-            <input type="text" className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 input-transparente" ref={emailField} id={email} />
+            <input type="text" className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-colors-1 input-transparente" ref={emailField} id={email} />
         </div>
-        <button type="submit" className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Enviar recuperación</button>
-        <Link to="/" className="mt-3 text-blue-500 hover:text-blue-600 text-sm font-medium">Atrás</Link>
+        <button type="submit" className="px-4 py-2 bg-colors-1 text-white font-semibold rounded-md hover:bg-colors-1 focus:outline-none focus:ring-2 focus:ring-colors-1 focus:ring-opacity-50">Enviar recuperación</button>
+        <Link to="/" className="mt-3 text-colors-1 hover:text-colors-1 text-sm font-medium">Atrás</Link>
     </form>
 </div>
   )

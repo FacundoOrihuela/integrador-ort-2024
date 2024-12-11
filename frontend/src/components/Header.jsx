@@ -21,7 +21,7 @@ const Header = ({ store }) => {
   }, [store]);
 
   return (
-    <header className="bg-colors-1 shadow-md relative"> {/* Contenedor relativo */}
+    <header className="bg-colors-1 shadow-md relative z-50">
       <div className="container mx-auto flex justify-between items-center py-6 px-8">
         <Link to="/principal" className="flex items-center">
           <img src={logoImg} alt="Logo" className="h-14 w-14 rounded-full" />{" "}

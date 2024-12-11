@@ -2,7 +2,7 @@ import React from 'react';
 
 const Sidebar = ({ categories, featuredProducts, className }) => {
   return (
-    <aside className={`h-[calc(100vh-60px)] bg-gray-100 p-[70px_20px] flex flex-col shadow-md z-50 ${className}`}>
+    <aside className={"bg-gray-100 p-[70px_20px] flex flex-col shadow-md"}>
       {/* Header */}
       <div className="flex flex-col gap-1 mb-8">
         <h1 className="text-xl font-bold text-gray-800">Sidebar Logo</h1>
@@ -15,7 +15,7 @@ const Sidebar = ({ categories, featuredProducts, className }) => {
           {categories.map((category) => (
             <li
               key={category.id}
-              className="flex justify-between items-center text-gray-800 text-lg font-medium hover:text-blue-500"
+              className="flex justify-between items-center text-gray-800 text-lg font-medium hover:text-colors-1"
             >
               <span>{category.name}</span>
               <i className="fas fa-plus"></i>
@@ -33,7 +33,7 @@ const Sidebar = ({ categories, featuredProducts, className }) => {
             max="700"
             className="w-full"
           />
-          <button className="bg-blue-500 text-white px-4 py-2 rounded">FILTRAR</button>
+          <button className="bg-colors-1 text-white px-4 py-2 rounded">FILTRAR</button>
         </div>
       </div>
       {/* Productos destacados */}

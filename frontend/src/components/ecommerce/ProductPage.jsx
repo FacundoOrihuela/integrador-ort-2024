@@ -3,6 +3,7 @@ import Header from '../Header';
 import Sidebar from './Sidebar';
 import ProductList from './ProductList';
 import { CartProvider } from '../../context/CartContext';
+import Memberships from './Memberships';
 
 const ProductPage = () => {
     const [categories, setCategories] = useState([]);
@@ -31,13 +32,17 @@ const ProductPage = () => {
         <CartProvider>
             <div>
                 <Header store/>
-                <div className="container mx-auto p-4 mt-16 flex">
+                <div className="container mx-auto flex">
                     <Sidebar
                         categories={categories}
                         featuredProducts={featuredProducts}
                         className="w-1/4"
                     />
-                    <ProductList products={products} className="w-3/4" />
+                    <div className='flex flex-col w-3/4'>
+                        <ProductList products={products} className="w-100vw" />
+                        <Memberships />
+                    </div>
+                    
                 </div>
             </div>
         </CartProvider>

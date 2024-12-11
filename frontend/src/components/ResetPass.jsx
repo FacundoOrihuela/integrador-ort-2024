@@ -89,20 +89,20 @@ const ResetPass = () => {
                 <h1 className="mb-3 w-1/2 relative font-medium">Cambiar contraseña</h1>
                 <div className="mb-3 w-1/2 relative">
                     <label htmlFor={pass} className="block text-gray-700 text-sm font-medium mb-1">Contraseña</label>
-                    <input type={showPassword ? "text" : "password"} className="w-full border border-gray-300 rounded-md p-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 input-transparente" ref={passField} id={pass} />
+                    <input type={showPassword ? "text" : "password"} className="w-full border border-gray-300 rounded-md p-2 pr-10 focus:outline-none focus:ring-2 focus:ring-colors-1 input-transparente" ref={passField} id={pass} />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 translate-y-0.5">
                         <img src={showPassword ? "/svg/eyeClosed.svg" : "/svg/eyeOpen.svg"} alt={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"} className="w-6 h-6" />
                     </button>
                 </div>
                 <div className="mb-3 w-1/2 relative">
                     <label htmlFor={repeatPass} className="block text-gray-700 text-sm font-medium mb-1">Repetir Contraseña</label>
-                    <input type={showRepeatPassword ? "text" : "password"} className="w-full border border-gray-300 rounded-md p-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 input-transparente" ref={repeatPassField} id={repeatPass} />
+                    <input type={showRepeatPassword ? "text" : "password"} className="w-full border border-gray-300 rounded-md p-2 pr-10 focus:outline-none focus:ring-2 focus:ring-colors-1 input-transparente" ref={repeatPassField} id={repeatPass} />
                     <button type="button" onClick={() => setShowRepeatPassword(!showRepeatPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 translate-y-0.5">
                         <img src={showRepeatPassword ? "/svg/eyeClosed.svg" : "/svg/eyeOpen.svg"} alt={showRepeatPassword ? "Ocultar contraseña" : "Mostrar contraseña"} className="w-6 h-6" />
                     </button>
                 </div>
-                <button type="submit" className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Cambiar contraseña</button>
-                <Link to="/" className="mt-3 text-blue-500 hover:text-blue-600 text-sm font-medium">Login</Link>
+                <button type="submit" className="px-4 py-2 bg-colors-1 text-white font-semibold rounded-md hover:bg-colors-1 focus:outline-none focus:ring-2 focus:ring-colors-1 focus:ring-opacity-50">Cambiar contraseña</button>
+                <Link to="/" className="mt-3 text-colors-1 hover:text-colors-1 text-sm font-medium">Login</Link>
             </form>
         </div>
     );
