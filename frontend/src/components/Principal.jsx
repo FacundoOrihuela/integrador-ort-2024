@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import Header from "./Header";
+import Footer from "./Footer"; // Importamos el Footer
 import portadaImg from "../components/img/Portada.png";
 import kabalaImg from "../components/img/kabala.png";
 import meditarImg from "../components/img/meditar.png";
@@ -93,6 +94,7 @@ const Principal = () => {
           </div>
         </section>
       </div>
+      <Footer /> {/* Agregar el Footer */}
     </div>
   );
 };
