@@ -13,9 +13,10 @@ module.exports = {
           3: '#de9800',
           4: '#ffe8ca'
         },
+        secondary: '#ffffff', // Color secundario
+        tertiary: '#ffe8ca', // Color terciario (blanco puro)
       },
     },
   },
   plugins: [],
 };
-  

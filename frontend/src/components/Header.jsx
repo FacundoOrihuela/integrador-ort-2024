@@ -1,10 +1,11 @@
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
-import logoImg from "../components/img/logo.png";
-import React, { useContext, useState, useEffect, useRef } from "react";
+import { AppBar, Toolbar, IconButton, Container } from "@mui/material";
+import ProfileModal from "./ProfileModal";
 import Cart from "./ecommerce/Cart";
 import { UserContext } from "../context/UserContext";
-import ProfileModal from "./ProfileModal";
+import logoImg from "../components/img/logo.png";
 
 const Header = ({ store }) => {
   const { user } = useContext(UserContext);
@@ -12,7 +13,7 @@ const Header = ({ store }) => {
   const [showProfile, setShowProfile] = useState(false);
   const [cart, setCart] = useState(false);
 
-  const profileButtonRef = useRef(null); // Referencia al botón de perfil
+  const profileButtonRef = useRef(null);
 
   useEffect(() => {
     if (store) {
@@ -21,55 +22,83 @@ const Header = ({ store }) => {
   }, [store]);
 
   return (
-    <header className="bg-colors-1 shadow-md relative z-50">
-      <div className="container mx-auto flex justify-between items-center py-6 px-8">
-        <Link to="/principal" className="flex items-center">
-          <img src={logoImg} alt="Logo" className="h-14 w-14 rounded-full" />{" "}
-        </Link>
-        <nav className="space-x-6">
-          <Link to="/principal" className="text-black hover:text-gray-700 text-lg">
-            Home
+    <AppBar position="fixed" className="bg-colors-1 shadow-md h-[5rem]">
+      <Container maxWidth="lg">
+        <Toolbar
+          disableGutters
+          className="flex justify-between items-center h-full"
+        >
+          <Link to="/principal" className="flex items-center">
+            <img src={logoImg} alt="Logo" className="h-14 w-14 rounded-full" />
           </Link>
-          <Link to="/somos" className="text-black hover:text-gray-700 text-lg">
-            Somos
-          </Link>
-          <Link to="/events" className="text-black hover:text-gray-700 text-lg">
-            Actividades
-          </Link>
-          <Link to="/grupos" className="text-black hover:text-gray-700 text-lg">
-            Grupos
-          </Link>
-          <Link to="/blog" className="text-black hover:text-gray-700 text-lg">
-            Blog
-          </Link>
-          <Link to="/store" className="text-black hover:text-gray-700 text-lg">
-            Tienda
-          </Link>
-          <Link to="/aula" className="text-black hover:text-gray-700 text-lg">
-            Aula virtual
-          </Link>
-        </nav>
-        <div className="flex items-center gap-4">
-          {cart && (
-            <button
-              className="header-button"
-              onClick={() => setShowCart(!showCart)}
+          <nav className="space-x-6">
+            <Link
+              to="/principal"
+              className="text-secondary hover:text-tertiary text-lg font-bold"
             >
-              🛒
-            </button>
-          )}
-          <button
-            className="header-button"
-            onClick={() => setShowProfile(!showProfile)}
-            ref={profileButtonRef} // Asignar la referencia al botón
-          >
-            <FaUserCircle className="text-black text-3xl" />
-          </button>
-          {showProfile && <ProfileModal profileButtonRef={profileButtonRef} />}
-          {showCart && <Cart />}
-        </div>
-      </div>
-    </header>
+              Home
+            </Link>
+            <Link
+              to="/somos"
+              className="text-secondary hover:text-tertiary text-lg font-bold"
+            >
+              Somos
+            </Link>
+            <Link
+              to="/events"
+              className="text-secondary hover:text-tertiary text-lg font-bold"
+            >
+              Actividades
+            </Link>
+            <Link
+              to="/grupos"
+              className="text-secondary hover:text-tertiary text-lg font-bold"
+            >
+              Grupos
+            </Link>
+            <Link
+              to="/blog"
+              className="text-secondary hover:text-tertiary text-lg font-bold"
+            >
+              Blog
+            </Link>
+            <Link
+              to="/store"
+              className="text-secondary hover:text-tertiary text-lg font-bold"
+            >
+              Tienda
+            </Link>
+            <Link
+              to="/aula"
+              className="text-secondary hover:text-tertiary text-lg font-bold"
+            >
+              Aula virtual
+            </Link>
+          </nav>
+          <div className="flex items-center gap-4">
+            {cart && (
+              <IconButton
+                color="inherit"
+                onClick={() => setShowCart(!showCart)}
+              >
+                🛒
+              </IconButton>
+            )}
+            <IconButton
+              color="inherit"
+              onClick={() => setShowProfile(!showProfile)}
+              ref={profileButtonRef}
+            >
+              <FaUserCircle className="text-black text-3xl" />
+            </IconButton>
+            {showProfile && (
+              <ProfileModal profileButtonRef={profileButtonRef} />
+            )}
+            {showCart && <Cart />}
+          </div>
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 };
 

@@ -87,3 +87,34 @@ export const removeFromCart = async (req, res) => {
         res.status(500).json({ message: 'Error interno del servidor', error: error.message });
     }
 };
+
+export const decreaseQuantity = async (req, res) => {
+    const userId = req.user.id;
+    const { productId } = req.body;
+
+    try {
+        const cart = await Cart.findOne({ where: { userId } });
+
+        if (!cart) {
+            return res.status(404).json({ message: 'Carrito no encontrado' });
+        }
+
+        const cartItem = await CartItem.findOne({ where: { cartId: cart.id, productId } });
+
+        if (!cartItem) {
+            return res.status(404).json({ message: 'Producto no encontrado en el carrito' });
+        }
+
+        if (cartItem.quantity > 1) {
+            cartItem.quantity -= 1;
+            await cartItem.save();
+            res.json({ message: 'Cantidad del producto disminuida', cartItem });
+        } else {
+            await cartItem.destroy();
+            res.json({ message: 'Producto eliminado del carrito' });
+        }
+    } catch (error) {
+        console.error('Error al disminuir la cantidad del producto:', error);
+        res.status(500).json({ message: 'Error interno del servidor', error: error.message });
+    }
+};

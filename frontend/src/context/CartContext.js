@@ -65,8 +65,35 @@ export const CartProvider = ({ children }) => {
         }
     };
 
+    const decreaseQuantity = (productId) => {
+        if (user) {
+            fetch(`http://localhost:3001/api/cart/decrease`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+                body: JSON.stringify({ productId }),
+            })
+                .then((response) => response.json())
+                .then(() => {
+                    setCart((prevCart) => {
+                        const existingProduct = prevCart.find((item) => item.productId === productId);
+                        if (existingProduct && existingProduct.quantity > 1) {
+                            return prevCart.map((item) =>
+                                item.productId === productId ? { ...item, quantity: item.quantity - 1 } : item
+                            );
+                        } else {
+                            return prevCart.filter((item) => item.productId !== productId);
+                        }
+                    });
+                })
+                .catch((error) => console.error('Error decreasing quantity:', error));
+        }
+    };
+
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
+        <CartContext.Provider value={{ cart, addToCart, removeFromCart, decreaseQuantity }}>
             {children}
         </CartContext.Provider>
     );

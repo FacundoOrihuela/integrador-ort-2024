@@ -31,18 +31,17 @@ const ProductPage = () => {
     return (
         <CartProvider>
             <div>
-                <Header store/>
-                <div className="container mx-auto flex">
+                <Header store />
+                <div className="flex pt-[5rem]">
                     <Sidebar
                         categories={categories}
                         featuredProducts={featuredProducts}
                         className="w-1/4"
                     />
-                    <div className='flex flex-col w-3/4'>
-                        <ProductList products={products} className="w-100vw" />
+                    <div className="flex flex-col w-3/4 ml-[25%]">
+                        <ProductList products={products} className="w-full" />
                         <Memberships />
                     </div>
-                    
                 </div>
             </div>
         </CartProvider>

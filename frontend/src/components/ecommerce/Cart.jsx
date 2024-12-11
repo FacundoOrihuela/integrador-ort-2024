@@ -1,47 +1,57 @@
 import React, { useContext } from 'react';
 import { CartContext } from '../../context/CartContext';
+import { Box, Typography, IconButton, List, ListItem, ListItemText, ListItemAvatar, Avatar } from '@mui/material';
+import { Remove as RemoveIcon, Delete as DeleteIcon } from '@mui/icons-material';
 
 const Cart = () => {
-    const { cart, removeFromCart } = useContext(CartContext);
+    const { cart, removeFromCart, decreaseQuantity } = useContext(CartContext);
 
     const calculateSubtotal = () => {
         return cart.reduce((total, item) => total + item.priceAtAddition * item.quantity, 0);
     };
 
     return (
-        <div className="absolute top-16 right-0 w-64 bg-white shadow-lg p-4">
-            <h2 className="text-lg font-bold mb-4">Carrito de Compras</h2>
+        <Box className="absolute top-16 right-0 w-64 bg-white shadow-lg p-4">
+            <Typography variant="h6" className="text-black font-bold mb-4">Carrito de Compras</Typography>
             {cart.length === 0 ? (
-                <p>El carrito está vacío</p>
+                <Typography className="text-black">El carrito está vacío</Typography>
             ) : (
-                <ul>
+                <List>
                     {cart.map((item) => (
-                        <li key={item.id} className="relative flex mb-2">
-                            <div className="w-2/3 flex flex-col">
-                                <span className="font-bold">{item.Product.name}</span>
-                                <span>{item.quantity}x ${item.priceAtAddition}</span>
-                            </div>
-                            <div className="w-1/3">
-                                <img 
-                                    src={`http://localhost:3001${item.Product.image}`} 
-                                    alt={item.Product.name} 
-                                    className="w-full h-16 object-cover" 
+                        <ListItem key={item.id} className="relative flex mb-2">
+                            <ListItemAvatar>
+                                <Avatar
+                                    src={`http://localhost:3001${item.Product.image}`}
+                                    alt={item.Product.name}
+                                    className="w-full h-16 object-cover"
                                 />
+                            </ListItemAvatar>
+                            <ListItemText
+                                primary={<span className="font-bold text-black">{item.Product.name}</span>}
+                                secondary={<span className="text-black">{item.quantity}x ${item.priceAtAddition}</span>}
+                            />
+                            <div className="absolute top-0 right-0 flex space-x-2">
+                                <IconButton
+                                    onClick={() => decreaseQuantity(item.productId)}
+                                    className="bg-yellow-500 text-white px-2 py-1 rounded-full"
+                                >
+                                    <RemoveIcon />
+                                </IconButton>
+                                <IconButton
+                                    onClick={() => removeFromCart(item.productId)}
+                                    className="bg-red-500 text-white px-2 py-1 rounded-full"
+                                >
+                                    <DeleteIcon />
+                                </IconButton>
                             </div>
-                            <button
-                                onClick={() => removeFromCart(item.productId)}
-                                className="absolute top-0 right-0 bg-red-500 text-white px-2 py-1 rounded-full"
-                            >
-                                &times;
-                            </button>
-                        </li>
+                        </ListItem>
                     ))}
-                </ul>
+                </List>
             )}
-            <div className="mt-4">
-                <h3 className="text-lg font-bold">Subtotal: ${calculateSubtotal().toFixed(2)}</h3>
-            </div>
-        </div>
+            <Box className="mt-4">
+                <Typography variant="h6" className="text-black font-bold">Subtotal: ${calculateSubtotal().toFixed(2)}</Typography>
+            </Box>
+        </Box>
     );
 };
 

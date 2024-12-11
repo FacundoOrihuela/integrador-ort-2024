@@ -6,8 +6,8 @@ const ProductList = ({ products, className }) => {
 
   return (
     <main className={`w-full p-4 ${className}`}>
-      <div className="flex justify-between items-center mb-4">
-        <span>Sort By:</span>
+      <div className="flex items-center mb-4">
+        <span className="mr-2">Sort By:</span>
         <select className="border border-gray-300 p-2 rounded">
           <option>Ordenar por precio</option>
         </select>

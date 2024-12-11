@@ -2,12 +2,7 @@ import React from 'react';
 
 const Sidebar = ({ categories, featuredProducts, className }) => {
   return (
-    <aside className={"bg-gray-100 p-[70px_20px] flex flex-col shadow-md"}>
-      {/* Header */}
-      <div className="flex flex-col gap-1 mb-8">
-        <h1 className="text-xl font-bold text-gray-800">Sidebar Logo</h1>
-        <p className="text-sm text-gray-500">example@email.com</p>
-      </div>
+    <aside className={`bg-gray-100 p-4 shadow-md fixed top-[5rem] left-0 h-[calc(100vh-5rem)] w-1/4 ${className}`}>
       {/* Categorías */}
       <div>
         <h2 className="text-lg font-bold mb-4">CATEGORÍAS DE PRODUCTOS</h2>
