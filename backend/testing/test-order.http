@@ -1,0 +1,20 @@
+# Crear una nueva orden
+POST http://localhost:3001/api/orders/create
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczMzk0NjcyMCwiZXhwIjoxNzMzOTUwMzIwfQ.TjUBNQ09rTSLgiB-HJds57s7WwwB-r15fUy1ggNhVmI
+
+{
+    "userId": 1
+}
+
+###
+
+# Obtener una orden específica
+GET http://localhost:3001/api/orders/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczMzk0NjcyMCwiZXhwIjoxNzMzOTUwMzIwfQ.TjUBNQ09rTSLgiB-HJds57s7WwwB-r15fUy1ggNhVmI
+
+###
+
+# Obtener todas las órdenes del usuario
+GET http://localhost:3001/api/orders
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczMzk0NjcyMCwiZXhwIjoxNzMzOTUwMzIwfQ.TjUBNQ09rTSLgiB-HJds57s7WwwB-r15fUy1ggNhVmI

@@ -32,6 +32,7 @@ import membershipRoutes from './routes/membershipRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
 import eventRoutes from './routes/EventRoutes.js';
 import eventRegistrationRoutes from './routes/EventRegistrationRoutes.js';
+import orderRoutes from './routes/orderRoutes.js'; // Importar las rutas de órdenes
 
 app.use('/api/clients', clientsRoutes);
 app.use('/api/administrators', administratorRoutes);
@@ -45,6 +46,7 @@ app.use('/api/memberships', membershipRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/event-registrations', eventRegistrationRoutes);
+app.use('/api/orders', orderRoutes); // Usar las rutas de órdenes
 
 // Error handling
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
