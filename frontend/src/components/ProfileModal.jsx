@@ -1,4 +1,4 @@
-import React, { useContext, useState, useLayoutEffect, useRef } from "react";
+import React, { useContext, useState, useLayoutEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { saveSessionToken } from "../features/loginSlice";
@@ -41,9 +41,9 @@ const ProfileModal = ({ profileButtonRef }) => {
         <button className="text-white py-2 px-4 bg-black hover:bg-gray-500">
           Mis cursos
         </button>
-        <button className="text-white py-2 px-4 bg-black hover:bg-gray-500">
+        <Link to="/purchase-history" className="text-white py-2 px-4 bg-black hover:bg-gray-500">
           Mis compras
-        </button>
+        </Link>
         {user && user.userType === "administrator" && (
           <Link
             to="/admin-panel"

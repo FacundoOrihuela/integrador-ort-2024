@@ -16,15 +16,16 @@ import ProductPage from "./components/ecommerce/ProductPage";
 import { UserProvider } from "./context/UserContext";
 import AdminPanel from "./components/adminPanel/AdminPanel";
 import ProductFormPage from "./components/ecommerce/ProductFormPage";
+import PurchaseHistory from "./components/PurchaseHistory"; // Importar el nuevo componente
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "./theme";
 
 function App() {
   return (
-    <UserProvider>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <UserProvider>
         <Provider store={store}>
           <BrowserRouter>
             <Routes>
@@ -39,12 +40,13 @@ function App() {
               <Route path="/events" element={<Event />} />
               <Route path="/admin-panel" element={<AdminPanel />} />
               <Route path="/create-product" element={<ProductFormPage />} />
+              <Route path="/purchase-history" element={<PurchaseHistory />} /> {/* Nueva ruta */}
             </Routes>
             <ToastContainer />
           </BrowserRouter>
         </Provider>
-      </ThemeProvider>
-    </UserProvider>
+      </UserProvider>
+    </ThemeProvider>
   );
 }
 
