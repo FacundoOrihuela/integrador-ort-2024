@@ -6,6 +6,7 @@ import UserList from "./UsersList";
 import CreateMemberships from "./CreateMemberships";
 import MembershipList from "./MembershipList";
 import Sidebar from "./Sidebar";
+import CreateActivity from "./CreateActivity";
 
 const AdminPanel = () => {
   const { user } = useContext(UserContext);
@@ -34,6 +35,8 @@ const AdminPanel = () => {
         return <CreateMemberships />;
       case "MembershipList":
         return <MembershipList />;
+      case "CreateActivity":
+        return <CreateActivity />;
       default:
         return null;
     }
@@ -42,14 +45,19 @@ const AdminPanel = () => {
   return (
     <div>
       <Header />
-      <div className="relative container mx-auto flex">
-        <div className="absolute left-0 h-[calc(100%-64px)] w-10 bg-transparent z-10" onMouseEnter={() => setShowSidebar(true)}></div>
+      <div className="relative container mx-auto flex h-[100vh]">
+        <div
+          className="absolute left-0 h-[100%] w-[40px] bg-transparent z-10"
+          onMouseEnter={() => setShowSidebar(true)}
+        ></div>
         <Sidebar
-          className={`${showSidebar ? "translate-x-0" : "-translate-x-full"} `}
+          className={`${
+            showSidebar ? "translate-x-0" : "-translate-x-[90%]"
+          }`}
           onMouseLeave={() => setShowSidebar(false)}
           onSelect={setSelectedComponent}
         />
-        <div className="flex flex-col w-full">{renderComponent()}</div>
+        <div className="flex flex-col m-[104px] w-full">{renderComponent()}</div>
       </div>
     </div>
   );

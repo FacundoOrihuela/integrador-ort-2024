@@ -13,10 +13,9 @@ const ProfileModal = ({ profileButtonRef }) => {
 
   useLayoutEffect(() => {
     if (profileButtonRef.current) {
-      // Accedemos a la posición del botón después de que todos los cambios se hayan completado
       const buttonRect = profileButtonRef.current.getBoundingClientRect();
       setPosition({
-        top: buttonRect.bottom + window.scrollY, // Posiciona debajo del botón
+        top: buttonRect.bottom, // Posiciona debajo del botón
         left: buttonRect.left + window.scrollX - 256, // Restamos el ancho del modal para alinearlo a la izquierda
       });
     }

@@ -1,38 +1,104 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import psicoterapia from '../img/psicoterapia.png';
-import yoga from '../img/yoga.png';
 import Header from '../Header';
+import { UserContext } from '../../context/UserContext';
 
 const Event = () => {
+  const { user } = useContext(UserContext);
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [registering, setRegistering] = useState(false);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/events');
+        if (!response.ok) {
+          throw new Error('Error al obtener los eventos');
+        }
+        const data = await response.json();
+        console.log(data)
+        setEvents(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  const handleRegister = async (eventId) => {
+    if (!user) {
+      alert('Por favor, inicia sesión para registrarte en un evento.');
+      return;
+    }
+
+    setRegistering(true);
+    try {
+      const response = await fetch('http://localhost:3001/api/event-registrations/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          eventId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al registrar el evento');
+      }
+
+      alert('Te has registrado exitosamente en el evento.');
+    } catch (err) {
+      console.error(err);
+      alert('Hubo un problema al intentar registrarte. Intenta de nuevo.');
+    } finally {
+      setRegistering(false);
+    }
+  };
+
+  if (loading) {
+    return <p className="text-center">Cargando eventos...</p>;
+  }
+
+  if (error) {
+    return <p className="text-center text-red-500">Error: {error}</p>;
+  }
+
   return (
     <div>
-      <Header/>
-    
+      <Header />
       <div className="event-container">
-        <h2 className="event-title">EVENTOS</h2>
+        <h2 className="event-title text-center text-3xl font-bold mb-4">ACTIVIDADES</h2>
 
-        <div className="event-card">
-          <img src={psicoterapia} alt="Psicoterapia" className="event-image" />
-          <div className="event-info">
-            <h3>Psicoterapia...</h3>
-            <p>Dirigida por...</p>
-            <p>DESCRIPCION.....................................................</p>
-            <p>21/11/2024</p>
-            <Link to="/principal" className="event-link">ANOTARME</Link>
-          </div>
-        </div>
-
-        <div className="event-card">
-          <img src={yoga} alt="Clase de Yoga" className="event-image" />
-          <div className="event-info">
-            <h3>Clase de Yoga...</h3>
-            <p>Dirigida por...</p>
-            <p>DESCRIPCION.....................................................</p>
-            <p>21/11/2024</p>
-            <Link to="/principal" className="event-link">ANOTARME</Link>
-          </div>
-        </div>
+        {events.length === 0 ? (
+          <p className="text-center">No hay eventos disponibles.</p>
+        ) : (
+          events.map((event) => (
+            <div key={event.id} className="event-card bg-white shadow-lg rounded-lg p-4 mb-4">
+              <div className="event-info">
+                <h3 className="text-xl font-bold mb-2">{event.name}</h3>
+                <p className="mb-2 text-gray-700">{event.description}</p>
+                <p className="mb-2 text-gray-500">
+                  <span className="font-semibold">Fecha:</span> {new Date(event.startDateTime).toLocaleDateString()} -{' '}
+                  {new Date(event.endDateTime).toLocaleDateString()}
+                </p>
+                <button
+                  onClick={() => handleRegister(event.id)}
+                  disabled={registering}
+                  className="event-link bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+                >
+                  {registering ? 'Registrando...' : 'ANOTARME'}
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

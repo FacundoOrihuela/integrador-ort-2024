@@ -33,16 +33,7 @@ const CreateMemberships = () => {
   return (
     <div className="flex flex-col items-center justify-center ">
 
-<h1
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "10px",
-          fontSize: "40px",
-        }}
-      >
-        Crear una Membresia
-        </h1>
+    <h1 className="flex justify-center items-center p-2 text-4xl">Crear una Membresía</h1>
         
       <div className="bg-white p-6 rounded shadow-lg w-full max-w-md">
         <h1 className="text-xl font-bold mb-4">Crear Membresía</h1>
