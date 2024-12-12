@@ -88,7 +88,7 @@ const Event = () => {
                   <span className="font-semibold">Fecha:</span> {new Date(event.startDateTime).toLocaleDateString()} -{' '}
                   {new Date(event.endDateTime).toLocaleDateString()}
                 </p>
-                <button
+                <button 
                   onClick={() => handleRegister(event.id)}
                   disabled={registering}
                   className="event-link bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 transition"

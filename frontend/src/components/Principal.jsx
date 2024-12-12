@@ -11,9 +11,9 @@ import fotoHomeImg from "../components/img/fotoHome.png";
 
 const Principal = () => {
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <Header />
-      <div className="mt-[5rem]"> {/* Añadir margen superior para compensar la altura del Header */}
+      <div className="flex-grow mt-[5rem]"> {/* Asegura que el contenido crezca */}
         <section className="bg-gray py-8">
           <div className="container w-[50%] mx-auto flex justify-center space-x-8">
             <Link to="/kabala" className="text-center flex flex-col items-center">
@@ -94,7 +94,7 @@ const Principal = () => {
           </div>
         </section>
       </div>
-      <Footer /> {/* Agregar el Footer */}
+      <Footer />
     </div>
   );
 };

@@ -45,7 +45,7 @@ const Header = ({ store }) => {
               Somos
             </Link>
             <Link
-              to="/events"
+              to="/actividades"
               className="text-secondary hover:text-tertiary text-lg font-bold"
             >
               Actividades

@@ -22,6 +22,7 @@ import Checkout from "./components/ecommerce/Checkout";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "./theme";
+import About from "./components/About";
 
 function App() {
   return (
@@ -40,11 +41,12 @@ function App() {
                 <Route path="/forgotPassword" element={<ForgotPass />} />
                 <Route path="/reset-password" element={<ResetPass />} />
                 <Route path="/store" element={<ProductPage />} />
-                <Route path="/events" element={<Event />} />
+                <Route path="/actividades" element={<Event />} />
                 <Route path="/admin-panel" element={<AdminPanel />} />
                 <Route path="/create-product" element={<ProductFormPage />} />
                 <Route path="/purchase-history" element={<PurchaseHistory />} />
                 <Route path="/checkout" element={<Checkout />} />
+                <Route path="/somos" element={<About />} />
               </Routes>
               <ToastContainer />
             </BrowserRouter>

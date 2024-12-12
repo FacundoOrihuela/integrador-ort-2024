@@ -9,6 +9,7 @@ export const UserProvider = ({ children }) => {
 
     const fetchUser = useCallback(async () => {
         if (token) {
+            console.log(token)
             try {
                 const response = await fetch("http://localhost:3001/api/user/me", {
                     method: "GET",
