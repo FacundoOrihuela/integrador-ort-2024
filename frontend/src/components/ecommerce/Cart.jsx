@@ -1,13 +1,19 @@
 import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../../context/CartContext';
-import { Box, Typography, IconButton, List, ListItem, ListItemText, ListItemAvatar, Avatar } from '@mui/material';
+import { Box, Typography, IconButton, List, ListItem, ListItemText, ListItemAvatar, Avatar, Button } from '@mui/material';
 import { Remove as RemoveIcon, Delete as DeleteIcon } from '@mui/icons-material';
 
 const Cart = () => {
     const { cart, removeFromCart, decreaseQuantity } = useContext(CartContext);
+    const navigate = useNavigate();
 
     const calculateSubtotal = () => {
         return cart.reduce((total, item) => total + item.priceAtAddition * item.quantity, 0);
+    };
+
+    const handleCheckout = () => {
+        navigate('/checkout');
     };
 
     return (
@@ -50,6 +56,14 @@ const Cart = () => {
             )}
             <Box className="mt-4">
                 <Typography variant="h6" className="text-black font-bold">Subtotal: ${calculateSubtotal().toFixed(2)}</Typography>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    className="w-full mt-4"
+                    onClick={handleCheckout}
+                >
+                    Comprar
+                </Button>
             </Box>
         </Box>
     );

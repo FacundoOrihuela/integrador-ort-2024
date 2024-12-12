@@ -14,9 +14,11 @@ import ResetPass from "./components/ResetPass";
 import Event from "./components/event/Event";
 import ProductPage from "./components/ecommerce/ProductPage";
 import { UserProvider } from "./context/UserContext";
+import { CartProvider } from "./context/CartContext";
 import AdminPanel from "./components/adminPanel/AdminPanel";
 import ProductFormPage from "./components/ecommerce/ProductFormPage";
-import PurchaseHistory from "./components/PurchaseHistory"; // Importar el nuevo componente
+import PurchaseHistory from "./components/PurchaseHistory";
+import Checkout from "./components/ecommerce/Checkout";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "./theme";
@@ -27,23 +29,26 @@ function App() {
       <CssBaseline />
       <UserProvider>
         <Provider store={store}>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/principal" element={<Principal />} />
-              <Route path="*" element={<NotFound />} />
-              <Route path="/verifyEmail" element={<VerifyEmail />} />
-              <Route path="/forgotPassword" element={<ForgotPass />} />
-              <Route path="/reset-password" element={<ResetPass />} />
-              <Route path="/store" element={<ProductPage />} />
-              <Route path="/events" element={<Event />} />
-              <Route path="/admin-panel" element={<AdminPanel />} />
-              <Route path="/create-product" element={<ProductFormPage />} />
-              <Route path="/purchase-history" element={<PurchaseHistory />} /> {/* Nueva ruta */}
-            </Routes>
-            <ToastContainer />
-          </BrowserRouter>
+          <CartProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/principal" element={<Principal />} />
+                <Route path="*" element={<NotFound />} />
+                <Route path="/verifyEmail" element={<VerifyEmail />} />
+                <Route path="/forgotPassword" element={<ForgotPass />} />
+                <Route path="/reset-password" element={<ResetPass />} />
+                <Route path="/store" element={<ProductPage />} />
+                <Route path="/events" element={<Event />} />
+                <Route path="/admin-panel" element={<AdminPanel />} />
+                <Route path="/create-product" element={<ProductFormPage />} />
+                <Route path="/purchase-history" element={<PurchaseHistory />} />
+                <Route path="/checkout" element={<Checkout />} />
+              </Routes>
+              <ToastContainer />
+            </BrowserRouter>
+          </CartProvider>
         </Provider>
       </UserProvider>
     </ThemeProvider>

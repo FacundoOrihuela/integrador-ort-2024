@@ -1,7 +1,7 @@
 # Crear una nueva orden
 POST http://localhost:3001/api/orders/create
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczMzk0NjcyMCwiZXhwIjoxNzMzOTUwMzIwfQ.TjUBNQ09rTSLgiB-HJds57s7WwwB-r15fUy1ggNhVmI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczMzk2Nzk4NywiZXhwIjoxNzMzOTcxNTg3fQ.Yx7d1bOv0RP-FyBW0rtG0_p0DZgJ5MGmpI2HxozrW4w
 
 {
     "userId": 1
