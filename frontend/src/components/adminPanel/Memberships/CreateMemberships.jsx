@@ -1,18 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 
-const CreateMemberships = () => {
+const CreateMemberships = ({
+  editData,
+  isUpdate,
+  handleUpdateOrCreate,
+  setIsModalOpen,
+}) => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    price: '',
-    duration: '',
+    price: "",
+    duration: "",
   });
-  const [message, setMessage] = useState("");
 
-  const handleCreateMembership = async () => {
+  const [message, setLocalMessage] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (isUpdate && editData.id) {
+      setFormData({
+        name: editData.name,
+        description: editData.description,
+        price: editData.price,
+        duration: editData.duration,
+      });
+    }
+  }, [editData, isUpdate]);
+
+  const handleSaveMembership = async () => {
+    const url = isUpdate
+      ? `http://localhost:3001/api/memberships/${editData.id}`  // PUT para editar
+      : "http://localhost:3001/api/memberships";  // POST para crear
+
+    const method = isUpdate ? "PUT" : "POST";
+
     try {
-      const response = await fetch("http://localhost:3001/api/memberships", {
-        method: "POST",
+      const response = await fetch(url, {
+        method: method,
         headers: {
           "Content-Type": "application/json",
         },
@@ -20,24 +44,25 @@ const CreateMemberships = () => {
       });
 
       if (response.ok) {
-        setMessage("Membresía creada exitosamente!");
+        setLocalMessage(isUpdate ? "Membresía actualizada exitosamente!" : "Membresía creada exitosamente!");
+        handleUpdateOrCreate();  // Actualiza la lista de membresías
+        setIsModalOpen(false);   // Cierra el modal después de guardar
       } else {
         const errorData = await response.json();
-        setMessage(`Error: ${errorData.message || "Algo salió mal"}`);
+        setError(`${errorData.message || "Algo salió mal"}`);
       }
     } catch (error) {
-      setMessage("Error al conectar con el servidor.");
+      setError("Error al conectar con el servidor.");
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center ">
-
-    <h1 className="flex justify-center items-center p-2 text-4xl">Crear una Membresía</h1>
-        
-      <div className="bg-white p-6 rounded shadow-lg w-full max-w-md">
-        <h1 className="text-xl font-bold mb-4">Crear Membresía</h1>
-        <div className="space-y-4">
+    <div className="flex flex-col items-center justify-center">
+      <div className="bg-white p-6 w-full max-w-md">
+        <h1 className="text-xl font-bold mb-4">
+          {isUpdate ? "Editar Membresía" : "Crear Membresía"}
+        </h1>
+        <div className="space-y-1">
           <div>
             <label className="block text-sm font-medium">Nombre</label>
             <input
@@ -84,14 +109,14 @@ const CreateMemberships = () => {
           </div>
         </div>
         <button
-          onClick={handleCreateMembership}
+          onClick={handleSaveMembership}
           className="w-full bg-colors-1 text-white p-2 rounded mt-4 hover:bg-colors-1"
         >
-          Crear Membresía
+          {isUpdate ? "Actualizar Membresía" : "Crear Membresía"}
         </button>
-        {message && (
-          <p className="mt-4 text-center text-sm text-gray-600">{message}</p>
-        )}
+
+        {message && <p className="text-green-500 mt-2">{message}</p>}
+        {error && <p className="text-red-500 mt-2">{error}</p>}
       </div>
     </div>
   );

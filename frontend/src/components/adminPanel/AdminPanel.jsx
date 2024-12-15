@@ -3,10 +3,12 @@ import { UserContext } from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import Header from "../Header";
 import UserList from "./UsersList";
-import CreateMemberships from "./CreateMemberships";
-import MembershipList from "./MembershipList";
+import CreateMemberships from "./Memberships/CreateMemberships";
+import MembershipList from "./Memberships/MembershipList";
 import Sidebar from "./Sidebar";
-import CreateActivity from "./CreateActivity";
+import CreateActivity from "./Activities/CreateActivity";
+import Activities from "./Activities/Activities";
+import Memberships from "./Memberships/Memberships";
 
 const AdminPanel = () => {
   const { user } = useContext(UserContext);
@@ -31,12 +33,10 @@ const AdminPanel = () => {
     switch (selectedComponent) {
       case "UserList":
         return <UserList />;
-      case "CreateMemberships":
-        return <CreateMemberships />;
-      case "MembershipList":
-        return <MembershipList />;
-      case "CreateActivity":
-        return <CreateActivity />;
+      case "Memberships":
+        return <Memberships />;
+      case "Activities":
+        return <Activities />;
       default:
         return null;
     }
@@ -47,9 +47,10 @@ const AdminPanel = () => {
       <Header />
       <div className="relative container mx-auto flex h-[100vh]">
         <div
-          className="absolute left-0 h-[100%] w-[40px] bg-transparent z-10"
-          onMouseEnter={() => setShowSidebar(true)}
+          className="fixed left-0 top-0 h-full w-[40px] bg-transparent z-[999] cursor-pointer"
+          onClick={() => setShowSidebar(true)}
         ></div>
+
         <Sidebar
           className={`${
             showSidebar ? "translate-x-0" : "-translate-x-[90%]"
