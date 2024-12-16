@@ -9,6 +9,12 @@ export const CartProvider = ({ children }) => {
 
     useEffect(() => {
         if (user) {
+            fetchCart();
+        }
+    }, [user]);
+
+    const fetchCart = () => {
+        if (user) {
             fetch(`http://localhost:3001/api/cart`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -18,7 +24,7 @@ export const CartProvider = ({ children }) => {
                 .then((data) => setCart(data.cart.CartItems))
                 .catch((error) => console.error('Error fetching cart:', error));
         }
-    }, [user]);
+    };
 
     const addToCart = (product) => {
         if (user) {
@@ -93,7 +99,7 @@ export const CartProvider = ({ children }) => {
     };
 
     return (
-        <CartContext.Provider value={{ cart, setCart, addToCart, removeFromCart, decreaseQuantity }}>
+        <CartContext.Provider value={{ cart, setCart, addToCart, removeFromCart, decreaseQuantity, fetchCart }}>
             {children}
         </CartContext.Provider>
     );

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../../context/CartContext';
 import { UserContext } from '../../context/UserContext';
@@ -7,19 +7,16 @@ import axios from 'axios';
 import Header from '../Header';
 
 const Checkout = () => {
-    const { cart, setCart } = useContext(CartContext);
+    const { cart, setCart, fetchCart } = useContext(CartContext);
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
-    const [localCart, setLocalCart] = useState(cart);
-    console.log("Carrito", cart);
-    
 
     useEffect(() => {
-        setLocalCart(cart);
-    }, [cart]);
+        fetchCart();
+    }, [fetchCart]);
 
     const calculateSubtotal = () => {
-        return localCart.reduce((total, item) => total + item.priceAtAddition * item.quantity, 0);
+        return cart.reduce((total, item) => total + item.priceAtAddition * item.quantity, 0);
     };
 
     const handlePlaceOrder = () => {
@@ -41,7 +38,7 @@ const Checkout = () => {
             <Box className="container mx-auto p-4 mt-[5rem]">
                 <Typography variant="h4" className="text-black font-bold mb-4">Checkout</Typography>
                 <List>
-                    {localCart.map(item => (
+                    {cart.map(item => (
                         <ListItem key={item.id}>
                             <ListItemText
                                 primary={`${item.Product.name} - $${item.priceAtAddition.toFixed(2)}`}
