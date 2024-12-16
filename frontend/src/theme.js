@@ -3,7 +3,7 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#d87d3d', // Color primario de Tailwind (naranja)
+      main: '#FD763E', // Color primario de Tailwind (naranja)
     },
     secondary: {
       main: '#ffdec5', // Color secundario de Tailwind

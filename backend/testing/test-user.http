@@ -2,7 +2,7 @@
 
 # Obtener los detalles del usuario autenticado
 GET http://localhost:3001/api/user/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJkaWVnb21hemFzY3VyaWVsQGdtYWlsLmNvbSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3MzMwMTAzMDMsImV4cCI6MTczMzAxMzkwM30.5qWJWrn7rSIqGZH0XifQJUwGzQapGl8vTVVs1ohKe-c
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNDM4OTgwMCwiZXhwIjoxNzM0MzkzNDAwfQ.ABlQqD2UpziAomqOmgMbRdZn1VR8-UE2uJVEsyDmECQ
 Content-Type: application/json
 
 ###
