@@ -3,8 +3,11 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import bcrypt from 'bcryptjs';
 import Product from '../models/Product.js'; // Asegúrate de que la ruta sea correcta
 import Category from '../models/Category.js'; // Asegúrate de que la ruta sea correcta
+import User from '../models/User.js';
+import Administrator from '../models/Administrator.js';
 
 dotenv.config();
 
@@ -23,6 +26,8 @@ const populateDatabase = async () => {
         // Sincronizar los modelos sin eliminar las tablas existentes
         await Category.sync({ force: false, alter: false });
         await Product.sync({ force: false, alter: false });
+        await User.sync({ force: false, alter: false });
+        await Administrator.sync({ force: false, alter: false });
         console.log('Modelos sincronizados correctamente.');
 
         // Crear categorías por defecto si no existen
@@ -53,6 +58,21 @@ const populateDatabase = async () => {
 
         await Product.bulkCreate(products);
         console.log('Productos creados correctamente.');
+
+        // Crear usuario administrador
+        const hashedPassword = await bcrypt.hash('Admin123', 10);
+        const adminUser = await User.create({
+            name: 'Admin',
+            email: 'admin@gmail.com',
+            password: hashedPassword,
+            userType: 'administrator',
+        });
+
+        await Administrator.create({
+            userId: adminUser.id,
+        });
+
+        console.log('Usuario administrador creado correctamente.');
     } catch (error) {
         console.error('Error al poblar la base de datos:', error);
     } finally {

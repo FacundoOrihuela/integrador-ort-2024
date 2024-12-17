@@ -5,6 +5,7 @@ import ProductList from './ProductList';
 import Memberships from './Memberships';
 import { CartProvider } from '../../context/CartContext';
 import { Container, Button, Box } from '@mui/material';
+import axios from 'axios';
 
 const ProductPage = () => {
     const [categories, setCategories] = useState([]);
@@ -15,6 +16,7 @@ const ProductPage = () => {
     const [priceRange, setPriceRange] = useState([0, 0]);
     const [maxPrice, setMaxPrice] = useState(0);
     const [tempPriceRange, setTempPriceRange] = useState([0, 0]);
+    const [ratingsLoaded, setRatingsLoaded] = useState(false); // Estado adicional para controlar si las calificaciones ya se han cargado
     const fixedMinPrice = 0;
 
     useEffect(() => {
@@ -40,6 +42,27 @@ const ProductPage = () => {
             })
             .catch((error) => console.error("Error fetching products:", error));
     }, []);
+
+    useEffect(() => {
+        // Fetch average ratings and rating counts for each product
+        const fetchRatings = async () => {
+            const updatedProducts = await Promise.all(products.map(async (product) => {
+                try {
+                    const response = await axios.get(`http://localhost:3001/api/ratings/product/${product.id}/average`);
+                    return { ...product, averageRating: response.data.averageRating, ratingCount: response.data.ratingCount };
+                } catch (error) {
+                    console.error(`Error fetching ratings for product ${product.id}:`, error);
+                    return { ...product, averageRating: 0, ratingCount: 0 };
+                }
+            }));
+            setProducts(updatedProducts);
+            setRatingsLoaded(true); // Marcar las calificaciones como cargadas
+        };
+
+        if (products.length > 0 && !ratingsLoaded) {
+            fetchRatings();
+        }
+    }, [products, ratingsLoaded]);
 
     const handleCategoryClick = (categoryId) => {
         setSelectedCategory(categoryId);

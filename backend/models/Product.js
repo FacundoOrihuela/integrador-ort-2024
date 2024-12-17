@@ -34,6 +34,10 @@ const Product = sequelize.define('Product', {
         type: DataTypes.STRING(255),
         allowNull: true,
     },
+    timesSold: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+    },
 }, {
     tableName: 'product',
     timestamps: false,

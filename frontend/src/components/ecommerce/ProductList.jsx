@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { CartContext } from '../../context/CartContext';
-import { Box, Typography, Select, MenuItem, Grid, Card, CardContent, CardMedia, Button } from '@mui/material';
+import { Box, Typography, Select, MenuItem, Grid, Card, CardContent, CardMedia, Button, Rating } from '@mui/material';
 
 const ProductList = ({ products, className }) => {
   const { addToCart } = useContext(CartContext);
@@ -63,9 +63,29 @@ const ProductList = ({ products, className }) => {
                   className="w-full h-full object-cover"
                 />
               </Box>
-              <CardContent>
+              <CardContent className="flex items-center flex-col items-start">
                 <Typography variant="h6" className="font-bold">{product.name}</Typography>
                 <Typography className="text-colors-1 font-bold">${product.price}</Typography>
+                <Box className="flex items-center">
+                  <Rating
+                    name={`rating-${product.id}`}
+                    value={product.averageRating || 5}
+                    precision={0.1}
+                    readOnly
+                    size="small"
+                    sx={{
+                      '& .MuiRating-iconFilled': {
+                        color: '#FFD700',
+                      },
+                      '& .MuiRating-iconEmpty': {
+                        color: '#FFD700',
+                      },
+                    }}
+                  />
+                  <Typography variant="body2" color="text.secondary" className="ml-2">
+                    ({product.ratingCount || 0})
+                  </Typography>
+                </Box>
                 <Button
                   onClick={() => addToCart(product)}
                   className="bg-colors-1 text-white px-4 py-2 rounded mt-2"

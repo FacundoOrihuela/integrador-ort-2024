@@ -1,0 +1,39 @@
+# TEST RATING OPERATIONS
+
+# Obtener todas las calificaciones de un producto
+GET http://localhost:3001/api/ratings/product/59
+Content-Type: application/json
+
+###
+
+# Obtener la calificación promedio de un producto
+GET http://localhost:3001/api/ratings/product/59/average
+Content-Type: application/json
+
+###
+
+# Crear una nueva calificación
+POST http://localhost:3001/api/ratings
+Content-Type: application/json
+
+{
+    "userId": 1,
+    "productId": 59,
+    "rating": 5
+}
+
+###
+
+# Actualizar una calificación
+PUT http://localhost:3001/api/ratings/1
+Content-Type: application/json
+
+{
+    "rating": 4
+}
+
+###
+
+# Eliminar una calificación
+DELETE http://localhost:3001/api/ratings/2
+Content-Type: application/json

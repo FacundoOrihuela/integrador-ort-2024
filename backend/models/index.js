@@ -9,6 +9,8 @@ import RecurringEvent from './RecurringEvent.js';
 import EventRegistration from './EventRegistration.js';
 import Order from './Order.js';
 import OrderItem from './OrderItem.js';
+import Rating from './Rating.js';
+import Category from './Category.js';
 
 // Definir relaciones
 User.hasOne(Cart, { foreignKey: 'userId' });
@@ -37,4 +39,13 @@ Order.hasMany(OrderItem, { foreignKey: 'orderId' });
 OrderItem.belongsTo(Order, { foreignKey: 'orderId' });
 OrderItem.belongsTo(Product, { foreignKey: 'productId' });
 
-export { sequelize, User, Cart, CartItem, Product, Event, SingleEvent, RecurringEvent, EventRegistration, Order, OrderItem };
+Product.hasMany(Rating, { foreignKey: 'productId' });
+Rating.belongsTo(Product, { foreignKey: 'productId' });
+
+User.hasMany(Rating, { foreignKey: 'userId' });
+Rating.belongsTo(User, { foreignKey: 'userId' });
+
+Product.belongsTo(Category, { foreignKey: 'categoryId' });
+Category.hasMany(Product, { foreignKey: 'categoryId' });
+
+export { sequelize, User, Cart, CartItem, Product, Event, SingleEvent, RecurringEvent, EventRegistration, Order, OrderItem, Rating, Category };
