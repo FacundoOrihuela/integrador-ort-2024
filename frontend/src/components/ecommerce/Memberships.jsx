@@ -22,6 +22,7 @@ const Memberships = () => {
     }, []);
 
     const comprar = (membresia) => {
+        // Implementar la lógica de compra de membresía
     };
 
     if (error) {

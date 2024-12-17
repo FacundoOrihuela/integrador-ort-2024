@@ -32,6 +32,10 @@ const Checkout = () => {
         .catch(error => console.error('Error placing order:', error));
     };
 
+    const handleBackToStore = () => {
+        navigate('/store');
+    };
+
     return (
         <div>
             <Header />
@@ -50,14 +54,24 @@ const Checkout = () => {
                 </List>
                 <Box className="mt-4">
                     <Typography variant="h6" className="text-black font-bold">Total: ${calculateSubtotal().toFixed(2)}</Typography>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        className="w-full mt-4"
-                        onClick={handlePlaceOrder}
-                    >
-                        Finalizar Compra
-                    </Button>
+                    <Box className="flex space-x-4 mt-4">
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            className="w-full"
+                            onClick={handleBackToStore}
+                        >
+                            Volver a la tienda
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            className="w-full"
+                            onClick={handlePlaceOrder}
+                        >
+                            Finalizar Compra
+                        </Button>
+                    </Box>
                 </Box>
             </Box>
         </div>

@@ -1,21 +1,77 @@
+# Obtener todos los productos
+GET http://localhost:3001/api/products
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNDM5NDI4OSwiZXhwIjoxNzM0Mzk3ODg5fQ.Tfn4sNxXAMnfWEjipbZ5NkVYlqesvAPUJTd7GDmMd8E
+
+###
+
 # Crear un nuevo producto con imagen
 POST http://localhost:3001/api/products
 Content-Type: multipart/form-data; boundary=boundary
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNDM5NDI4OSwiZXhwIjoxNzM0Mzk3ODg5fQ.Tfn4sNxXAMnfWEjipbZ5NkVYlqesvAPUJTd7GDmMd8E
 
 --boundary
-Content-Disposition: form-data; name="product"
-Content-Type: application/json
+Content-Disposition: form-data; name="name"
 
-{
-    "name": "Nuevo Producto",
-    "description": "Descripción del nuevo producto",
-    "price": 100,
-    "stock": 50,
-    "categoryId": 1
-}
+PDF 1
+--boundary
+Content-Disposition: form-data; name="description"
+
+Descripción del nuevo producto
+--boundary
+Content-Disposition: form-data; name="price"
+
+100
+--boundary
+Content-Disposition: form-data; name="stock"
+
+50
+--boundary
+Content-Disposition: form-data; name="categoryId"
+
+4
 --boundary
 Content-Disposition: form-data; name="image"; filename="images.jpg"
 Content-Type: image/jpeg
 
 < D:/Descargas/tiferet-images/images.jpg
 --boundary--
+
+###
+
+# Actualizar un producto existente
+PUT http://localhost:3001/api/products/1
+Content-Type: multipart/form-data; boundary=boundary
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNDM5NDI4OSwiZXhwIjoxNzM0Mzk3ODg5fQ.Tfn4sNxXAMnfWEjipbZ5NkVYlqesvAPUJTd7GDmMd8E
+
+--boundary
+Content-Disposition: form-data; name="name"
+
+Producto Actualizado
+--boundary
+Content-Disposition: form-data; name="description"
+
+Descripción actualizada del producto
+--boundary
+Content-Disposition: form-data; name="price"
+
+150
+--boundary
+Content-Disposition: form-data; name="stock"
+
+30
+--boundary
+Content-Disposition: form-data; name="categoryId"
+
+1
+--boundary
+Content-Disposition: form-data; name="image"; filename="images.jpg"
+Content-Type: image/jpeg
+
+< D:/Descargas/tiferet-images/images.jpg
+--boundary--
+
+###
+
+# Eliminar un producto
+DELETE http://localhost:3001/api/products/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNDM5NDI4OSwiZXhwIjoxNzM0Mzk3ODg5fQ.Tfn4sNxXAMnfWEjipbZ5NkVYlqesvAPUJTd7GDmMd8E

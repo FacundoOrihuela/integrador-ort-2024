@@ -19,6 +19,9 @@ const LoginInputs = () => {
     const { fetchUser } = useContext(UserContext);
 
     useEffect(() => {
+        // Set default values
+        emailField.current.value = "admin@gmail.com";
+        passField.current.value = "Admin123";
         checkFields();
     }, []);
 
@@ -124,7 +127,6 @@ const LoginInputs = () => {
                     "Login"
                 )}
             </button>
-
 
             <Link to="/register" className="mt-2 text-colors-1 hover:text-colors-1 text-xs font-medium">Registrarse</Link>
             <Link to="/forgotPassword" className="mt-1 text-colors-1 hover:text-orange-900 text-xs font-small">¿Olvidaste tu contraseña?</Link>
