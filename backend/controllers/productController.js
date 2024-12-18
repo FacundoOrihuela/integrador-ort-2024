@@ -91,4 +91,18 @@ const deleteProduct = async (req, res) => {
     }
 };
 
-export { getProducts, createProduct, updateProduct, deleteProduct, upload };
+// Obtener los productos más vendidos
+const getTopSellingProducts = async (req, res) => {
+    try {
+        const topSellingProducts = await Product.findAll({
+            order: [['timesSold', 'DESC']],
+            limit: 6,
+        });
+        res.json({ message: 'Productos más vendidos obtenidos con éxito', data: topSellingProducts });
+    } catch (error) {
+        console.error('Error al obtener los productos más vendidos:', error);
+        res.status(500).json({ message: 'Error interno del servidor', error: error.message });
+    }
+};
+
+export { getProducts, createProduct, updateProduct, deleteProduct, getTopSellingProducts, upload };

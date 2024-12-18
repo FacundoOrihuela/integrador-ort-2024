@@ -31,8 +31,6 @@ const ProductPage = () => {
             .then((response) => response.json())
             .then((data) => {
                 setProducts(data.data);
-                // Assuming featured products are the first three products for simplicity
-                setFeaturedProducts(data.data.slice(0, 3));
                 // Set initial price range
                 const prices = data.data.map(product => product.price);
                 const maxProductPrice = Math.max(...prices);
@@ -41,6 +39,12 @@ const ProductPage = () => {
                 setMaxPrice(maxProductPrice);
             })
             .catch((error) => console.error("Error fetching products:", error));
+
+        // Fetch top-selling products from the API
+        fetch("http://localhost:3001/api/products/top-selling")
+            .then((response) => response.json())
+            .then((data) => setFeaturedProducts(data.data))
+            .catch((error) => console.error("Error fetching top-selling products:", error));
     }, []);
 
     useEffect(() => {

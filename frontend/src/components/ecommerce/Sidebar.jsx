@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Slider, List, ListItem, ListItemText, ListItemAvatar, Avatar, Button } from '@mui/material';
+import { Box, Typography, Slider, List, ListItem, ListItemText, Avatar, Button, Grid } from '@mui/material';
 
 const Sidebar = ({ categories, featuredProducts, onCategoryClick, priceRange, onPriceChange, applyPriceFilter, className, fixedMinPrice, maxPrice }) => {
   return (
@@ -47,25 +47,25 @@ const Sidebar = ({ categories, featuredProducts, onCategoryClick, priceRange, on
       </Box>
       {/* Productos destacados */}
       <Box className="mt-8">
-        <Typography variant="h6" className="font-bold mb-4">PRODUCTOS DESTACADOS</Typography>
-        <List className="space-y-4">
+        <Typography variant="h6" className="font-bold" sx={{ mb: 2 }}>PRODUCTOS DESTACADOS</Typography>
+        <Grid container spacing={2}>
           {featuredProducts.map((product) => (
-            <ListItem key={product.id} className="flex items-center space-x-4">
-              <ListItemAvatar>
+            <Grid item xs={6} key={product.id}>
+              <Box display="flex" alignItems="center" p={1} border={1} borderColor="grey.300" borderRadius={2}>
                 <Avatar
                   src={`http://localhost:3001${product.image}`}
                   alt={product.name}
-                  className="w-16 h-16 object-cover"
+                  sx={{ width: 64, height: 64 }}
                 />
-              </ListItemAvatar>
-              <ListItemText
-                primary={product.name}
-                secondary={`$${product.price}`}
-                className="text-colors-1 font-bold"
-              />
-            </ListItem>
+                <Box flexGrow={1} ml={2}>
+                  <Typography variant="body2" fontWeight="bold">{product.name}</Typography>
+                  <Typography variant="body2" color="textSecondary">{product.timesSold} vendidos</Typography>
+                </Box>
+                <Typography variant="h6" fontWeight="bold">${product.price}</Typography>
+              </Box>
+            </Grid>
           ))}
-        </List>
+        </Grid>
       </Box>
     </Box>
   );

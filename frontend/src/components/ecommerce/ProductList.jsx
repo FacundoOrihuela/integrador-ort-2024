@@ -65,7 +65,7 @@ const ProductList = ({ products, className }) => {
               </Box>
               <CardContent className="flex items-center flex-col items-start">
                 <Typography variant="h6" className="font-bold">{product.name}</Typography>
-                <Typography className="text-colors-1 font-bold">${product.price}</Typography>
+                <Typography variant="h5" className="text-colors-1 font-bold">${product.price}</Typography>
                 <Box className="flex items-center">
                   <Rating
                     name={`rating-${product.id}`}

@@ -29,6 +29,8 @@ export const createOrder = async (req, res) => {
         });
 
         const orderItems = await Promise.all(cart.CartItems.map(async (item) => {
+            await Product.increment('timesSold', { by: 1, where: { id: item.productId } });
+
             return await OrderItem.create({
                 orderId: order.id,
                 productId: item.productId,
