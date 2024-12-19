@@ -85,8 +85,18 @@ const Event = () => {
                 <h3 className="text-xl font-bold mb-2">{event.name}</h3>
                 <p className="mb-2 text-gray-700">{event.description}</p>
                 <p className="mb-2 text-gray-500">
-                  <span className="font-semibold">Fecha:</span> {new Date(event.startDateTime).toLocaleDateString()} -{' '}
-                  {new Date(event.endDateTime).toLocaleDateString()}
+                <h2 className="font-bold">Empieza:</h2>
+                <p>
+                  {new Date(event.SingleEvent.startDateTime).toLocaleDateString()}
+                  <span className="font-bold"> - </span>
+                  {new Date(event.SingleEvent.startDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </p>
+                <h2 className="font-bold">Finaliza:</h2>
+                <p>
+                  {new Date(event.SingleEvent.endDateTime).toLocaleDateString()}
+                  <span className="font-bold"> - </span>
+                  {new Date(event.SingleEvent.endDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </p>
                 </p>
                 <button 
                   onClick={() => handleRegister(event.id)}

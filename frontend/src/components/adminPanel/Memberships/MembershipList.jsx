@@ -102,13 +102,13 @@ const MembershipList = () => {
             <div className="mt-4 flex justify-between gap-4">
               <button
                 onClick={() => openEditModal(membresia)}
-                className="w-[100%] bg-colors-3 text-white px-4 py-2 rounded hover:bg-yellow-600 transition duration-200"
+                className="w-[50%] bg-yellow-500 text-white px-3 py-2 rounded hover:bg-yellow-600 transition duration-200"
               >
                 Editar
               </button>
               <button
                 onClick={() => handleDelete(membresia.id)}
-                className="w-[100%] bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200"
+                className="w-[50%] bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-200"
               >
                 Eliminar
               </button>

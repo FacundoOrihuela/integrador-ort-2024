@@ -29,8 +29,8 @@ const CreateMemberships = ({
 
   const handleSaveMembership = async () => {
     const url = isUpdate
-      ? `http://localhost:3001/api/memberships/${editData.id}`  // PUT para editar
-      : "http://localhost:3001/api/memberships";  // POST para crear
+      ? `http://localhost:3001/api/memberships/${editData.id}`
+      : "http://localhost:3001/api/memberships";
 
     const method = isUpdate ? "PUT" : "POST";
 
@@ -45,8 +45,8 @@ const CreateMemberships = ({
 
       if (response.ok) {
         setLocalMessage(isUpdate ? "Membresía actualizada exitosamente!" : "Membresía creada exitosamente!");
-        handleUpdateOrCreate();  // Actualiza la lista de membresías
-        setIsModalOpen(false);   // Cierra el modal después de guardar
+        handleUpdateOrCreate();
+        setIsModalOpen(false);
       } else {
         const errorData = await response.json();
         setError(`${errorData.message || "Algo salió mal"}`);

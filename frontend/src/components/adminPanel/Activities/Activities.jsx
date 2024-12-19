@@ -5,9 +5,9 @@ import CreateActivity from './CreateActivity'
 
 const Activities = () => {
   return (
-    <div>
-        <ActivitiesList />
-        <CreateActivity />
+    <div className="relative">
+      <h1 className="flex justify-center items-center p-2 text-4xl">Actividades</h1>
+      <ActivitiesList />
     </div>
   )
 }

@@ -3,13 +3,6 @@ import MembershipList from "./MembershipList";
 import CreateMemberships from "./CreateMemberships";
 
 const Memberships = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const toggleModal = () => setIsModalOpen(!isModalOpen);
-
-  const handleUpdateOrCreate = () => {
-    setIsModalOpen(false);
-  };
 
   return (
     <div className="relative">
