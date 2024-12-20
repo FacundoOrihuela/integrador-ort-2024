@@ -16,6 +16,9 @@ const Sidebar = ({ className, onMouseLeave, onSelect }) => {
         <button className="py-2 hover:bg-gray-300" onClick={() => onSelect("Activities")}>
           Actividades
         </button>
+        <button className="py-2 hover:bg-gray-300" onClick={() => onSelect("ShoppingList")}>
+          Lista de Compras
+        </button>
       </div>
     </aside>
   );

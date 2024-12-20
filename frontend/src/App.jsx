@@ -23,6 +23,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "./theme";
 import About from "./components/About";
+import ProtectedRoute from "./components/ProtectedRoute"; // Nuevo componente
 
 function App() {
   return (
@@ -33,15 +34,19 @@ function App() {
           <CartProvider>
             <BrowserRouter>
               <Routes>
-                <Route path="/" element={<Login />} />
+                <Route path="/" element={<Principal />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/principal" element={<Principal />} />
                 <Route path="*" element={<NotFound />} />
                 <Route path="/verifyEmail" element={<VerifyEmail />} />
                 <Route path="/forgotPassword" element={<ForgotPass />} />
                 <Route path="/reset-password" element={<ResetPass />} />
-                <Route path="/store" element={<ProductPage />} />
-                <Route path="/actividades" element={<Event />} />
+                
+                {/* Rutas protegidas */}
+                <Route path="/store" element={<ProtectedRoute><ProductPage /></ProtectedRoute>} />
+                <Route path="/actividades" element={<ProtectedRoute><Event /></ProtectedRoute>} />
+                <Route path="/grupos" element={<ProtectedRoute><div>Grupos</div></ProtectedRoute>} />
+
                 <Route path="/admin-panel" element={<AdminPanel />} />
                 <Route path="/create-product" element={<ProductFormPage />} />
                 <Route path="/purchase-history" element={<PurchaseHistory />} />

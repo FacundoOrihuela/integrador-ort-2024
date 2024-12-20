@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Header from './Header';
+import Footer from './Footer'
 
 const About = () => {
   // Estado para los campos del formulario
@@ -114,6 +115,7 @@ const About = () => {
           </form>
         )}
       </div>
+      <Footer/>
     </div>
   );
 };

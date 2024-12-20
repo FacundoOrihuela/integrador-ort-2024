@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../Header';
+import Footer from '../Footer'; // Importamos el componente Footer
 import { UserContext } from '../../context/UserContext';
 
 const Event = () => {
@@ -18,7 +19,7 @@ const Event = () => {
           throw new Error('Error al obtener los eventos');
         }
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         setEvents(data);
       } catch (err) {
         setError(err.message);
@@ -71,45 +72,48 @@ const Event = () => {
   }
 
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Header />
-      <div className="event-container">
-        <h2 className="event-title text-center text-3xl font-bold mb-4">ACTIVIDADES</h2>
+      <main className="flex-grow">
+        <div className="event-container">
+          <h2 className="event-title text-center text-3xl font-bold mb-4">ACTIVIDADES</h2>
 
-        {events.length === 0 ? (
-          <p className="text-center">No hay eventos disponibles.</p>
-        ) : (
-          events.map((event) => (
-            <div key={event.id} className="event-card bg-white shadow-lg rounded-lg p-4 mb-4">
-              <div className="event-info">
-                <h3 className="text-xl font-bold mb-2">{event.name}</h3>
-                <p className="mb-2 text-gray-700">{event.description}</p>
-                <p className="mb-2 text-gray-500">
-                <h2 className="font-bold">Empieza:</h2>
-                <p>
-                  {new Date(event.SingleEvent.startDateTime).toLocaleDateString()}
-                  <span className="font-bold"> - </span>
-                  {new Date(event.SingleEvent.startDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </p>
-                <h2 className="font-bold">Finaliza:</h2>
-                <p>
-                  {new Date(event.SingleEvent.endDateTime).toLocaleDateString()}
-                  <span className="font-bold"> - </span>
-                  {new Date(event.SingleEvent.endDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </p>
-                </p>
-                <button 
-                  onClick={() => handleRegister(event.id)}
-                  disabled={registering}
-                  className="event-link bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
-                >
-                  {registering ? 'Registrando...' : 'ANOTARME'}
-                </button>
+          {events.length === 0 ? (
+            <p className="text-center">No hay eventos disponibles.</p>
+          ) : (
+            events.map((event) => (
+              <div key={event.id} className="event-card bg-white shadow-lg rounded-lg p-4 mb-4">
+                <div className="event-info">
+                  <h3 className="text-xl font-bold mb-2">{event.name}</h3>
+                  <p className="mb-2 text-gray-700">{event.description}</p>
+                  <p className="mb-2 text-gray-500">
+                    <h2 className="font-bold">Empieza:</h2>
+                    <p>
+                      {new Date(event.SingleEvent.startDateTime).toLocaleDateString()}
+                      <span className="font-bold"> - </span>
+                      {new Date(event.SingleEvent.startDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                    <h2 className="font-bold">Finaliza:</h2>
+                    <p>
+                      {new Date(event.SingleEvent.endDateTime).toLocaleDateString()}
+                      <span className="font-bold"> - </span>
+                      {new Date(event.SingleEvent.endDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </p>
+                  <button
+                    onClick={() => handleRegister(event.id)}
+                    disabled={registering}
+                    className="event-link bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+                  >
+                    {registering ? 'Registrando...' : 'ANOTARME'}
+                  </button>
+                </div>
               </div>
-            </div>
-          ))
-        )}
-      </div>
+            ))
+          )}
+        </div>
+      </main>
+      <Footer /> {/* Usamos el componente Footer aquí */}
     </div>
   );
 };

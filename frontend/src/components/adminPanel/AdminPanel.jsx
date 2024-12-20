@@ -3,12 +3,10 @@ import { UserContext } from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import Header from "../Header";
 import UserList from "./UsersList";
-import CreateMemberships from "./Memberships/CreateMemberships";
-import MembershipList from "./Memberships/MembershipList";
 import Sidebar from "./Sidebar";
-import CreateActivity from "./Activities/CreateActivity";
 import Activities from "./Activities/Activities";
 import Memberships from "./Memberships/Memberships";
+import ShoppingList from "./Activities/ShoppingList";
 
 const AdminPanel = () => {
   const { user } = useContext(UserContext);
@@ -35,6 +33,8 @@ const AdminPanel = () => {
         return <UserList />;
       case "Memberships":
         return <Memberships />;
+      case "ShoppingList":
+        return <ShoppingList/>;
       case "Activities":
         return <Activities />;
       default:
