@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AppBar, Toolbar, IconButton, Container } from "@mui/material";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -15,13 +15,14 @@ const Header = ({ store }) => {
   const [showProfile, setShowProfile] = useState(false);
   const [showAlert, setShowAlert] = useState(false); // Estado para la alerta
   const navigate = useNavigate();
+  const profileButtonRef = useRef(null); // Creación de la referencia para el botón de perfil
 
   // Función que maneja los clics en las secciones restringidas
   const handleRestrictedClick = (path) => {
     if (!user) {
-      setShowAlert(true); // Muestra la alerta si no hay usuario logueado
+      setShowAlert(true); 
     } else {
-      navigate(path); // Si está logueado, navega a la sección
+      navigate(path); 
     }
   };
 
@@ -70,18 +71,21 @@ const Header = ({ store }) => {
                   <ShoppingCartIcon className="text-white text-3xl" />
                 </IconButton>
               )}
-              <IconButton color="inherit" onClick={() => setShowProfile(!showProfile)}>
+              <IconButton
+                color="inherit"
+                onClick={() => setShowProfile(!showProfile)}
+                ref={profileButtonRef} // Referencia del botón de perfil
+              >
                 <AccountCircleIcon className="text-white text-3xl" />
               </IconButton>
-              {showProfile && <ProfileModal />}
+              {showProfile && <ProfileModal profileButtonRef={profileButtonRef} />} {/* Pasamos la referencia */}
               {showCart && <Cart />}
             </div>
           </Toolbar>
         </Container>
       </AppBar>
 
-      {/* Alerta de registro */}
-      <RegisterAlert open={showAlert} onClose={() => setShowAlert(false)} />
+      {showAlert && <RegisterAlert onClose={() => setShowAlert(false)} />}
     </>
   );
 };

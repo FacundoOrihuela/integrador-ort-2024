@@ -12,14 +12,14 @@ const ProfileModal = ({ profileButtonRef }) => {
   const [position, setPosition] = useState({ top: 0, left: 0 });
 
   useLayoutEffect(() => {
-    if (profileButtonRef.current) {
+    if (profileButtonRef && profileButtonRef.current) {
       const buttonRect = profileButtonRef.current.getBoundingClientRect();
       setPosition({
-        top: buttonRect.bottom, // Posiciona debajo del botón
-        left: buttonRect.left + window.scrollX - 256, // Restamos el ancho del modal para alinearlo a la izquierda
+        top: buttonRect.bottom + window.scrollY, // Incluye scroll vertical
+        left: buttonRect.left + window.scrollX - 256, // Ajusta horizontalmente
       });
     }
-  }, [profileButtonRef]); // Este efecto se ejecuta solo cuando el perfil se muestra
+  }, [profileButtonRef]);
 
   const handleLogout = () => {
     dispatch(saveSessionToken(null));
@@ -40,7 +40,10 @@ const ProfileModal = ({ profileButtonRef }) => {
         <button className="text-white py-2 px-4 bg-black hover:bg-gray-500">
           Mis cursos
         </button>
-        <Link to="/purchase-history" className="text-white py-2 px-4 bg-black hover:bg-gray-500">
+        <Link
+          to="/purchase-history"
+          className="text-white py-2 px-4 bg-black hover:bg-gray-500"
+        >
           Mis compras
         </Link>
         {user && user.userType === "administrator" && (
