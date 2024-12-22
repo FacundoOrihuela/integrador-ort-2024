@@ -15,8 +15,8 @@ const ProfileModal = ({ profileButtonRef }) => {
     if (profileButtonRef && profileButtonRef.current) {
       const buttonRect = profileButtonRef.current.getBoundingClientRect();
       setPosition({
-        top: buttonRect.bottom + window.scrollY, // Incluye scroll vertical
-        left: buttonRect.left + window.scrollX - 256, // Ajusta horizontalmente
+        top: buttonRect.bottom + window.scrollY,
+        left: buttonRect.left + window.scrollX - 256,
       });
     }
   }, [profileButtonRef]);
@@ -25,7 +25,7 @@ const ProfileModal = ({ profileButtonRef }) => {
     dispatch(saveSessionToken(null));
     localStorage.removeItem("token");
     localStorage.removeItem("idUsuarioLogueado");
-    navigate("/");
+    navigate("/login");
   };
 
   return (
@@ -40,17 +40,11 @@ const ProfileModal = ({ profileButtonRef }) => {
         <button className="text-white py-2 px-4 bg-black hover:bg-gray-500">
           Mis cursos
         </button>
-        <Link
-          to="/purchase-history"
-          className="text-white py-2 px-4 bg-black hover:bg-gray-500"
-        >
+        <Link to="/purchase-history" className="text-white py-2 px-4 bg-black hover:bg-gray-500">
           Mis compras
         </Link>
         {user && user.userType === "administrator" && (
-          <Link
-            to="/admin-panel"
-            className="text-white py-2 px-4 bg-black hover:bg-gray-500"
-          >
+          <Link to="/admin-panel" className="text-white py-2 px-4 bg-black hover:bg-gray-500">
             Panel Administrativo
           </Link>
         )}

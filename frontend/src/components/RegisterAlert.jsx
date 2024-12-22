@@ -1,14 +1,13 @@
 import React from "react";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
-import { useNavigate } from "react-router-dom"; // Usamos useNavigate para la redirección
+import { useNavigate } from "react-router-dom";
 
 const RegisterAlert = ({ open, onClose }) => {
-  const navigate = useNavigate(); // Hook para redirigir al usuario
+  const navigate = useNavigate();
 
-  // redirección al registro
   const handleRegisterRedirect = () => {
-    navigate("/register"); 
-    onClose(); // Cierra la alerta cuando se hace clic
+    navigate("/register");
+    onClose();
   };
 
   return (

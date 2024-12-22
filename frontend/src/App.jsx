@@ -41,6 +41,7 @@ function App() {
                 <Route path="/verifyEmail" element={<VerifyEmail />} />
                 <Route path="/forgotPassword" element={<ForgotPass />} />
                 <Route path="/reset-password" element={<ResetPass />} />
+                <Route path="/login" element={<Login />} />
                 
                 {/* Rutas protegidas */}
                 <Route path="/store" element={<ProtectedRoute><ProductPage /></ProtectedRoute>} />
