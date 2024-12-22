@@ -91,7 +91,12 @@ const Header = ({ store }) => {
                   <Typography variant="body1" className="text-white">
                     ¡Bienvenido, {user.name}!
                   </Typography>
-                  {showProfile && <ProfileModal profileButtonRef={profileButtonRef} />}
+                  {showProfile && (
+                    <ProfileModal
+                      profileButtonRef={profileButtonRef}
+                      onClose={() => setShowProfile(false)}
+                    />
+                  )}
                 </>
               ) : (
                 <div className="flex gap-4">

@@ -3,6 +3,7 @@ import OrderItem from '../models/OrderItem.js';
 import Cart from '../models/Cart.js';
 import CartItem from '../models/CartItem.js';
 import Product from '../models/Product.js';
+import User from '../models/User.js'; // Asegúrate de importar el modelo de usuario
 
 export const createOrder = async (req, res) => {
     const userId = req.user.id;
@@ -87,6 +88,29 @@ export const getOrders = async (req, res) => {
         res.json({ orders });
     } catch (error) {
         console.error('Error al obtener las órdenes:', error);
+        res.status(500).json({ message: 'Error interno del servidor', error: error.message });
+    }
+};
+
+// Nuevo controlador para obtener todas las órdenes
+export const getAllOrders = async (req, res) => {
+    try {
+        const orders = await Order.findAll({
+            include: [
+                {
+                    model: OrderItem,
+                    include: [Product],
+                },
+                {
+                    model: User, // Incluir información del usuario
+                    attributes: ['id', 'name', 'email'], // Seleccionar los atributos que deseas incluir
+                },
+            ],
+        });
+
+        res.json({ orders });
+    } catch (error) {
+        console.error('Error al obtener todas las órdenes:', error);
         res.status(500).json({ message: 'Error interno del servidor', error: error.message });
     }
 };
