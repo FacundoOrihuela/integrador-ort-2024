@@ -32,8 +32,18 @@ export const UserProvider = ({ children }) => {
         fetchUser();
     }, [fetchUser]);
 
+    const login = (userData, token) => {
+        setUser(userData);
+        localStorage.setItem('token', token);
+    };
+
+    const logout = () => {
+        setUser(null);
+        localStorage.removeItem('token');
+    };
+
     return (
-        <UserContext.Provider value={{ user, setUser, fetchUser }}>
+        <UserContext.Provider value={{ user, login, logout, fetchUser }}>
             {children}
         </UserContext.Provider>
     );

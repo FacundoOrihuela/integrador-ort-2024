@@ -7,7 +7,7 @@ import { UserContext } from "../context/UserContext";
 const ProfileModal = ({ profileButtonRef }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useContext(UserContext);
+  const { user, logout } = useContext(UserContext);
 
   const [position, setPosition] = useState({ top: 0, left: 0 });
 
@@ -23,8 +23,7 @@ const ProfileModal = ({ profileButtonRef }) => {
 
   const handleLogout = () => {
     dispatch(saveSessionToken(null));
-    localStorage.removeItem("token");
-    localStorage.removeItem("idUsuarioLogueado");
+    logout();
     navigate("/login");
   };
 

@@ -1,6 +1,6 @@
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AppBar, Toolbar, IconButton, Container } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Container, Typography } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ProfileModal from "./ProfileModal";
@@ -10,14 +10,16 @@ import logoImg from "../components/img/logo.png";
 import RegisterAlert from "./RegisterAlert";
 
 const Header = ({ store }) => {
-  const { user } = useContext(UserContext);
+  const { user, logout } = useContext(UserContext);
   const [showCart, setShowCart] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
   const profileButtonRef = useRef(null);
 
-  console.log("Estado del usuario:", user); // Verificar el valor de `user`
+  useEffect(() => {
+    console.log("Estado del usuario:", user); // Verificar el valor de `user`
+  }, [user]);
 
   const handleRestrictedClick = (path) => {
     if (!user) {
@@ -86,7 +88,9 @@ const Header = ({ store }) => {
                   >
                     <AccountCircleIcon className="text-white text-3xl" />
                   </IconButton>
-
+                  <Typography variant="body1" className="text-white">
+                    ¡Bienvenido, {user.name}!
+                  </Typography>
                   {showProfile && <ProfileModal profileButtonRef={profileButtonRef} />}
                 </>
               ) : (

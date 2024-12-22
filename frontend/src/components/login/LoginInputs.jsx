@@ -16,7 +16,7 @@ const LoginInputs = () => {
   const [passFieldLength, setPassFieldLength] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { fetchUser } = useContext(UserContext);
+  const { login } = useContext(UserContext);
 
   useEffect(() => {
     // Set default values
@@ -51,8 +51,7 @@ const LoginInputs = () => {
           return resp.json();
         })
         .then((data) => {
-          startSession(data.token);
-          fetchUser();
+          startSession(data.token, data.user);
           navigate("/principal");
         })
         .catch((error) => {
@@ -65,9 +64,9 @@ const LoginInputs = () => {
     }, 1500);
   };
 
-  const startSession = (token) => {
+  const startSession = (token, user) => {
     dispatch(saveSessionToken(token));
-    localStorage.setItem("token", token);
+    login(user, token);
   };
 
   const handleKeyDown = (event) => {
