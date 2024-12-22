@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context/UserContext';
-import { Box, Typography, List, ListItem, ListItemText, Collapse } from '@mui/material';
+import { Box, Typography, List, ListItem, ListItemText, Collapse, Avatar } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import axios from 'axios';
 import Header from './Header';
@@ -44,15 +44,29 @@ const PurchaseHistory = () => {
                             </ListItem>
                             <Collapse in={openOrderId === order.id} timeout="auto" unmountOnExit>
                                 <List component="div" disablePadding>
-                                    {order.OrderItems.map(item => (
-                                        <ListItem key={item.id} className="pl-8">
-                                            <ListItemText
-                                                primary={`${item.Product.name} - $${item.priceAtPurchase.toFixed(2)}`}
-                                                secondary={`Cantidad: ${item.quantity}`}
-                                                className="text-black"
-                                            />
-                                        </ListItem>
-                                    ))}
+                                    {order.OrderItems.map(item => {
+                                        // Extraer la ruta relativa de la URL de Cloudinary
+                                        const cloudinaryUrl = new URL(item.Product.image);
+                                        const relativePath = cloudinaryUrl.pathname;
+
+                                        // Construir la URL de Imgix basada en la ruta relativa
+                                        const imgixUrl = `https://tiferet-689097844.imgix.net${relativePath}`;
+
+                                        return (
+                                            <ListItem key={item.id} className="pl-8 flex items-center">
+                                                <Avatar
+                                                    src={`${imgixUrl}?w=64&h=64&fit=crop`}
+                                                    alt={item.Product.name}
+                                                    sx={{ width: 64, height: 64, marginRight: 2 }}
+                                                />
+                                                <ListItemText
+                                                    primary={`${item.Product.name} - $${item.priceAtPurchase.toFixed(2)}`}
+                                                    secondary={`Cantidad: ${item.quantity}`}
+                                                    className="text-black"
+                                                />
+                                            </ListItem>
+                                        );
+                                    })}
                                 </List>
                             </Collapse>
                         </Box>

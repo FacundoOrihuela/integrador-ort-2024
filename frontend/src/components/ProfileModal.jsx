@@ -1,100 +1,63 @@
-import React, { useContext, useState, useLayoutEffect, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
-import { saveSessionToken } from "../features/loginSlice";
-import { UserContext } from "../context/UserContext";
-import { Box, Typography, Divider } from "@mui/material";
+import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { saveSessionToken } from '../features/loginSlice';
+import { UserContext } from '../context/UserContext';
+import { Box, Typography, List, ListItemText, ListItemAvatar, ClickAwayListener, ListItemButton } from '@mui/material';
+import { AccountCircle as AccountCircleIcon, School as SchoolIcon, ShoppingCart as ShoppingCartIcon, AdminPanelSettings as AdminPanelSettingsIcon, ExitToApp as ExitToAppIcon } from '@mui/icons-material';
 
-const ProfileModal = ({ profileButtonRef, onClose }) => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { user, logout } = useContext(UserContext);
-  const modalRef = useRef(null);
+const ProfileModal = ({ onClose }) => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { user, logout } = useContext(UserContext);
 
-  const [position, setPosition] = useState({ top: 0, left: 0 });
-
-  useLayoutEffect(() => {
-    if (profileButtonRef && profileButtonRef.current) {
-      const buttonRect = profileButtonRef.current.getBoundingClientRect();
-      setPosition({
-        top: buttonRect.bottom + window.scrollY,
-        left: buttonRect.left + window.scrollX,
-      });
-    }
-  }, [profileButtonRef]);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
-        onClose();
-      }
+    const handleLogout = () => {
+        dispatch(saveSessionToken(null));
+        logout();
+        navigate('/login');
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [onClose]);
-
-  const handleLogout = () => {
-    dispatch(saveSessionToken(null));
-    logout();
-    navigate("/login");
-  };
-
-  return (
-    <Box
-      ref={modalRef}
-      className="absolute bg-white rounded-lg shadow-lg z-50 w-64 max-w-full"
-      style={{ top: `${position.top}px`, left: `${position.left}px` }}
-    >
-      <Box className="flex flex-col">
-        <Typography
-          variant="button"
-          className="text-colors-1 py-3 px-4 rounded-t-lg bg-white hover:bg-gray-100 cursor-pointer"
-        >
-          Gestionar mi perfil
-        </Typography>
-        <Divider className="bg-colors-1 mx-4" />
-        <Typography
-          variant="button"
-          className="text-colors-1 py-3 px-4 bg-white hover:bg-gray-100 cursor-pointer"
-        >
-          Mis cursos
-        </Typography>
-        <Divider className="bg-colors-1 mx-4" />
-        <Link to="/purchase-history" className="no-underline">
-          <Typography
-            variant="button"
-            className="text-colors-1 py-3 px-4 bg-white hover:bg-gray-100 cursor-pointer"
-          >
-            Mis compras
-          </Typography>
-        </Link>
-        {user && user.userType === "administrator" && (
-          <>
-            <Divider className="bg-colors-1 mx-4" />
-            <Link to="/admin-panel" className="no-underline">
-              <Typography
-                variant="button"
-                className="text-colors-1 py-3 px-4 bg-white hover:bg-gray-100 cursor-pointer"
-              >
-                Panel Administrativo
-              </Typography>
-            </Link>
-          </>
-        )}
-        <Divider className="bg-colors-1 mx-4" />
-        <Typography
-          variant="button"
-          className="text-colors-1 py-3 px-4 rounded-b-lg bg-white hover:bg-gray-100 cursor-pointer"
-          onClick={handleLogout}
-        >
-          Cerrar sesión
-        </Typography>
-      </Box>
-    </Box>
-  );
+    return (
+        <ClickAwayListener onClickAway={onClose}>
+            <Box className="absolute top-16 right-0 w-64 bg-white shadow-lg p-4">
+                <Typography variant="h6" className="text-black font-bold mb-4">Menú</Typography>
+                <List>
+                    <ListItemButton onClick={() => navigate('/profile')}>
+                        <ListItemAvatar>
+                            <AccountCircleIcon className="text-colors-1 bg-transparent" />
+                        </ListItemAvatar>
+                        <ListItemText primary="Gestionar mi perfil" />
+                    </ListItemButton>
+                    <ListItemButton onClick={() => navigate('/courses')}>
+                        <ListItemAvatar>
+                            <SchoolIcon className="text-colors-1 bg-transparent" />
+                        </ListItemAvatar>
+                        <ListItemText primary="Mis cursos" />
+                    </ListItemButton>
+                    <ListItemButton onClick={() => navigate('/purchase-history')}>
+                        <ListItemAvatar>
+                            <ShoppingCartIcon className="text-colors-1 bg-transparent" />
+                        </ListItemAvatar>
+                        <ListItemText primary="Mis compras" />
+                    </ListItemButton>
+                    {user && user.userType === "administrator" && (
+                        <ListItemButton onClick={() => navigate('/admin-panel')}>
+                            <ListItemAvatar>
+                                <AdminPanelSettingsIcon className="text-colors-1 bg-transparent" />
+                            </ListItemAvatar>
+                            <ListItemText primary="Panel Administrativo" />
+                        </ListItemButton>
+                    )}
+                    <ListItemButton onClick={handleLogout}>
+                        <ListItemAvatar>
+                            <ExitToAppIcon className="text-colors-1 bg-transparent" />
+                        </ListItemAvatar>
+                        <ListItemText primary="Cerrar sesión" />
+                    </ListItemButton>
+                </List>
+            </Box>
+        </ClickAwayListener>
+    );
 };
 
 export default ProfileModal;

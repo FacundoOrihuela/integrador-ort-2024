@@ -49,22 +49,31 @@ const Sidebar = ({ categories, featuredProducts, onCategoryClick, priceRange, on
       <Box className="mt-8">
         <Typography variant="h6" className="font-bold" sx={{ mb: 2 }}>PRODUCTOS DESTACADOS</Typography>
         <Grid container spacing={2}>
-          {featuredProducts.map((product) => (
-            <Grid item xs={6} key={product.id}>
-              <Box display="flex" alignItems="center" p={1} border={1} borderColor="grey.300" borderRadius={2}>
-                <Avatar
-                  src={`http://localhost:3001${product.image}`}
-                  alt={product.name}
-                  sx={{ width: 64, height: 64 }}
-                />
-                <Box flexGrow={1} ml={2}>
-                  <Typography variant="body2" fontWeight="bold">{product.name}</Typography>
-                  <Typography variant="body2" color="textSecondary">{product.timesSold} vendidos</Typography>
+          {featuredProducts.map((product) => {
+            // Extraer la ruta relativa de la URL de Cloudinary
+            const cloudinaryUrl = new URL(product.image);
+            const relativePath = cloudinaryUrl.pathname;
+
+            // Construir la URL de Imgix basada en la ruta relativa
+            const imgixUrl = `https://tiferet-689097844.imgix.net${relativePath}`;
+
+            return (
+              <Grid item xs={6} key={product.id}>
+                <Box display="flex" alignItems="center" p={1} border={1} borderColor="grey.300" borderRadius={2}>
+                  <Avatar
+                    src={`${imgixUrl}?w=64&h=64&fit=crop`}
+                    alt={product.name}
+                    sx={{ width: 64, height: 64 }}
+                  />
+                  <Box flexGrow={1} ml={2}>
+                    <Typography variant="body2" fontWeight="bold">{product.name}</Typography>
+                    <Typography variant="body2" color="textSecondary">{product.timesSold} vendidos</Typography>
+                  </Box>
+                  <Typography variant="h6" fontWeight="bold">${product.price}</Typography>
                 </Box>
-                <Typography variant="h6" fontWeight="bold">${product.price}</Typography>
-              </Box>
-            </Grid>
-          ))}
+              </Grid>
+            );
+          })}
         </Grid>
       </Box>
     </Box>

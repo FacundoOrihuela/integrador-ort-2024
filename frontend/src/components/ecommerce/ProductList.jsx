@@ -52,50 +52,60 @@ const ProductList = ({ products, className }) => {
         </Select>
       </Box>
       <Grid container spacing={2}>
-        {sortedProducts.map((product) => (
-          <Grid item xs={6} sm={4} md={3} lg={2} key={product.id}>
-            <Card className="bg-white p-4 rounded shadow-md">
-              <Box className="w-full h-48 mb-4">
-                <CardMedia
-                  component="img"
-                  image={`http://localhost:3001${product.image}`}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                />
-              </Box>
-              <CardContent className="flex items-center flex-col items-start">
-                <Typography variant="h6" className="font-bold">{product.name}</Typography>
-                <Typography variant="h5" className="text-colors-1 font-bold">${product.price}</Typography>
-                <Box className="flex items-center">
-                  <Rating
-                    name={`rating-${product.id}`}
-                    value={product.averageRating || 5}
-                    precision={0.1}
-                    readOnly
-                    size="small"
-                    sx={{
-                      '& .MuiRating-iconFilled': {
-                        color: '#FFD700',
-                      },
-                      '& .MuiRating-iconEmpty': {
-                        color: '#FFD700',
-                      },
-                    }}
+        {sortedProducts.map((product) => {
+          // Extraer la ruta relativa de la URL de Cloudinary
+          const cloudinaryUrl = new URL(product.image);
+          const relativePath = cloudinaryUrl.pathname;
+
+          // Construir la URL de Imgix basada en la ruta relativa
+          const imgixUrl = `https://tiferet-689097844.imgix.net${relativePath}`;
+          console.log('URL de Imgix:', imgixUrl);
+
+          return (
+            <Grid item xs={6} sm={4} md={3} lg={2} key={product.id}>
+              <Card className="bg-white p-4 rounded shadow-md">
+                <Box className="w-full h-48 mb-4">
+                  <CardMedia
+                    component="img"
+                    image={`${imgixUrl}?w=400&h=300&fit=crop`}
+                    alt={product.name}
+                    className="w-full h-full object-cover"
                   />
-                  <Typography variant="body2" color="text.secondary" className="ml-2">
-                    ({product.ratingCount || 0})
-                  </Typography>
                 </Box>
-                <Button
-                  onClick={() => addToCart(product)}
-                  className="bg-colors-1 text-white px-4 py-2 rounded mt-2"
-                >
-                  Agregar al carrito
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
+                <CardContent className="flex items-center flex-col items-start">
+                  <Typography variant="h6" className="font-bold">{product.name}</Typography>
+                  <Typography variant="h5" className="text-colors-1 font-bold">${product.price}</Typography>
+                  <Box className="flex items-center">
+                    <Rating
+                      name={`rating-${product.id}`}
+                      value={product.averageRating || 5}
+                      precision={0.1}
+                      readOnly
+                      size="small"
+                      sx={{
+                        '& .MuiRating-iconFilled': {
+                          color: '#FFD700',
+                        },
+                        '& .MuiRating-iconEmpty': {
+                          color: '#FFD700',
+                        },
+                      }}
+                    />
+                    <Typography variant="body2" color="text.secondary" className="ml-2">
+                      ({product.ratingCount || 0})
+                    </Typography>
+                  </Box>
+                  <Button
+                    onClick={() => addToCart(product)}
+                    className="bg-colors-1 text-white px-4 py-2 rounded mt-2"
+                  >
+                    Agregar al carrito
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          );
+        })}
       </Grid>
     </Box>
   );

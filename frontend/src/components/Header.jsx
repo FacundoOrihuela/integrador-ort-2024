@@ -10,7 +10,7 @@ import logoImg from "../components/img/logo.png";
 import RegisterAlert from "./RegisterAlert";
 
 const Header = ({ store }) => {
-  const { user, logout } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [showCart, setShowCart] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -115,7 +115,7 @@ const Header = ({ store }) => {
                 </div>
               )}
 
-              {showCart && <Cart />}
+              {showCart && <Cart onClose={() => setShowCart(false)} />}
             </div>
           </Toolbar>
         </Container>

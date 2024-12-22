@@ -1,5 +1,6 @@
 import Product from '../models/Product.js';
 import Category from '../models/Category.js';
+import cloudinary from '../config/cloudinaryConfig.js'; // Importar la configuración de Cloudinary
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -8,7 +9,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Configurar multer para almacenar imágenes
+// Configurar multer para almacenar imágenes temporalmente
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, path.join(__dirname, '..', 'uploads')); // Usar path para construir la ruta
@@ -34,7 +35,7 @@ const getProducts = async (req, res) => {
 // Crear un nuevo producto
 const createProduct = async (req, res) => {
     const { name, description, price, stock, categoryId } = req.body;
-    const image = req.file ? `/uploads/${req.file.filename}` : null;
+    const image = req.file ? req.file.path : null;
 
     try {
         // Verificar si la categoría existe
@@ -43,7 +44,16 @@ const createProduct = async (req, res) => {
             return res.status(400).json({ message: 'La categoría especificada no existe' });
         }
 
-        const newProduct = await Product.create({ name, description, price, stock, categoryId, image });
+        // Subir la imagen a Cloudinary
+        let imageUrl = null;
+        if (image) {
+            const result = await cloudinary.uploader.upload(image, {
+                folder: 'products',
+            });
+            imageUrl = result.secure_url;
+        }
+
+        const newProduct = await Product.create({ name, description, price, stock, categoryId, image: imageUrl });
         res.json({ message: 'Producto creado con éxito', data: newProduct });
     } catch (error) {
         console.error('Error al crear el producto:', error);
@@ -55,7 +65,7 @@ const createProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
     const { id } = req.params;
     const { name, description, price, stock, categoryId } = req.body;
-    const image = req.file ? `/uploads/${req.file.filename}` : null;
+    const image = req.file ? req.file.path : null;
 
     try {
         // Verificar si la categoría existe
@@ -64,7 +74,16 @@ const updateProduct = async (req, res) => {
             return res.status(400).json({ message: 'La categoría especificada no existe' });
         }
 
-        const [updated] = await Product.update({ name, description, price, stock, categoryId, image }, { where: { id } });
+        // Subir la nueva imagen a Cloudinary si existe
+        let imageUrl = null;
+        if (image) {
+            const result = await cloudinary.uploader.upload(image, {
+                folder: 'products',
+            });
+            imageUrl = result.secure_url;
+        }
+
+        const [updated] = await Product.update({ name, description, price, stock, categoryId, image: imageUrl }, { where: { id } });
         if (updated === 0) {
             return res.status(404).json({ message: `Producto con id ${id} no encontrado` });
         }

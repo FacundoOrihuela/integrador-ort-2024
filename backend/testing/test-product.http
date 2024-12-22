@@ -7,12 +7,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 # Crear un nuevo producto con imagen
 POST http://localhost:3001/api/products
 Content-Type: multipart/form-data; boundary=boundary
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNDM5NDI4OSwiZXhwIjoxNzM0Mzk3ODg5fQ.Tfn4sNxXAMnfWEjipbZ5NkVYlqesvAPUJTd7GDmMd8E
 
 --boundary
 Content-Disposition: form-data; name="name"
 
-PDF 1
+Nuevo Producto
 --boundary
 Content-Disposition: form-data; name="description"
 
@@ -28,7 +27,7 @@ Content-Disposition: form-data; name="stock"
 --boundary
 Content-Disposition: form-data; name="categoryId"
 
-4
+9
 --boundary
 Content-Disposition: form-data; name="image"; filename="images.jpg"
 Content-Type: image/jpeg

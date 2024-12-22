@@ -4,6 +4,8 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
+import axios from 'axios';
+import FormData from 'form-data';
 import Product from '../models/Product.js'; // Asegúrate de que la ruta sea correcta
 import Category from '../models/Category.js'; // Asegúrate de que la ruta sea correcta
 import User from '../models/User.js';
@@ -47,17 +49,30 @@ const populateDatabase = async () => {
         const uploadsDir = path.join(__dirname, '..', 'uploads');
         const files = fs.readdirSync(uploadsDir);
 
-        const products = files.map((file, index) => ({
-            name: `Producto ${index + 1}`,
-            description: `Descripción del producto ${index + 1}`,
-            price: (index + 1) * 10,
-            stock: 100,
-            categoryId: categories[index % categories.length].id, // Asignar categorías de manera cíclica
-            image: `/uploads/${file}`,
+        const products = await Promise.all(files.map(async (file, index) => {
+            const filePath = path.join(uploadsDir, file);
+            const formData = new FormData();
+            formData.append('name', `Producto ${index + 1}`);
+            formData.append('description', `Descripción del producto ${index + 1}`);
+            formData.append('price', (index + 1) * 10);
+            formData.append('stock', 100);
+            formData.append('categoryId', categories[index % categories.length].id);
+            formData.append('image', fs.createReadStream(filePath));
+
+            try {
+                const response = await axios.post('http://localhost:3001/api/products', formData, {
+                    headers: {
+                        ...formData.getHeaders(),
+                    },
+                });
+                return response.data.data;
+            } catch (error) {
+                console.error('Error al crear el producto:', error.response ? error.response.data : error.message);
+                return null;
+            }
         }));
 
-        await Product.bulkCreate(products);
-        console.log('Productos creados correctamente.');
+        console.log('Productos creados correctamente:', products.filter(product => product !== null));
 
         // Crear usuario administrador
         const hashedPassword = await bcrypt.hash('Admin123', 10);
