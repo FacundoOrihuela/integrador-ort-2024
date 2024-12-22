@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Header from './Header';
-import Footer from './Footer'
+import Footer from './Footer';
 
 const About = () => {
   // Estado para los campos del formulario
@@ -31,9 +31,9 @@ const About = () => {
   };
 
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Header />
-      <div className="pt-20"> {/* Ajusta el contenido debajo del Header */}
+      <div className="flex-grow pt-20"> {/* Ajusta el contenido debajo del Header */}
         <h1 className="text-center text-5xl font-bold mb-8">¡Contáctanos!</h1>
         
         {formSubmitted ? (
@@ -115,7 +115,7 @@ const About = () => {
           </form>
         )}
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };
