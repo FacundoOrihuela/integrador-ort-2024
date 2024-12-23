@@ -15,6 +15,7 @@ import Event from "./components/event/Event";
 import ProductPage from "./components/ecommerce/ProductPage";
 import { UserProvider } from "./context/UserContext";
 import { CartProvider } from "./context/CartContext";
+import { FavoriteProvider } from "./context/FavoriteContext";
 import AdminPanel from "./components/adminPanel/AdminPanel";
 import ProductFormPage from "./components/ecommerce/ProductFormPage";
 import PurchaseHistory from "./components/PurchaseHistory";
@@ -33,31 +34,33 @@ function App() {
       <UserProvider>
         <Provider store={store}>
           <CartProvider>
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Principal />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="*" element={<NotFound />} />
-                <Route path="/verifyEmail" element={<VerifyEmail />} />
-                <Route path="/forgotPassword" element={<ForgotPass />} />
-                <Route path="/reset-password" element={<ResetPass />} />
-                <Route path="/login" element={<Login />} />
-                
-                {/* Rutas protegidas */}
-                <Route path="/store" element={<ProtectedRoute><ProductPage /></ProtectedRoute>} />
-                <Route path="/actividades" element={<ProtectedRoute><Event /></ProtectedRoute>} />
-                <Route path="/grupos" element={<ProtectedRoute><div>Grupos</div></ProtectedRoute>} />
+            <FavoriteProvider>
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<Principal />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="*" element={<NotFound />} />
+                  <Route path="/verifyEmail" element={<VerifyEmail />} />
+                  <Route path="/forgotPassword" element={<ForgotPass />} />
+                  <Route path="/reset-password" element={<ResetPass />} />
+                  <Route path="/login" element={<Login />} />
+                  
+                  {/* Rutas protegidas */}
+                  <Route path="/store" element={<ProtectedRoute><ProductPage /></ProtectedRoute>} />
+                  <Route path="/actividades" element={<ProtectedRoute><Event /></ProtectedRoute>} />
+                  <Route path="/grupos" element={<ProtectedRoute><div>Grupos</div></ProtectedRoute>} />
 
-                <Route path="/admin-panel" element={<AdminPanel />} />
-                <Route path="/create-product" element={<ProductFormPage />} />
-                <Route path="/purchase-history" element={<PurchaseHistory />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/somos" element={<About />} />
-                <Route path="/profile/:userId" element={<UserProfile />} />
+                  <Route path="/admin-panel" element={<AdminPanel />} />
+                  <Route path="/create-product" element={<ProductFormPage />} />
+                  <Route path="/purchase-history" element={<PurchaseHistory />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/somos" element={<About />} />
+                  <Route path="/profile/:userId" element={<UserProfile />} />
 
-              </Routes>
-              <ToastContainer />
-            </BrowserRouter>
+                </Routes>
+                <ToastContainer />
+              </BrowserRouter>
+            </FavoriteProvider>
           </CartProvider>
         </Provider>
       </UserProvider>
