@@ -34,6 +34,7 @@ import eventRoutes from './routes/EventRoutes.js';
 import eventRegistrationRoutes from './routes/EventRegistrationRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import ratingRoutes from './routes/ratingRoutes.js';
+import favoriteRoutes from './routes/favoriteRoutes.js';
 
 app.use('/api/clients', clientsRoutes);
 app.use('/api/administrators', administratorRoutes);
@@ -49,6 +50,7 @@ app.use('/api/events', eventRoutes);
 app.use('/api/event-registrations', eventRegistrationRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/ratings', ratingRoutes);
+app.use('/api/favorites', favoriteRoutes);
 
 // Error handling
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
