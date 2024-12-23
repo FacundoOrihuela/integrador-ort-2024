@@ -52,7 +52,7 @@ const LoginInputs = () => {
         })
         .then((data) => {
           startSession(data.token, data.user);
-          navigate("/principal");
+          navigate("/");
         })
         .catch((error) => {
           console.error("Error al iniciar sesión:", error);

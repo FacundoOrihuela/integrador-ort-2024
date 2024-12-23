@@ -23,7 +23,8 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "./theme";
 import About from "./components/About";
-import ProtectedRoute from "./components/ProtectedRoute"; // Nuevo componente
+import ProtectedRoute from "./components/ProtectedRoute";
+import UserProfile from './components/UserProfile';
 
 function App() {
   return (
@@ -36,7 +37,6 @@ function App() {
               <Routes>
                 <Route path="/" element={<Principal />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/principal" element={<Principal />} />
                 <Route path="*" element={<NotFound />} />
                 <Route path="/verifyEmail" element={<VerifyEmail />} />
                 <Route path="/forgotPassword" element={<ForgotPass />} />
@@ -53,6 +53,8 @@ function App() {
                 <Route path="/purchase-history" element={<PurchaseHistory />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/somos" element={<About />} />
+                <Route path="/profile/:userId" element={<UserProfile />} />
+
               </Routes>
               <ToastContainer />
             </BrowserRouter>

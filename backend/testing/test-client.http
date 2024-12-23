@@ -30,8 +30,7 @@ Content-Type: application/json
 
 {
     "name": "Diego Alejandro Updated",
-    "email": "diego.mazas.updated@gmail.com",
-    "password": "nueva_contraseña"
+    "email": "diego.mazas.updated@gmail.com"
 }
 
 ###

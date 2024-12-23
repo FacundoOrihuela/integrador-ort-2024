@@ -33,7 +33,6 @@ Content-Type: application/json
 {
     "name": "Teacher User Updated",
     "email": "teacher.user.updated@gmail.com",
-    "password": "new_teacher_password",
     "specialty": "Physics",
     "description": "Experienced physics teacher"
 }

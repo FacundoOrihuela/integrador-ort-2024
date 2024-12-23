@@ -1,19 +1,14 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { saveSessionToken } from "../features/loginSlice";
 import { toast } from 'react-toastify';
-import { validateEmail, validatePassword } from "../utils/validateRegister";
+import {validatePassword } from "../utils/validateRegister";
 import '../index.css';
 
 const ResetPass = () => {
     
     const pass = useId();
     const repeatPass = useId();
-    const dispatch = useDispatch();
     const navigate = useNavigate();
-    const userField = useRef();
-    const emailField = useRef();
     const passField = useRef();
     const repeatPassField = useRef();
     const [showPassword, setShowPassword] = useState(false);

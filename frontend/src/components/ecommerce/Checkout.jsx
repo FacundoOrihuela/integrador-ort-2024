@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../../context/CartContext';
-import { UserContext } from '../../context/UserContext';
 import { Box, Typography, Button, List, ListItem, ListItemText, Avatar } from '@mui/material';
 import axios from 'axios';
 import Header from '../Header';

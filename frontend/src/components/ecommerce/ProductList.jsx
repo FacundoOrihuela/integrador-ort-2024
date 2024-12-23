@@ -59,7 +59,6 @@ const ProductList = ({ products, className }) => {
 
           // Construir la URL de Imgix basada en la ruta relativa
           const imgixUrl = `https://tiferet-689097844.imgix.net${relativePath}`;
-          console.log('URL de Imgix:', imgixUrl);
 
           return (
             <Grid item xs={6} sm={4} md={3} lg={2} key={product.id}>

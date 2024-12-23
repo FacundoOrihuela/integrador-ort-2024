@@ -12,3 +12,22 @@ GET http://localhost:3001/api/user/all
 Content-Type: application/json
 
 ###
+
+# Subir una imagen de perfil para un usuario
+POST http://localhost:3001/api/user/upload-profile-image/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNDkyMzIzMSwiZXhwIjoxNzM0OTI2ODMxfQ.Re22ZyDl3oBnu4QJCPRQseDiGYz9Q9gnrjP7SpkTDuY
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="image"; filename="profile.jpg"
+Content-Type: image/jpeg
+
+< D:/Descargas/tiferet-images/person.jpg
+--boundary--
+
+###
+
+# Obtener los detalles de un usuario por ID
+GET http://localhost:3001/api/user/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNDkxNTc2NCwiZXhwIjoxNzM0OTE5MzY0fQ.Q3rvMrAuvUXmEt_gIeDs8Cal56PqJ8nnjGWWxqpE8U0
+Content-Type: application/json

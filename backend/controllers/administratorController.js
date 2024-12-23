@@ -72,16 +72,12 @@ const createAdministrator = async (req, res) => {
 // Actualizar un administrador
 const updateAdministrator = async (req, res) => {
     const { id } = req.params;
-    const { name, email, password } = req.body;
+    const { name, email } = req.body;
     try {
-        // Hashear la nueva contraseña
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const updateData = { name, email };
 
         // Actualizar el usuario
-        const [userUpdated] = await User.update(
-            { name, email, password: hashedPassword },
-            { where: { id } }
-        );
+        const [userUpdated] = await User.update(updateData, { where: { id } });
 
         if (userUpdated === 0) {
             return res.status(404).json({ message: `Usuario con id ${id} no encontrado` });

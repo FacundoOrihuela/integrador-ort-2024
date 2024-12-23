@@ -43,7 +43,7 @@ const Header = ({ store }) => {
             </div>
 
             <nav className="flex-1 flex justify-center space-x-6">
-              <Link to="/principal" className="text-secondary hover:text-tertiary text-lg font-bold">
+              <Link to="/" className="text-secondary hover:text-tertiary text-lg font-bold">
                 Home
               </Link>
               <Link to="/somos" className="text-secondary hover:text-tertiary text-lg font-bold">
