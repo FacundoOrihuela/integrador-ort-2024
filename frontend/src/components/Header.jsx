@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { AppBar, Toolbar, IconButton, Container, Typography } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import Favorite from "@mui/icons-material/Favorite";
+import Favorites from "./ecommerce/Favorites";
 import ProfileModal from "./ProfileModal";
 import Cart from "./ecommerce/Cart";
 import { UserContext } from "../context/UserContext";
@@ -11,6 +13,7 @@ import RegisterAlert from "./RegisterAlert";
 
 const Header = ({ store }) => {
   const { user } = useContext(UserContext);
+  const [showFav, setShowFav] = useState(false);
   const [showCart, setShowCart] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -74,9 +77,14 @@ const Header = ({ store }) => {
 
             <div className="flex items-center gap-4">
               {store && (
-                <IconButton color="inherit" onClick={() => setShowCart(!showCart)}>
-                  <ShoppingCartIcon className="text-white text-3xl" />
-                </IconButton>
+                <div>
+                 <IconButton color="inherit" onClick={() => setShowFav(!showFav)}>
+                   <Favorite className="text-white text-3xl" />
+                 </IconButton>
+                 <IconButton color="inherit" onClick={() => setShowCart(!showCart)}>
+                   <ShoppingCartIcon className="text-white text-3xl" />
+                 </IconButton>
+               </div>
               )}
 
               {user ? (
@@ -114,7 +122,7 @@ const Header = ({ store }) => {
                   </Link>
                 </div>
               )}
-
+              {showFav && <Favorites onClose={() => setShowFav(false)} />}
               {showCart && <Cart onClose={() => setShowCart(false)} />}
             </div>
           </Toolbar>
