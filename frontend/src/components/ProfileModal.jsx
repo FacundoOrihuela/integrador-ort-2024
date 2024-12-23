@@ -22,7 +22,7 @@ const ProfileModal = ({ onClose }) => {
             <Box className="absolute top-16 right-0 w-64 bg-white shadow-lg p-4">
                 <Typography variant="h6" className="text-black font-bold mb-4">Menú</Typography>
                 <List>
-                    <ListItemButton onClick={() => navigate(`profile/${user.userId}`)}>
+                    <ListItemButton onClick={() => navigate('/profile/' + user.userId)}>
                         <ListItemAvatar>
                             <AccountCircleIcon className="text-colors-1 bg-transparent" />
                         </ListItemAvatar>

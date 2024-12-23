@@ -27,12 +27,12 @@ Content-Disposition: form-data; name="stock"
 --boundary
 Content-Disposition: form-data; name="categoryId"
 
-9
+1
 --boundary
 Content-Disposition: form-data; name="image"; filename="images.jpg"
 Content-Type: image/jpeg
 
-< D:/Descargas/tiferet-images/images.jpg
+< D:/Descargas/tiferet-images/2.jpg
 --boundary--
 
 ###

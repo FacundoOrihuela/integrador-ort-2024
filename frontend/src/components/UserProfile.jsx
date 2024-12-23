@@ -189,9 +189,8 @@ const UserProfile = () => {
         <Box display="flex" flexDirection="column" minHeight="100vh">
             <Header />
             <Box display="flex" flexDirection="column" flexGrow={1}>
-                <Container component="main" sx={{ flexGrow: 1, py: 4 }}>
-                    <Typography variant="h4" className="font-bold mb-4 text-center">Perfil del Usuario</Typography>
-                    <Card sx={{ p: 4, flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+                <Container component="main" sx={{ flexGrow: 1, py: 4, height: '80vh', mt: 6 }}>
+                    <Card sx={{ p: 4, flexGrow: 1, display: 'flex', flexDirection: 'column'}}>
                         <CardContent sx={{ display: 'flex', justifyContent: 'center', mb: 4, position: 'relative' }}>
                             <Box sx={{ width: 192, height: 192, position: 'relative' }}>
                                 {isUploading ? (
@@ -220,6 +219,7 @@ const UserProfile = () => {
                                         right: 0,
                                         backgroundColor: 'white',
                                         color: 'primary.main',
+                                        boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.3)',
                                         '&:hover': {
                                             backgroundColor: 'white',
                                         },

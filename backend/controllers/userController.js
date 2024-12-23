@@ -4,29 +4,15 @@ import Teacher from '../models/Teacher.js';
 import Administrator from '../models/Administrator.js';
 import cloudinary from '../config/cloudinaryConfig.js';
 import multer from 'multer';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
-// Obtener la ruta del directorio actual
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Configurar multer para almacenar imágenes temporalmente
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, '..', 'uploads'));
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
-    },
-});
-
+// Configurar multer para almacenar imágenes en memoria
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // Subir una imagen de perfil para un usuario
 const uploadProfileImage = async (req, res) => {
     const { userId } = req.params;
-    const image = req.file ? req.file.path : null;
+    const image = req.file ? req.file.buffer : null;
 
     try {
         // Verificar si el usuario existe
@@ -38,8 +24,15 @@ const uploadProfileImage = async (req, res) => {
         // Subir la imagen a Cloudinary
         let imageUrl = null;
         if (image) {
-            const result = await cloudinary.uploader.upload(image, {
-                folder: 'profile_pictures',
+            const result = await new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream({ folder: 'profile_pictures' }, (error, result) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(result);
+                    }
+                });
+                stream.end(image);
             });
             imageUrl = result.secure_url;
         }

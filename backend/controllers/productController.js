@@ -1,24 +1,10 @@
 import Product from '../models/Product.js';
 import Category from '../models/Category.js';
-import cloudinary from '../config/cloudinaryConfig.js'; // Importar la configuración de Cloudinary
+import cloudinary from '../config/cloudinaryConfig.js';
 import multer from 'multer';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
-// Obtener la ruta del directorio actual
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Configurar multer para almacenar imágenes temporalmente
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, '..', 'uploads')); // Usar path para construir la ruta
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
-    },
-});
-
+// Configurar multer para almacenar imágenes en memoria
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // Obtener todos los productos
@@ -35,7 +21,7 @@ const getProducts = async (req, res) => {
 // Crear un nuevo producto
 const createProduct = async (req, res) => {
     const { name, description, price, stock, categoryId } = req.body;
-    const image = req.file ? req.file.path : null;
+    const image = req.file ? req.file.buffer : null;
 
     try {
         // Verificar si la categoría existe
@@ -47,8 +33,15 @@ const createProduct = async (req, res) => {
         // Subir la imagen a Cloudinary
         let imageUrl = null;
         if (image) {
-            const result = await cloudinary.uploader.upload(image, {
-                folder: 'products',
+            const result = await new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream({ folder: 'products' }, (error, result) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(result);
+                    }
+                });
+                stream.end(image);
             });
             imageUrl = result.secure_url;
         }
@@ -65,7 +58,7 @@ const createProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
     const { id } = req.params;
     const { name, description, price, stock, categoryId } = req.body;
-    const image = req.file ? req.file.path : null;
+    const image = req.file ? req.file.buffer : null;
 
     try {
         // Verificar si la categoría existe
@@ -77,8 +70,15 @@ const updateProduct = async (req, res) => {
         // Subir la nueva imagen a Cloudinary si existe
         let imageUrl = null;
         if (image) {
-            const result = await cloudinary.uploader.upload(image, {
-                folder: 'products',
+            const result = await new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream({ folder: 'products' }, (error, result) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(result);
+                    }
+                });
+                stream.end(image);
             });
             imageUrl = result.secure_url;
         }
