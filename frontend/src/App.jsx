@@ -31,11 +31,11 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <UserProvider>
-        <Provider store={store}>
-          <CartProvider>
-            <FavoriteProvider>
-              <BrowserRouter>
+      <BrowserRouter>
+        <UserProvider>
+          <Provider store={store}>
+            <CartProvider>
+              <FavoriteProvider>
                 <Routes>
                   <Route path="/" element={<Principal />} />
                   <Route path="/register" element={<Register />} />
@@ -58,11 +58,11 @@ function App() {
 
                 </Routes>
                 <ToastContainer />
-              </BrowserRouter>
-            </FavoriteProvider>
-          </CartProvider>
-        </Provider>
-      </UserProvider>
+              </FavoriteProvider>
+            </CartProvider>
+          </Provider>
+        </UserProvider>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }
