@@ -35,6 +35,9 @@ import eventRegistrationRoutes from './routes/eventRegistrationRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import ratingRoutes from './routes/ratingRoutes.js';
 import favoriteRoutes from './routes/favoriteRoutes.js';
+import groupRoutes from './routes/groupRoutes.js'; // Importar las rutas de Group
+import postRoutes from './routes/postRoutes.js'; // Importar las rutas de Post
+import commentRoutes from './routes/commentRoutes.js'; // Importar las rutas de Comment
 
 app.use('/api/clients', clientsRoutes);
 app.use('/api/administrators', administratorRoutes);
@@ -51,6 +54,9 @@ app.use('/api/event-registrations', eventRegistrationRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/ratings', ratingRoutes);
 app.use('/api/favorites', favoriteRoutes);
+app.use('/api/groups', groupRoutes); // Usar las rutas de Group
+app.use('/api/posts', postRoutes); // Usar las rutas de Post
+app.use('/api/comments', commentRoutes); // Usar las rutas de Comment
 
 // Error handling
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars

@@ -1,0 +1,73 @@
+# Obtener todos los posts
+GET http://localhost:3001/api/posts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNTAwNzA0MywiZXhwIjoxNzM1MDEwNjQzfQ.-FaFZ17NG_jERM0LhYW2nJAZ5EwP_Mbwlj6R6Uappvw
+
+###
+
+# Crear un nuevo post
+POST http://localhost:3001/api/posts
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNTAwNzA0MywiZXhwIjoxNzM1MDEwNjQzfQ.-FaFZ17NG_jERM0LhYW2nJAZ5EwP_Mbwlj6R6Uappvw
+
+{
+    "userId": 1,
+    "groupId": 1,
+    "content": "Contenido del nuevo post"
+}
+
+###
+
+# Actualizar un post existente
+PUT http://localhost:3001/api/posts/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNTAwNzA0MywiZXhwIjoxNzM1MDEwNjQzfQ.-FaFZ17NG_jERM0LhYW2nJAZ5EwP_Mbwlj6R6Uappvw
+
+{
+    "userId": 1,
+    "groupId": 1,
+    "content": "Contenido actualizado del post"
+}
+
+###
+
+# Eliminar un post
+DELETE http://localhost:3001/api/posts/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNTAwNzA0MywiZXhwIjoxNzM1MDEwNjQzfQ.-FaFZ17NG_jERM0LhYW2nJAZ5EwP_Mbwlj6R6Uappvw
+
+###
+
+# Obtener un post por su id
+GET http://localhost:3001/api/posts/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNTAwNzA0MywiZXhwIjoxNzM1MDEwNjQzfQ.-FaFZ17NG_jERM0LhYW2nJAZ5EwP_Mbwlj6R6Uappvw
+
+###
+
+# Obtener todos los posts de un grupo determinado
+GET http://localhost:3001/api/posts/group/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNTAwNzA0MywiZXhwIjoxNzM1MDEwNjQzfQ.-FaFZ17NG_jERM0LhYW2nJAZ5EwP_Mbwlj6R6Uappvw
+
+###
+
+# Obtener todos los posts de un usuario determinado
+GET http://localhost:3001/api/posts/user/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNTAwNzA0MywiZXhwIjoxNzM1MDEwNjQzfQ.-FaFZ17NG_jERM0LhYW2nJAZ5EwP_Mbwlj6R6Uappvw
+
+###
+
+# Obtener todos los posts de un usuario determinado en un grupo determinado
+GET http://localhost:3001/api/posts/user/1/group/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNTAwNzA0MywiZXhwIjoxNzM1MDEwNjQzfQ.-FaFZ17NG_jERM0LhYW2nJAZ5EwP_Mbwlj6R6Uappvw
+
+###
+
+# Agregar una imagen a un post existente
+POST http://localhost:3001/api/posts/1/image
+Content-Type: multipart/form-data; boundary=boundary
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNTAwNzA0MywiZXhwIjoxNzM1MDEwNjQzfQ.-FaFZ17NG_jERM0LhYW2nJAZ5EwP_Mbwlj6R6Uappvw
+
+--boundary
+Content-Disposition: form-data; name="image"; filename="post-image.jpg"
+Content-Type: image/jpeg
+
+< D:/Descargas/tiferet-images/person.jpg
+--boundary--

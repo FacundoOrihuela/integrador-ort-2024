@@ -12,6 +12,10 @@ import OrderItem from './OrderItem.js';
 import Rating from './Rating.js';
 import Category from './Category.js';
 import Favorite from './Favorite.js';
+import Group from './Group.js';
+import Post from './Post.js';
+import GroupUser from './GroupUser.js';
+import Comment from './Comment.js';
 
 // Definir relaciones
 User.hasOne(Cart, { foreignKey: 'userId' });
@@ -55,4 +59,20 @@ Product.hasMany(Favorite, { foreignKey: 'productId' });
 Favorite.belongsTo(User, { foreignKey: 'userId' });
 Favorite.belongsTo(Product, { foreignKey: 'productId' });
 
-export { sequelize, User, Cart, CartItem, Product, Event, SingleEvent, RecurringEvent, EventRegistration, Order, OrderItem, Rating, Category, Favorite };
+// Definir las asociaciones
+User.belongsToMany(Group, { through: GroupUser, foreignKey: 'userId' });
+Group.belongsToMany(User, { through: GroupUser, foreignKey: 'groupId' });
+
+User.hasMany(Post, { foreignKey: 'userId' });
+Post.belongsTo(User, { foreignKey: 'userId' });
+
+Group.hasMany(Post, { foreignKey: 'groupId' });
+Post.belongsTo(Group, { foreignKey: 'groupId' });
+
+User.hasMany(Comment, { foreignKey: 'userId' });
+Comment.belongsTo(User, { foreignKey: 'userId' });
+
+Post.hasMany(Comment, { foreignKey: 'postId' });
+Comment.belongsTo(Post, { foreignKey: 'postId' });
+
+export { sequelize, User, Cart, CartItem, Product, Event, SingleEvent, RecurringEvent, EventRegistration, Order, OrderItem, Rating, Category, Favorite, Group, Post, GroupUser, Comment };

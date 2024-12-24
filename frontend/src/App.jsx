@@ -48,7 +48,6 @@ function App() {
                   {/* Rutas protegidas */}
                   <Route path="/store" element={<ProtectedRoute><ProductPage /></ProtectedRoute>} />
                   <Route path="/actividades" element={<ProtectedRoute><Event /></ProtectedRoute>} />
-                  <Route path="/grupos" element={<ProtectedRoute><div>Grupos</div></ProtectedRoute>} />
 
                   <Route path="/admin-panel" element={<AdminPanel />} />
                   <Route path="/create-product" element={<ProductFormPage />} />

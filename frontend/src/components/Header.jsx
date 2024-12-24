@@ -21,7 +21,7 @@ const Header = ({ store }) => {
   const profileButtonRef = useRef(null);
 
   useEffect(() => {
-    console.log("Estado del usuario:", user); // Verificar el valor de `user`
+    console.log("Estado del usuario:", user);
   }, [user]);
 
   const handleRestrictedClick = (path) => {
@@ -30,7 +30,7 @@ const Header = ({ store }) => {
       setShowAlert(true);
     } else {
       console.log(`Usuario logueado. Redirigiendo a: ${path}`);
-      navigate(path); // Asegúrate de que `path` es válido
+      navigate(path);
     }
   };
 
@@ -57,12 +57,6 @@ const Header = ({ store }) => {
                 className="text-secondary hover:text-tertiary text-lg font-bold cursor-pointer"
               >
                 Actividades
-              </span>
-              <span
-                onClick={() => handleRestrictedClick("/grupos")}
-                className="text-secondary hover:text-tertiary text-lg font-bold cursor-pointer"
-              >
-                Grupos
               </span>
               <span
                 onClick={() => handleRestrictedClick("/store")}
