@@ -1,6 +1,6 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AppBar, Toolbar, IconButton, Container, Typography } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Container, Typography, Avatar } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Favorite from "@mui/icons-material/Favorite";
@@ -88,7 +88,11 @@ const Header = ({ store }) => {
                     onClick={() => setShowProfile(!showProfile)}
                     ref={profileButtonRef}
                   >
-                    <AccountCircleIcon className="text-white text-3xl" />
+                    {user.photo ? (
+                      <Avatar src={user.photo} alt="Profile Photo" className="h-10 w-10" />
+                    ) : (
+                      <AccountCircleIcon className="text-white text-3xl" />
+                    )}
                   </IconButton>
                   <Typography variant="body1" className="text-white">
                     ¡Bienvenido, {user.name}!

@@ -7,12 +7,14 @@ import Sidebar from "./Sidebar";
 import Activities from "./Activities/Activities";
 import Memberships from "./Memberships/Memberships";
 import ShoppingList from "./Activities/ShoppingList";
+import { Box, CssBaseline, Toolbar } from "@mui/material";
+
+const drawerWidth = 240;
 
 const AdminPanel = () => {
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const [selectedComponent, setSelectedComponent] = useState("UserList");
-  const [showSidebar, setShowSidebar] = useState(false);
 
   useEffect(() => {
     if (user === null) {
@@ -34,7 +36,7 @@ const AdminPanel = () => {
       case "Memberships":
         return <Memberships />;
       case "ShoppingList":
-        return <ShoppingList/>;
+        return <ShoppingList />;
       case "Activities":
         return <Activities />;
       default:
@@ -43,24 +45,25 @@ const AdminPanel = () => {
   };
 
   return (
-    <div>
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
       <Header />
-      <div className="relative container mx-auto flex h-[100vh]">
-        <div
-          className="fixed left-0 top-0 h-full w-[40px] bg-transparent z-[999] cursor-pointer"
-          onClick={() => setShowSidebar(true)}
-        ></div>
-
-        <Sidebar
-          className={`${
-            showSidebar ? "translate-x-0" : "-translate-x-[90%]"
-          }`}
-          onMouseLeave={() => setShowSidebar(false)}
-          onSelect={setSelectedComponent}
-        />
-        <div className="flex flex-col m-[104px] w-full">{renderComponent()}</div>
-      </div>
-    </div>
+      <Sidebar
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" },
+        }}
+        onSelect={setSelectedComponent}
+      />
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, p: 3, marginLeft: `${drawerWidth}px` }}
+      >
+        <Toolbar />
+        {renderComponent()}
+      </Box>
+    </Box>
   );
 };
 

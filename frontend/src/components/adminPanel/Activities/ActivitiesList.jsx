@@ -18,7 +18,6 @@ const ActivitiesList = () => {
       })
       .then((data) => {
         setActivities(data);
-        console.log(data)
       })
       .catch((err) => {
         setError(err.message);

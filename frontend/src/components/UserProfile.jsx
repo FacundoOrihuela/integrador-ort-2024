@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Button, TextField, Card, CardContent, Typography, CircularProgress, Box, Container, Alert, IconButton } from '@mui/material';
-import { Edit as EditIcon } from '@mui/icons-material';
+import { Edit as EditIcon, AccountCircle as AccountCircleIcon } from '@mui/icons-material';
 import Header from './Header';
 import Footer from './Footer';
 
@@ -198,12 +198,16 @@ const UserProfile = () => {
                                         size={192}
                                         sx={{ position: 'absolute', top: 0, left: 0, zIndex: 1 }}
                                     />
-                                ) : (
+                                ) : profile.photo ? (
                                     <img
                                         src={profile.photo}
                                         alt="Profile"
                                         onError={handleImageError}
                                         style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+                                    />
+                                ) : (
+                                    <AccountCircleIcon
+                                        sx={{ width: '100%', height: '100%', color: 'gray' }}
                                     />
                                 )}
                                 {imageError && (
