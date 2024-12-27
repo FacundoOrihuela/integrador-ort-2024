@@ -83,17 +83,23 @@ const Header = ({ store }) => {
 
               {user ? (
                 <>
+
                   <IconButton
                     color="inherit"
                     onClick={() => setShowProfile(!showProfile)}
-                    ref={profileButtonRef}
-                  >
+                    ref={profileButtonRef}>
+
+
                     {user.photo ? (
                       <Avatar src={user.photo} alt="Profile Photo" className="h-10 w-10" />
                     ) : (
                       <AccountCircleIcon className="text-white text-3xl" />
                     )}
+
+
                   </IconButton>
+
+                  
                   <Typography variant="body1" className="text-white">
                     ¡Bienvenido, {user.name}!
                   </Typography>
@@ -104,6 +110,8 @@ const Header = ({ store }) => {
                     />
                   )}
                 </>
+
+
               ) : (
                 <div className="flex gap-4">
                   <Link
