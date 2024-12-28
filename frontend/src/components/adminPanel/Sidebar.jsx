@@ -1,12 +1,12 @@
 import React from "react";
 
-const Sidebar = ({ className, onMouseLeave, onSelect }) => {
+const Sidebar = ({ onSelect }) => {
   return (
     <aside
-      className={`z-[100] rounded-br-[30px] rounded-tr-[0px] bg-gray-100 p-[174px_0px] flex flex-col shadow-md w-1/4 fixed top-0 left-0 h-full transition-transform duration-300 ${className}`}
-      onMouseLeave={onMouseLeave}
+      className="z-[100] bg-gray-100 p-4 flex flex-col shadow-md fixed top-0 left-0 h-full"
+      style={{ width: '240px', marginTop: '64px' }} // Ancho fijo para el sidebar y margen superior para el header
     >
-      <div className={`z-[100] rounded-br-[30px] rounded-tr-[0px] bg-gray-100 p-[174px_0px] flex flex-col shadow-md w-1/4 fixed top-0 left-0 h-full transition-transform duration-300 ${className}`}>
+      <div className="flex flex-col gap-1 mb-8">
         <button className="py-2 hover:bg-gray-300" onClick={() => onSelect("UserList")}>
           Lista de Usuarios
         </button>
