@@ -48,9 +48,7 @@ const AdminPanel = () => {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <Header />
-      <Sidebar sx={{width: drawerWidth,flexShrink: 0,[`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" },}} onSelect={setSelectedComponent}/>
-
-
+      <Sidebar onSelect={setSelectedComponent} />
       <Box
         component="main"
         sx={{ flexGrow: 1, p: 3, marginLeft: `${drawerWidth}px` }}

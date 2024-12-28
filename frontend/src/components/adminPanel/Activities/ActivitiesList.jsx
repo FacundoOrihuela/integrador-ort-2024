@@ -87,20 +87,31 @@ const ActivitiesList = () => {
             <p className="text-gray-700 mb-2">
               <span className="font-bold">Descripción:</span> {activity.description}
             </p>
-            <p className="text-gray-900">
-              <h2 className="font-bold">Desde:</h2>
-              <p>
-                {new Date(activity.SingleEvent.startDateTime).toLocaleDateString()}
-                <span className="font-bold"> - </span>
-                {new Date(activity.SingleEvent.startDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-              </p>
-              <h2 className="font-bold">Hasta:</h2>
-              <p>
-                {new Date(activity.SingleEvent.endDateTime).toLocaleDateString()}
-                <span className="font-bold"> - </span>
-                {new Date(activity.SingleEvent.endDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-              </p>
-            </p>
+            {activity.SingleEvent ? (
+              <div className="text-gray-900">
+                <h2 className="font-bold">Desde:</h2>
+                <p>
+                  {new Date(activity.SingleEvent.startDateTime).toLocaleDateString()}
+                  <span className="font-bold"> - </span>
+                  {new Date(activity.SingleEvent.startDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </p>
+                <h2 className="font-bold">Hasta:</h2>
+                <p>
+                  {new Date(activity.SingleEvent.endDateTime).toLocaleDateString()}
+                  <span className="font-bold"> - </span>
+                  {new Date(activity.SingleEvent.endDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </p>
+              </div>
+            ) : activity.RecurringEvent ? (
+              <div className="text-gray-900">
+                <h2 className="font-bold">Patrón de recurrencia:</h2>
+                <p>
+                  {activity.RecurringEvent.recurrencePattern.frequency} cada {activity.RecurringEvent.recurrencePattern.interval} semana(s) en los días {activity.RecurringEvent.recurrencePattern.daysOfWeek.join(', ')}
+                </p>
+              </div>
+            ) : (
+              <p className="text-gray-700">No hay información de evento disponible.</p>
+            )}
             <div className="mt-4 flex gap-4">
               <button
                 onClick={() => openEditModal(activity)}
