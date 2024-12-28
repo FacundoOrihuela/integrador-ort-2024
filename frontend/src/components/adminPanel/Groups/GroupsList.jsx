@@ -1,29 +1,34 @@
 import React, { useEffect, useState } from "react";
-import CreateMemberships from "./CreateMemberships";
+import CreateGroups from "./CreateGroups";
 
-const MembershipList = () => {
-  const [memberships, setMemberships] = useState([]);
+const GroupsList = () => {
+  const [groups, setGroups] = useState([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editData, setEditData] = useState({
     id: null,
     name: "",
     description: "",
-    price: "",
-    duration: "",
+    image: null,
   });
   const [error, setError] = useState(null);
 
-  const fetchMemberships = () => {
-    fetch("http://localhost:3001/api/memberships")
-      .then((respuesta) => {
-        if (!respuesta.ok) {
-          throw new Error("Error al obtener las membresías");
+  const fetchGroups = () => {
+    fetch("http://localhost:3001/api/groups", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    })
+      .then((response) => {
+        console.log(response)
+        if (!response.ok) {
+          throw new Error("Error al obtener los grupos");
         }
-        return respuesta.json();
+        return response.json();
       })
-      .then((dataMembresias) => {
-        setMemberships(dataMembresias.data);
+      .then((data) => {
+        console.log(data.data)
+        setGroups(data.data);
       })
       .catch((err) => {
         setError(err.message);
@@ -31,31 +36,31 @@ const MembershipList = () => {
   };
 
   useEffect(() => {
-    fetchMemberships();
+    fetchGroups();
   }, []);
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/memberships/${id}`, {
+      const response = await fetch(`http://localhost:3001/api/groups/${id}`, {
         method: "DELETE",
         headers: {
-          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
 
       if (response.ok) {
-        setMemberships(memberships.filter((membresia) => membresia.id !== id));
+        setGroups(groups.filter((group) => group.id !== id));
       } else {
         const errorData = await response.json();
-        setError(errorData.message || "Error al eliminar la membresía");
+        setError(errorData.message || "Error al eliminar el grupo");
       }
     } catch (error) {
       setError("Error al conectar con el servidor.");
     }
   };
 
-  const openEditModal = (membresia) => {
-    setEditData(membresia);
+  const openEditModal = (group) => {
+    setEditData(group);
     setIsEditModalOpen(true);
   };
 
@@ -65,7 +70,7 @@ const MembershipList = () => {
   const handleUpdateOrCreate = () => {
     setIsCreateModalOpen(false);
     setIsEditModalOpen(false);
-    fetchMemberships();
+    fetchGroups();
   };
 
   if (error) {
@@ -79,34 +84,38 @@ const MembershipList = () => {
           onClick={toggleCreateModal}
           className="bg-colors-1 text-white px-4 py-2 rounded hover:bg-colors-1"
         >
-          Crear Membresía
+          Crear Grupo
         </button>
       </div>
-      <h2 className="text-2xl font-bold mb-4">Lista de Membresías</h2>
+      <h2 className="text-2xl font-bold mb-4">Lista de Grupos</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {memberships.map((membresia) => (
+        {groups.map((group) => (
           <div
-            key={membresia.id}
+            key={group.id}
             className="bg-white rounded-lg shadow-md p-4 hover:shadow-xl transition duration-300 ease-in-out"
           >
             <h3 className="text-xl font-semibold text-colors-1 mb-2">
-              {membresia.name}
+              {group.name}
             </h3>
             <p className="text-gray-700 mb-2">
-              <span className="font-bold">Descripción:</span> {membresia.description}
+              <span className="font-bold">Descripción:</span> {group.description}
             </p>
-            <p className="text-gray-900 font-medium">
-              <span className="font-bold">Precio:</span> ${membresia.price}
-            </p>
+            {group.image && (
+              <img
+                src={group.image}
+                alt={group.name}
+                className="w-full h-32 object-cover mb-2"
+              />
+            )}
             <div className="mt-4 flex justify-between gap-4">
               <button
-                onClick={() => openEditModal(membresia)}
+                onClick={() => openEditModal(group)}
                 className="w-[50%] bg-yellow-500 text-white px-3 py-2 rounded hover:bg-yellow-600 transition duration-200"
               >
                 Editar
               </button>
               <button
-                onClick={() => handleDelete(membresia.id)}
+                onClick={() => handleDelete(group.id)}
                 className="w-[50%] bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-200"
               >
                 Eliminar
@@ -125,7 +134,7 @@ const MembershipList = () => {
             >
               ✕
             </button>
-            <CreateMemberships
+            <CreateGroups
               handleUpdateOrCreate={handleUpdateOrCreate}
               setIsModalOpen={setIsCreateModalOpen}
             />
@@ -142,7 +151,7 @@ const MembershipList = () => {
             >
               ✕
             </button>
-            <CreateMemberships
+            <CreateGroups
               editData={editData}
               setEditData={setEditData}
               setIsModalOpen={setIsEditModalOpen}
@@ -156,4 +165,4 @@ const MembershipList = () => {
   );
 };
 
-export default MembershipList;
+export default GroupsList;

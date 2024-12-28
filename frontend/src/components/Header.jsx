@@ -20,9 +20,9 @@ const Header = ({ store }) => {
   const navigate = useNavigate();
   const profileButtonRef = useRef(null);
 
-  useEffect(() => {
-    console.log("Estado del usuario:", user);
-  }, [user]);
+  // useEffect(() => {
+  //   console.log("Estado del usuario:", user);
+  // }, [user]);
 
   const handleRestrictedClick = (path) => {
     if (!user) {

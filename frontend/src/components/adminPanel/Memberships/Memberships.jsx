@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import MembershipList from "./MembershipList";
-import CreateMemberships from "./CreateMemberships";
 
 const Memberships = () => {
 

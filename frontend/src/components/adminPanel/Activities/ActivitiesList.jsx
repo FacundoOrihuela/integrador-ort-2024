@@ -18,6 +18,7 @@ const ActivitiesList = () => {
       })
       .then((data) => {
         setActivities(data);
+        console.log(data)
       })
       .catch((err) => {
         setError(err.message);
@@ -60,6 +61,38 @@ const ActivitiesList = () => {
     setIsEditModalOpen(false);
   };
 
+  const formatEventDate = (event) => {
+    if (event.eventType === "single") {
+      return (
+        <div>
+          <h2 className="font-bold">Desde:</h2>
+          <p>
+            {new Date(event.startDateTime).toLocaleDateString()}
+            <span className="font-bold"> - </span>
+            {new Date(event.startDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </p>
+          <h2 className="font-bold">Hasta:</h2>
+          <p>
+            {new Date(event.endDateTime).toLocaleDateString()}
+            <span className="font-bold"> - </span>
+            {new Date(event.endDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </p>
+        </div>
+      );
+    } else if (event.eventType === "recurring" && event.recurrencePattern) {
+      return (
+        <div>
+          <h2 className="font-bold">Frecuencia:</h2>
+          <p>
+            {event.recurrencePattern.type} - Días:{" "}
+            {event.recurrencePattern.days.join(", ")}{" "}
+            de {event.recurrencePattern.startTime} a {event.recurrencePattern.endTime}
+          </p>
+        </div>
+      );
+    }
+  };
+
   if (error) {
     return <div className="text-red-500">Error: {error}</div>;
   }
@@ -87,20 +120,7 @@ const ActivitiesList = () => {
             <p className="text-gray-700 mb-2">
               <span className="font-bold">Descripción:</span> {activity.description}
             </p>
-            <p className="text-gray-900">
-              <h2 className="font-bold">Desde:</h2>
-              <p>
-                {new Date(activity.SingleEvent.startDateTime).toLocaleDateString()}
-                <span className="font-bold"> - </span>
-                {new Date(activity.SingleEvent.startDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-              </p>
-              <h2 className="font-bold">Hasta:</h2>
-              <p>
-                {new Date(activity.SingleEvent.endDateTime).toLocaleDateString()}
-                <span className="font-bold"> - </span>
-                {new Date(activity.SingleEvent.endDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-              </p>
-            </p>
+            {formatEventDate(activity)}
             <div className="mt-4 flex gap-4">
               <button
                 onClick={() => openEditModal(activity)}

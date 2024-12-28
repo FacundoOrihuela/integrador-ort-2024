@@ -5,6 +5,7 @@ import Header from "../Header";
 import UserList from "./UsersList";
 import Sidebar from "./Sidebar";
 import Activities from "./Activities/Activities";
+import Groups from "./Groups/Groups";
 import Memberships from "./Memberships/Memberships";
 import ShoppingList from "./Activities/ShoppingList";
 import { Box, CssBaseline, Toolbar } from "@mui/material";
@@ -39,25 +40,25 @@ const AdminPanel = () => {
         return <ShoppingList />;
       case "Activities":
         return <Activities />;
+      case "Groups":
+        return <Groups />;
       default:
         return null;
     }
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
+    <Box className="flex 
+    justify-center">
       <Header />
-      <Sidebar sx={{width: drawerWidth,flexShrink: 0,[`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" },}} onSelect={setSelectedComponent}/>
-
-
-      <Box
-        component="main"
-        sx={{ flexGrow: 1, p: 3, marginLeft: `${drawerWidth}px` }}
-      >
-        <Toolbar />
-        {renderComponent()}
-      </Box>
+      <div className="flex">
+        <Sidebar className="w-[240px]" onSelect={setSelectedComponent}/>
+        <div className="ml-[240px] justify-center">
+          <Toolbar />
+          {renderComponent()}
+        </div>
+      </div>
+      
     </Box>
   );
 };
