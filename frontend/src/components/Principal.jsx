@@ -10,6 +10,7 @@ import psicoterapiaImg from "../components/img/psicoterapias.png";
 import fotoHomeImg from "../components/img/fotoHome.png";
 
 const Principal = () => {
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
