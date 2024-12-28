@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import sequelize from './config/database.js';
 import './models/index.js';
 
 dotenv.config();
@@ -35,9 +34,9 @@ import eventRegistrationRoutes from './routes/eventRegistrationRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import ratingRoutes from './routes/ratingRoutes.js';
 import favoriteRoutes from './routes/favoriteRoutes.js';
-import groupRoutes from './routes/groupRoutes.js'; // Importar las rutas de Group
-import postRoutes from './routes/postRoutes.js'; // Importar las rutas de Post
-import commentRoutes from './routes/commentRoutes.js'; // Importar las rutas de Comment
+import groupRoutes from './routes/groupRoutes.js';
+import postRoutes from './routes/postRoutes.js';
+import commentRoutes from './routes/commentRoutes.js';
 
 app.use('/api/clients', clientsRoutes);
 app.use('/api/administrators', administratorRoutes);
@@ -54,21 +53,16 @@ app.use('/api/event-registrations', eventRegistrationRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/ratings', ratingRoutes);
 app.use('/api/favorites', favoriteRoutes);
-app.use('/api/groups', groupRoutes); // Usar las rutas de Group
-app.use('/api/posts', postRoutes); // Usar las rutas de Post
-app.use('/api/comments', commentRoutes); // Usar las rutas de Comment
+app.use('/api/groups', groupRoutes);
+app.use('/api/posts', postRoutes);
+app.use('/api/comments', commentRoutes);
 
 // Error handling
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
     res.status(500).json({ message: 'Error interno del servidor', error: err.message });
 });
 
-// Sincronizar modelos con la base de datos
-sequelize.sync({ alter: true }).then(() => {
-    console.log('Base de datos sincronizada');
-    app.listen(port, () => {
-        console.log(`Servidor corriendo en http://localhost:${port}`);
-    });
-}).catch(error => {
-    console.error('Error al sincronizar la base de datos:', error);
+// Iniciar el servidor
+app.listen(port, () => {
+    console.log(`Servidor corriendo en http://localhost:${port}`);
 });

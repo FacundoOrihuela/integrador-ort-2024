@@ -51,6 +51,7 @@ const User = sequelize.define('User', {
         {
             unique: true,
             fields: ['email'],
+            name: 'user_email_unique', // Añadir un nombre único al índice
         },
     ],
 });
