@@ -22,6 +22,7 @@ export const CartProvider = ({ children }) => {
             })
                 .then((response) => response.json())
                 .then((data) => setCart(data.cart.CartItems))
+                .then((data) => console.log(data))
                 .catch((error) => console.error('Error fetching cart:', error));
         }
     };

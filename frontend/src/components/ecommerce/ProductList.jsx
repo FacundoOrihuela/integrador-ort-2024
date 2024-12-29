@@ -1,9 +1,13 @@
 import React, { useContext, useState } from 'react';
 import { CartContext } from '../../context/CartContext';
-import { Box, Typography, Select, MenuItem, Grid, Card, CardContent, CardMedia, Button, Rating } from '@mui/material';
+import { Box, Typography, Select, MenuItem, Grid, Card, CardContent, CardMedia, Button, Rating, IconButton } from '@mui/material';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import { FavoriteContext } from "../../context/FavoriteContext";
 
 const ProductList = ({ products, className }) => {
   const { addToCart } = useContext(CartContext);
+  const { favorite, addToFavorite, removeFromFavorite } = useContext(FavoriteContext);
   const [sortOption, setSortOption] = useState('price-asc'); // Valor inicial
 
   const handleSortChange = (e) => {
@@ -24,6 +28,10 @@ const ProductList = ({ products, className }) => {
         return 0;
     }
   });
+
+  const isFavorite = (productId) => {
+    return favorite.some((item) => item.productId === productId);
+  };
 
   return (
     <Box className={`w-full p-4 ${className}`}>
@@ -63,13 +71,19 @@ const ProductList = ({ products, className }) => {
           return (
             <Grid item xs={6} sm={4} md={3} lg={2} key={product.id}>
               <Card className="bg-white p-4 rounded shadow-md">
-                <Box className="w-full h-48 mb-4">
+                <Box className="w-full h-48 mb-4" position="relative">
                   <CardMedia
                     component="img"
                     image={`${imgixUrl}?w=400&h=300&fit=crop`}
                     alt={product.name}
                     className="w-full h-full object-cover"
                   />
+                  <IconButton
+                    onClick={() => isFavorite(product.id) ? removeFromFavorite(product.id) : addToFavorite(product)}
+                    sx={{ position: 'absolute', top: 8, right: 8 }}
+                  >
+                    {isFavorite(product.id) ? <FavoriteIcon color="error" /> : <FavoriteBorderIcon />}
+                  </IconButton>
                 </Box>
                 <CardContent className="flex items-center flex-col items-start">
                   <Typography variant="h6" className="font-bold">{product.name}</Typography>

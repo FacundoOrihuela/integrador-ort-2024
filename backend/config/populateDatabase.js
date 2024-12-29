@@ -1,6 +1,11 @@
 import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
+import fs from 'fs';
+import path from 'path';
+import multer from 'multer';
+import { fileURLToPath } from 'url';
+import cloudinary from '../config/cloudinaryConfig.js';
 import Product from '../models/Product.js';
 import Category from '../models/Category.js';
 import User from '../models/User.js';
@@ -31,6 +36,27 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
     logging: false,
 });
 
+// Configurar multer para almacenar imágenes en memoria
+const storage = multer.memoryStorage();
+const upload = multer({ storage }); // eslint-disable-line no-unused-vars
+
+const uploadImageToCloudinary = async (imageBuffer) => {
+    return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream({ folder: 'products' }, (error, result) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result.secure_url);
+            }
+        });
+        stream.end(imageBuffer);
+    });
+};
+
+// Obtener el directorio actual
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const populateDatabase = async () => {
     try {
         await sequelize.authenticate();
@@ -45,12 +71,25 @@ const populateDatabase = async () => {
         ], { ignoreDuplicates: true });
         console.log('Categorías creadas correctamente.');
 
-        // Crear productos
-        const products = await Product.bulkCreate([
-            { name: 'Producto 1', description: 'Descripción del producto 1', price: 10, stock: 100, categoryId: categories[0].id },
-            { name: 'Producto 2', description: 'Descripción del producto 2', price: 20, stock: 200, categoryId: categories[1].id },
-            { name: 'Producto 3', description: 'Descripción del producto 3', price: 30, stock: 300, categoryId: categories[2].id },
-        ]);
+        // Leer imágenes de la carpeta uploads
+        const imagesDir = path.join(__dirname, '../uploads');
+        const imageFiles = fs.readdirSync(imagesDir);
+
+        // Crear productos con imágenes subidas a Cloudinary
+        const products = await Promise.all(imageFiles.map(async (file, index) => {
+            const imagePath = path.join(imagesDir, file);
+            const imageBuffer = fs.readFileSync(imagePath);
+            const imageUrl = await uploadImageToCloudinary(imageBuffer);
+
+            return Product.create({
+                name: `Producto ${index + 1}`,
+                description: `Descripción del producto ${index + 1}`,
+                price: (index + 1) * 10,
+                stock: (index + 1) * 100,
+                categoryId: categories[index % categories.length].id,
+                image: imageUrl,
+            });
+        }));
         console.log('Productos creados correctamente.');
 
         // Crear usuario administrador

@@ -11,3 +11,14 @@ Content-Type: application/json
 
 # Obtener todos los favoritos de un usuario
 GET http://localhost:3001/api/favorites/1
+
+###
+
+# Eliminar un producto de los favoritos
+DELETE http://localhost:3001/api/favorites
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "productId": 12
+}

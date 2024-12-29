@@ -15,39 +15,30 @@ export const FavoriteProvider = ({ children }) => {
 
     const fetchFavorite = () => {
         if (user) {
-            fetch(`http://localhost:3001/api/favorites`, {
+            fetch(`http://localhost:3001/api/favorites/${user.id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             })
                 .then((response) => response.json())
-                .then((data) => setFavorite(data.favorite.FavoriteItems))
+                .then((data) => setFavorite(data))
                 .catch((error) => console.error('Error fetching favorite:', error));
         }
     };
 
     const addToFavorite = (product) => {
         if (user) {
-            fetch(`http://localhost:3001/api/favorite/add`, {
+            fetch(`http://localhost:3001/api/favorites`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
-                body: JSON.stringify({ productId: product.id, quantity: 1 }),
+                body: JSON.stringify({ userId: user.id, productId: product.id }),
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    setFavorite((prevFavorite) => {
-                        const existingProduct = prevFavorite.find((item) => item.productId === product.id);
-                        if (existingProduct) {
-                            return prevFavorite.map((item) =>
-                                item.productId === product.id ? { ...item, quantity: item.quantity + 1 } : item
-                            );
-                        } else {
-                            return [...prevFavorite, { ...data.favoriteItem, Product: product }];
-                        }
-                    });
+                    setFavorite((prevFavorite) => [...prevFavorite, { ...data, Product: product }]);
                 })
                 .catch((error) => console.error('Error adding to favorite:', error));
         }
@@ -55,13 +46,13 @@ export const FavoriteProvider = ({ children }) => {
 
     const removeFromFavorite = (productId) => {
         if (user) {
-            fetch(`http://localhost:3001/api/favorite/remove`, {
-                method: 'POST',
+            fetch(`http://localhost:3001/api/favorites`, {
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
-                body: JSON.stringify({ productId }),
+                body: JSON.stringify({ userId: user.id, productId }),
             })
                 .then((response) => response.json())
                 .then(() => {
@@ -71,35 +62,8 @@ export const FavoriteProvider = ({ children }) => {
         }
     };
 
-    const decreaseQuantity = (productId) => {
-        if (user) {
-            fetch(`http://localhost:3001/api/favorite/decrease`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-                body: JSON.stringify({ productId }),
-            })
-                .then((response) => response.json())
-                .then(() => {
-                    setFavorite((prevFavorite) => {
-                        const existingProduct = prevFavorite.find((item) => item.productId === productId);
-                        if (existingProduct && existingProduct.quantity > 1) {
-                            return prevFavorite.map((item) =>
-                                item.productId === productId ? { ...item, quantity: item.quantity - 1 } : item
-                            );
-                        } else {
-                            return prevFavorite.filter((item) => item.productId !== productId);
-                        }
-                    });
-                })
-                .catch((error) => console.error('Error decreasing quantity:', error));
-        }
-    };
-
     return (
-        <FavoriteContext.Provider value={{ favorite, setFavorite, addToFavorite, removeFromFavorite, decreaseQuantity, fetchFavorite }}>
+        <FavoriteContext.Provider value={{ favorite, setFavorite, addToFavorite, removeFromFavorite, fetchFavorite }}>
             {children}
         </FavoriteContext.Provider>
     );

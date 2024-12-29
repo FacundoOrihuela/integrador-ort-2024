@@ -23,7 +23,7 @@ const Cart = ({ onClose }) => {
                 {cart.length === 0 ? (
                     <Typography className="text-black">El carrito está vacío</Typography>
                 ) : (
-                    <List>
+                    <List sx={{ maxHeight: '300px', overflowY: 'auto' }}>
                         {cart.map((item) => {
                             // Extraer la ruta relativa de la URL de Cloudinary
                             const cloudinaryUrl = new URL(item.Product.image);

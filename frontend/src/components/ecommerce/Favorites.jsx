@@ -1,20 +1,10 @@
 import React, { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { FavoriteContext } from '../../context/FavoriteContext';
-import { Box, Typography, IconButton, List, ListItem, ListItemText, ListItemAvatar, Avatar, Button, ClickAwayListener } from '@mui/material';
-import { Remove as RemoveIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { Box, Typography, IconButton, List, ListItem, ListItemText, ListItemAvatar, Avatar, ClickAwayListener } from '@mui/material';
+import { Delete as DeleteIcon } from '@mui/icons-material';
 
-const Favorite = ({ onClose }) => {
-    const { favorite, removeFromFavorite, decreaseQuantity } = useContext(FavoriteContext);
-    const navigate = useNavigate();
-
-    const calculateSubtotal = () => {
-        return favorite.reduce((total, item) => total + item.priceAtAddition * item.quantity, 0);
-    };
-
-    const handleCheckout = () => {
-        navigate('/checkout');
-    };
+const Favorites = ({ onClose }) => {
+    const { favorite, removeFromFavorite } = useContext(FavoriteContext);
 
     return (
         <ClickAwayListener onClickAway={onClose}>
@@ -23,8 +13,12 @@ const Favorite = ({ onClose }) => {
                 {favorite.length === 0 ? (
                     <Typography className="text-black">Usted no cuenta con favoritos</Typography>
                 ) : (
-                    <List>
+                    <List sx={{ maxHeight: '300px', overflowY: 'auto' }}>
                         {favorite.map((item) => {
+                            if (!item.Product) {
+                                return null;
+                            }
+
                             // Extraer la ruta relativa de la URL de Cloudinary
                             const cloudinaryUrl = new URL(item.Product.image);
                             const relativePath = cloudinaryUrl.pathname;
@@ -43,15 +37,9 @@ const Favorite = ({ onClose }) => {
                                     </ListItemAvatar>
                                     <ListItemText
                                         primary={<span className="font-bold text-black">{item.Product.name}</span>}
-                                        secondary={<span className="text-black">{item.quantity}x ${item.priceAtAddition}</span>}
+                                        secondary={<span className="text-black">${item.Product.price}</span>}
                                     />
                                     <div className="absolute top-0 right-0 flex space-x-2">
-                                        <IconButton
-                                            onClick={() => decreaseQuantity(item.productId)}
-                                            className="bg-yellow-500 text-white px-2 py-1 rounded-full"
-                                        >
-                                            <RemoveIcon />
-                                        </IconButton>
                                         <IconButton
                                             onClick={() => removeFromFavorite(item.productId)}
                                             className="bg-red-500 text-white px-2 py-1 rounded-full"
@@ -69,4 +57,4 @@ const Favorite = ({ onClose }) => {
     );
 };
 
-export default Favorite;
+export default Favorites;
