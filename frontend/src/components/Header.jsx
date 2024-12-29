@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef, useEffect } from "react";
+import React, { useContext, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AppBar, Toolbar, IconButton, Container, Typography, Avatar } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -19,10 +19,6 @@ const Header = ({ store }) => {
   const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
   const profileButtonRef = useRef(null);
-
-  // useEffect(() => {
-  //   console.log("Estado del usuario:", user);
-  // }, [user]);
 
   const handleRestrictedClick = (path) => {
     if (!user) {
