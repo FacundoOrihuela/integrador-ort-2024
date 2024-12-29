@@ -28,18 +28,24 @@ const ProfileModal = ({ onClose }) => {
                         </ListItemAvatar>
                         <ListItemText primary="Gestionar mi perfil" />
                     </ListItemButton>
+
+
                     <ListItemButton onClick={() => navigate('/courses')}>
                         <ListItemAvatar>
                             <SchoolIcon className="text-colors-1 bg-transparent" />
                         </ListItemAvatar>
                         <ListItemText primary="Mis cursos" />
                     </ListItemButton>
+
+
                     <ListItemButton onClick={() => navigate('/purchase-history')}>
                         <ListItemAvatar>
                             <ShoppingCartIcon className="text-colors-1 bg-transparent" />
                         </ListItemAvatar>
                         <ListItemText primary="Mis compras" />
                     </ListItemButton>
+
+                    
                     {user && user.userType === "administrator" && (
                         <ListItemButton onClick={() => navigate('/admin-panel')}>
                             <ListItemAvatar>
