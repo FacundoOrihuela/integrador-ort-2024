@@ -77,10 +77,21 @@ const ProductList = ({ products, className }) => {
                     image={`${imgixUrl}?w=400&h=300&fit=crop`}
                     alt={product.name}
                     className="w-full h-full object-cover"
+                    sx={{ borderRadius: '4px' }} // Añadir borde redondeado
                   />
                   <IconButton
                     onClick={() => isFavorite(product.id) ? removeFromFavorite(product.id) : addToFavorite(product)}
-                    sx={{ position: 'absolute', top: 8, right: 8 }}
+                    sx={{ 
+                      position: 'absolute', 
+                      top: 4, 
+                      right: 4, 
+                      width: '40px', 
+                      height: '40px', 
+                      backgroundColor: isFavorite(product.id) ? 'transparent' : 'white',
+                      '&:hover': {
+                        backgroundColor: isFavorite(product.id) ? 'rgba(255, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.8)',
+                      }
+                    }}
                   >
                     {isFavorite(product.id) ? <FavoriteIcon color="error" /> : <FavoriteBorderIcon />}
                   </IconButton>
