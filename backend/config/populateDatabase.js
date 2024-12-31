@@ -130,17 +130,35 @@ const populateDatabase = async () => {
         console.log('Profesores creados correctamente.');
 
         // Crear 3 eventos recurrentes
+        const daysOptions = [
+            ["Lunes", "Miércoles", "Viernes"],
+            ["Martes", "Jueves"],
+            ["Sábado", "Domingo"],
+        ];
+        
+        const timeOptions = [
+            { startTime: "09:00", endTime: "10:00" },
+            { startTime: "11:00", endTime: "12:00" },
+            { startTime: "14:00", endTime: "15:00" },
+        ];
+        
         const recurringEvents = await Promise.all([
             Event.create({ name: 'Evento Recurrente 1', description: 'Descripción del Evento Recurrente 1', eventType: 'recurring' }),
             Event.create({ name: 'Evento Recurrente 2', description: 'Descripción del Evento Recurrente 2', eventType: 'recurring' }),
             Event.create({ name: 'Evento Recurrente 3', description: 'Descripción del Evento Recurrente 3', eventType: 'recurring' }),
         ]);
-
-        await Promise.all(recurringEvents.map((event, index) => RecurringEvent.create({
-            eventId: event.id,
-            recurrencePattern: { frequency: 'weekly', interval: 1, daysOfWeek: [index + 1] },
-        })));
-        console.log('Eventos recurrentes creados correctamente.');
+        
+        await Promise.all(recurringEvents.map((event, index) => 
+            RecurringEvent.create({
+                eventId: event.id,
+                recurrencePattern: {
+                    type: 'weekly',
+                    days: daysOptions[index % daysOptions.length],
+                    startTime: timeOptions[index % timeOptions.length].startTime,
+                    endTime: timeOptions[index % timeOptions.length].endTime,
+                },
+            })
+        ));
 
         // Crear 3 eventos únicos con fechas hardcodeadas
         const singleEvents = await Promise.all([

@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from "react";
 
-const CreateActivity = ({
-  editData,
-  isUpdate,
-  handleUpdateOrCreate,
-  setIsModalOpen,
-}) => {
+const CreateActivity = ({editData ,isUpdate ,handleUpdateOrCreate ,setIsModalOpen }) => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    eventType: "single",  // Inicializa con "single"
+    eventType: "single",
     startDateTime: new Date().toISOString(),
     endDateTime: new Date().toISOString(),
-    recurrencePattern: { type: "weekly", days: [], startTime: "", endTime: "" }, // Para eventos recurrentes
+    recurrencePattern: { type: "weekly", days: [], startTime: "", endTime: "" },
   });
 
   const [message, setLocalMessage] = useState("");
@@ -20,13 +15,14 @@ const CreateActivity = ({
 
   useEffect(() => {
     if (isUpdate && editData.id) {
+      console.log(editData)
       setFormData({
         name: editData.name,
         description: editData.description,
         eventType: editData.eventType,
-        startDateTime: editData.startDateTime,
-        endDateTime: editData.endDateTime,
-        recurrencePattern: editData.recurrencePattern || { type: "weekly", days: [], startTime: "", endTime: "" },  // Asegúrate de que si no tiene recurrencia se inicialice correctamente
+        startDateTime: editData.SingleEvent ? editData.SingleEvent.startDateTime :null,
+        endDateTime: editData.SingleEvent ? editData.SingleEvent.endDateTime :null,
+        recurrencePattern: editData.RecurringEvent ? editData.RecurringEvent.recurrencePattern : null,
       });
     }
   }, [editData, isUpdate]);
@@ -42,6 +38,8 @@ const CreateActivity = ({
   };
 
   const handleRecurrenceChange = (field, value) => {
+    console.log("field:",field)
+    console.log("value:",value)
     setFormData({
       ...formData,
       recurrencePattern: { ...formData.recurrencePattern, [field]: value },
@@ -155,22 +153,24 @@ const CreateActivity = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium">Días de la Semana</label>
-                  <select
-                    multiple
-                    value={formData.recurrencePattern.days}
-                    onChange={(e) =>
-                      handleRecurrenceChange("days", Array.from(e.target.selectedOptions, option => option.value))
-                    }
-                    className="w-full p-2 border rounded"
-                  >
-                    <option value="Monday">Lunes</option>
-                    <option value="Tuesday">Martes</option>
-                    <option value="Wednesday">Miércoles</option>
-                    <option value="Thursday">Jueves</option>
-                    <option value="Friday">Viernes</option>
-                    <option value="Saturday">Sábado</option>
-                    <option value="Sunday">Domingo</option>
-                  </select>
+                  <div className="flex flex-col">
+                    {["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"].map((day) => (
+                      <label key={day} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          value={day}
+                          checked={formData.recurrencePattern.days.includes(day)}
+                          onChange={(e) => {
+                            const updatedDays = e.target.checked
+                              ? [...formData.recurrencePattern.days, e.target.value]
+                              : formData.recurrencePattern.days.filter((d) => d !== e.target.value);
+                            handleRecurrenceChange("days", updatedDays);
+                          }}
+                        />
+                        <span>{day}</span>
+                      </label>
+                    ))}
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium">Hora de Inicio</label>
@@ -182,8 +182,6 @@ const CreateActivity = ({
                     }
                     className="w-full p-2 border rounded"
                   />
-                </div>
-                <div>
                   <label className="block text-sm font-medium">Hora de Fin</label>
                   <input
                     type="time"

@@ -18,6 +18,7 @@ const ActivitiesList = () => {
       })
       .then((data) => {
         setActivities(data);
+        console.log(activities)
         console.log(data)
       })
       .catch((err) => {
@@ -67,26 +68,25 @@ const ActivitiesList = () => {
         <div>
           <h2 className="font-bold">Desde:</h2>
           <p>
-            {new Date(event.startDateTime).toLocaleDateString()}
+            {new Date(event.SingleEvent.startDateTime).toLocaleDateString()}
             <span className="font-bold"> - </span>
-            {new Date(event.startDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            {new Date(event.SingleEvent.startDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </p>
           <h2 className="font-bold">Hasta:</h2>
           <p>
-            {new Date(event.endDateTime).toLocaleDateString()}
+            {new Date(event.SingleEvent.endDateTime).toLocaleDateString()}
             <span className="font-bold"> - </span>
-            {new Date(event.endDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            {new Date(event.SingleEvent.endDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </p>
         </div>
       );
-    } else if (event.eventType === "recurring" && event.recurrencePattern) {
+    } else if (event.eventType === "recurring" && event.RecurringEvent.recurrencePattern) {
       return (
         <div>
           <h2 className="font-bold">Frecuencia:</h2>
           <p>
-            {event.recurrencePattern.type} - Días:{" "}
-            {event.recurrencePattern.days.join(", ")}{" "}
-            de {event.recurrencePattern.startTime} a {event.recurrencePattern.endTime}
+            {event.RecurringEvent.recurrencePattern.days.join(", ")}{" "}
+            de {event.RecurringEvent.recurrencePattern.startTime} a {event.RecurringEvent.recurrencePattern.endTime}
           </p>
         </div>
       );
@@ -120,6 +120,7 @@ const ActivitiesList = () => {
             <p className="text-gray-700 mb-2">
               <span className="font-bold">Descripción:</span> {activity.description}
             </p>
+            {formatEventDate(activity)}
             <div className="mt-4 flex gap-4">
               <button
                 onClick={() => openEditModal(activity)}
