@@ -3,9 +3,12 @@ import Category from '../models/Category.js';
 import cloudinary from '../config/cloudinaryConfig.js';
 import multer from 'multer';
 
-// Configurar multer para almacenar imágenes en memoria
+// Configurar multer para almacenar imágenes y archivos en memoria
 const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const upload = multer({ storage }).fields([
+    { name: 'image', maxCount: 1 },
+    { name: 'file', maxCount: 1 }
+]);
 
 // Obtener todos los productos
 const getProducts = async (req, res) => {
@@ -21,7 +24,8 @@ const getProducts = async (req, res) => {
 // Crear un nuevo producto
 const createProduct = async (req, res) => {
     const { name, description, price, stock, categoryId } = req.body;
-    const image = req.file ? req.file.buffer : null;
+    const image = req.files?.image ? req.files.image[0].buffer : null;
+    const file = req.files?.file ? req.files.file[0].buffer : null;
 
     try {
         // Verificar si la categoría existe
@@ -34,7 +38,7 @@ const createProduct = async (req, res) => {
         let imageUrl = null;
         if (image) {
             const result = await new Promise((resolve, reject) => {
-                const stream = cloudinary.uploader.upload_stream({ folder: 'products' }, (error, result) => {
+                const stream = cloudinary.uploader.upload_stream({ folder: 'products', resource_type: 'image' }, (error, result) => {
                     if (error) {
                         reject(error);
                     } else {
@@ -46,7 +50,23 @@ const createProduct = async (req, res) => {
             imageUrl = result.secure_url;
         }
 
-        const newProduct = await Product.create({ name, description, price, stock, categoryId, image: imageUrl });
+        // Subir el archivo a Cloudinary
+        let fileUrl = null;
+        if (file) {
+            const result = await new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream({ folder: 'product_files', resource_type: 'auto' }, (error, result) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(result);
+                    }
+                });
+                stream.end(file);
+            });
+            fileUrl = result.secure_url;
+        }
+
+        const newProduct = await Product.create({ name, description, price, stock, categoryId, image: imageUrl, file: fileUrl });
         res.json({ message: 'Producto creado con éxito', data: newProduct });
     } catch (error) {
         console.error('Error al crear el producto:', error);
@@ -58,7 +78,8 @@ const createProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
     const { id } = req.params;
     const { name, description, price, stock, categoryId } = req.body;
-    const image = req.file ? req.file.buffer : null;
+    const image = req.files?.image ? req.files.image[0].buffer : null;
+    const file = req.files?.file ? req.files.file[0].buffer : null;
 
     try {
         // Verificar si la categoría existe
@@ -71,7 +92,7 @@ const updateProduct = async (req, res) => {
         let imageUrl = null;
         if (image) {
             const result = await new Promise((resolve, reject) => {
-                const stream = cloudinary.uploader.upload_stream({ folder: 'products' }, (error, result) => {
+                const stream = cloudinary.uploader.upload_stream({ folder: 'products', resource_type: 'image' }, (error, result) => {
                     if (error) {
                         reject(error);
                     } else {
@@ -83,7 +104,23 @@ const updateProduct = async (req, res) => {
             imageUrl = result.secure_url;
         }
 
-        const [updated] = await Product.update({ name, description, price, stock, categoryId, image: imageUrl }, { where: { id } });
+        // Subir el nuevo archivo a Cloudinary si existe
+        let fileUrl = null;
+        if (file) {
+            const result = await new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream({ folder: 'product_files', resource_type: 'auto' }, (error, result) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(result);
+                    }
+                });
+                stream.end(file);
+            });
+            fileUrl = result.secure_url;
+        }
+
+        const [updated] = await Product.update({ name, description, price, stock, categoryId, image: imageUrl, file: fileUrl }, { where: { id } });
         if (updated === 0) {
             return res.status(404).json({ message: `Producto con id ${id} no encontrado` });
         }

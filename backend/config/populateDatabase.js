@@ -53,6 +53,19 @@ const uploadImageToCloudinary = async (imageBuffer) => {
     });
 };
 
+const uploadFileToCloudinary = async (fileBuffer) => {
+    return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream({ folder: 'product_files' }, (error, result) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result.secure_url);
+            }
+        });
+        stream.end(fileBuffer);
+    });
+};
+
 // Obtener el directorio actual
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -75,11 +88,12 @@ const populateDatabase = async () => {
         const imagesDir = path.join(__dirname, '../uploads');
         const imageFiles = fs.readdirSync(imagesDir);
 
-        // Crear productos con imágenes subidas a Cloudinary
+        // Crear productos con imágenes y archivos subidos a Cloudinary
         const products = await Promise.all(imageFiles.map(async (file, index) => {
             const imagePath = path.join(imagesDir, file);
             const imageBuffer = fs.readFileSync(imagePath);
             const imageUrl = await uploadImageToCloudinary(imageBuffer);
+            const fileUrl = await uploadFileToCloudinary(imageBuffer); // Usar el mismo archivo para el campo file
 
             return Product.create({
                 name: `Producto ${index + 1}`,
@@ -88,6 +102,7 @@ const populateDatabase = async () => {
                 stock: (index + 1) * 100,
                 categoryId: categories[index % categories.length].id,
                 image: imageUrl,
+                file: fileUrl,
             });
         }));
         console.log('Productos creados correctamente.');

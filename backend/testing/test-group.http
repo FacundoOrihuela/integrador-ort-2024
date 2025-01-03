@@ -4,7 +4,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 
 ###
 
-# Crear un nuevo grupo con imagen
+# Crear un nuevo grupo
 POST http://localhost:3001/api/groups
 Content-Type: multipart/form-data; boundary=boundary
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNTAwNzA0MywiZXhwIjoxNzM1MDEwNjQzfQ.-FaFZ17NG_jERM0LhYW2nJAZ5EwP_Mbwlj6R6Uappvw
@@ -18,7 +18,7 @@ Content-Disposition: form-data; name="description"
 
 Descripción del nuevo grupo
 --boundary
-Content-Disposition: form-data; name="userId"
+Content-Disposition: form-data; name="leaderId"
 
 1
 --boundary

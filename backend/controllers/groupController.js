@@ -59,16 +59,16 @@ const getUserGroups = async (req, res) => {
     }
 };
 
-// Crear un nuevo grupo
+// Crear un nuevo grupo con un líder asignado
 const createGroup = async (req, res) => {
-    const { name, description, userId } = req.body;
+    const { name, description, leaderId } = req.body;
     const image = req.file ? req.file.buffer : null;
 
     try {
-        // Verificar si el usuario existe
-        const user = await User.findByPk(userId);
-        if (!user) {
-            return res.status(400).json({ message: 'El usuario especificado no existe' });
+        // Verificar si el líder existe
+        const leader = await User.findByPk(leaderId);
+        if (!leader) {
+            return res.status(400).json({ message: 'El líder especificado no existe' });
         }
 
         // Subir la imagen a Cloudinary
@@ -87,7 +87,7 @@ const createGroup = async (req, res) => {
             imageUrl = result.secure_url;
         }
 
-        const newGroup = await Group.create({ name, description, userId, photo: imageUrl });
+        const newGroup = await Group.create({ name, description, userId: leaderId, photo: imageUrl });
         res.json({ message: 'Grupo creado con éxito', data: newGroup });
     } catch (error) {
         console.error('Error al crear el grupo:', error);

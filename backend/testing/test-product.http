@@ -4,9 +4,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 
 ###
 
-# Crear un nuevo producto con imagen
+# Crear un nuevo producto con imagen y archivo
 POST http://localhost:3001/api/products
 Content-Type: multipart/form-data; boundary=boundary
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNTg2MzIyNCwiZXhwIjoxNzM1ODY2ODI0fQ.zl5vZxNdplQ73odRQsW2VEqRS0b9YKdO8bXuv_DzRYI
 
 --boundary
 Content-Disposition: form-data; name="name"
@@ -29,15 +30,20 @@ Content-Disposition: form-data; name="categoryId"
 
 1
 --boundary
-Content-Disposition: form-data; name="image"; filename="images.jpg"
+Content-Disposition: form-data; name="image"; filename="image.jpg"
 Content-Type: image/jpeg
 
 < D:/Descargas/tiferet-images/2.jpg
+--boundary
+Content-Disposition: form-data; name="file"; filename="video.mp4"
+Content-Type: video/mp4
+
+< D:/Descargas/tiferet-images/video.mp4
 --boundary--
 
 ###
 
-# Actualizar un producto existente
+# Actualizar un producto existente con imagen y archivo
 PUT http://localhost:3001/api/products/1
 Content-Type: multipart/form-data; boundary=boundary
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNDM5NDI4OSwiZXhwIjoxNzM0Mzk3ODg5fQ.Tfn4sNxXAMnfWEjipbZ5NkVYlqesvAPUJTd7GDmMd8E
@@ -63,10 +69,15 @@ Content-Disposition: form-data; name="categoryId"
 
 1
 --boundary
-Content-Disposition: form-data; name="image"; filename="images.jpg"
+Content-Disposition: form-data; name="image"; filename="image.jpg"
 Content-Type: image/jpeg
 
-< D:/Descargas/tiferet-images/images.jpg
+< D:/Descargas/tiferet-images/2.jpg
+--boundary
+Content-Disposition: form-data; name="file"; filename="file.pdf"
+Content-Type: application/pdf
+
+< D:/Descargas/tiferet-images/2.jpg
 --boundary--
 
 ###
