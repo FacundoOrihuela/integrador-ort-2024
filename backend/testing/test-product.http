@@ -12,7 +12,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 --boundary
 Content-Disposition: form-data; name="name"
 
-Nuevo Producto
+Musica
 --boundary
 Content-Disposition: form-data; name="description"
 
@@ -35,10 +35,10 @@ Content-Type: image/jpeg
 
 < D:/Descargas/tiferet-images/2.jpg
 --boundary
-Content-Disposition: form-data; name="file"; filename="video.mp4"
-Content-Type: video/mp4
+Content-Disposition: form-data; name="file"; filename="audio.mp3"
+Content-Type: audio/mpeg
 
-< D:/Descargas/tiferet-images/video.mp4
+< D:/Descargas/tiferet-images/cancion.mp3
 --boundary--
 
 ###

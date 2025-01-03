@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context/UserContext';
-import { Box, Typography, List, ListItem, ListItemText, Collapse, Avatar } from '@mui/material';
+import { Box, Typography, List, ListItem, ListItemText, Collapse, Avatar, Button } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import axios from 'axios';
 import Header from './Header';
@@ -24,6 +24,21 @@ const PurchaseHistory = () => {
 
     const handleToggle = (orderId) => {
         setOpenOrderId(openOrderId === orderId ? null : orderId);
+    };
+
+    const handleDownload = async (fileUrl) => {
+        try {
+            const response = await fetch(fileUrl);
+            const blob = await response.blob();
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = fileUrl.split('/').pop();
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            console.error('Error downloading the file:', error);
+        }
     };
 
     return (
@@ -64,6 +79,16 @@ const PurchaseHistory = () => {
                                                     secondary={`Cantidad: ${item.quantity}`}
                                                     className="text-black"
                                                 />
+                                                {item.Product.file && (
+                                                    <Button
+                                                        variant="contained"
+                                                        color="primary"
+                                                        onClick={() => handleDownload(item.Product.file)}
+                                                        sx={{ marginLeft: 2 }}
+                                                    >
+                                                        Descargar
+                                                    </Button>
+                                                )}
                                             </ListItem>
                                         );
                                     })}
