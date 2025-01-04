@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Button, TextField, Card, CardContent, Typography, CircularProgress, Box, Container, Alert, IconButton } from '@mui/material';
 import { Edit as EditIcon, AccountCircle as AccountCircleIcon } from '@mui/icons-material';
 import Header from './Header';
 import Footer from './Footer';
+import { UserContext } from '../context/UserContext';
 
 const UserProfile = () => {
     const { userId } = useParams();
+    const { user } = useContext(UserContext);
     const [profile, setProfile] = useState(null);
     const [userType, setUserType] = useState('');
     const [isEditing, setIsEditing] = useState(false);
@@ -183,7 +185,7 @@ const UserProfile = () => {
         return <Box display="flex" justifyContent="center" alignItems="center" height="100vh"><CircularProgress /></Box>;
     }
 
-    const isOwnProfile = profile.id === parseInt(userId);
+    const isOwnProfile = user && user.id === parseInt(userId);
 
     return (
         <Box display="flex" flexDirection="column" minHeight="100vh">
@@ -215,27 +217,29 @@ const UserProfile = () => {
                                         Error al cargar la imagen
                                     </Typography>
                                 )}
-                                <IconButton
-                                    component="label"
-                                    sx={{
-                                        position: 'absolute',
-                                        bottom: 0,
-                                        right: 0,
-                                        backgroundColor: 'white',
-                                        color: 'primary.main',
-                                        boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.3)',
-                                        '&:hover': {
+                                {isOwnProfile && (
+                                    <IconButton
+                                        component="label"
+                                        sx={{
+                                            position: 'absolute',
+                                            bottom: 0,
+                                            right: 0,
                                             backgroundColor: 'white',
-                                        },
-                                    }}
-                                >
-                                    <EditIcon />
-                                    <input
-                                        type="file"
-                                        hidden
-                                        onChange={handleFileChange}
-                                    />
-                                </IconButton>
+                                            color: 'primary.main',
+                                            boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.3)',
+                                            '&:hover': {
+                                                backgroundColor: 'white',
+                                            },
+                                        }}
+                                    >
+                                        <EditIcon />
+                                        <input
+                                            type="file"
+                                            hidden
+                                            onChange={handleFileChange}
+                                        />
+                                    </IconButton>
+                                )}
                             </Box>
                         </CardContent>
                         <CardContent sx={{ flexGrow: 1 }}>
