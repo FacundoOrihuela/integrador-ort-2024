@@ -36,6 +36,22 @@ const getProductById = async (req, res) => {
     }
 };
 
+// Obtener todos los productos de una categoría
+const getProductsByCategory = async (req, res) => {
+    const { categoryId } = req.params;
+    try {
+        const category = await Category.findByPk(categoryId);
+        if (!category) {
+            return res.status(404).json({ message: `Categoría con id ${categoryId} no encontrada` });
+        }
+        const products = await Product.findAll({ where: { categoryId } });
+        res.json({ message: 'Lista de productos de la categoría', data: products });
+    } catch (error) {
+        console.error('Error al obtener los productos de la categoría:', error);
+        res.status(500).json({ message: 'Error al obtener los productos de la categoría', error: error.message });
+    }
+};
+
 // Crear un nuevo producto
 const createProduct = async (req, res) => {
     const { name, description, price, stock, categoryId } = req.body;
@@ -176,4 +192,4 @@ const getTopSellingProducts = async (req, res) => {
     }
 };
 
-export { getProducts, getProductById, createProduct, updateProduct, deleteProduct, getTopSellingProducts, upload };
+export { getProducts, getProductById, getProductsByCategory, createProduct, updateProduct, deleteProduct, getTopSellingProducts, upload };

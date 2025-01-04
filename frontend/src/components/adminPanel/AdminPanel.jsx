@@ -9,6 +9,7 @@ import Groups from "./Groups/Groups";
 import Memberships from "./Memberships/Memberships";
 import ShoppingList from "./Activities/ShoppingList";
 import AdminProductList from "./Products/AdminProductList";
+import CategoryList from "./Categories/CategoryList";
 import { Box, Toolbar } from "@mui/material";
 
 const drawerWidth = 240;
@@ -45,6 +46,8 @@ const AdminPanel = () => {
         return <Groups />;
       case "Products":
         return <AdminProductList />;
+      case "Categories":
+        return <CategoryList />;
       default:
         return null;
     }
