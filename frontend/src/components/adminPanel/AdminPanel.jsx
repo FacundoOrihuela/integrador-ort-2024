@@ -8,7 +8,8 @@ import Activities from "./Activities/Activities";
 import Groups from "./Groups/Groups";
 import Memberships from "./Memberships/Memberships";
 import ShoppingList from "./Activities/ShoppingList";
-import { Box, CssBaseline, Toolbar } from "@mui/material";
+import AdminProductList from "./Products/AdminProductList";
+import { Box, Toolbar } from "@mui/material";
 
 const drawerWidth = 240;
 
@@ -42,18 +43,24 @@ const AdminPanel = () => {
         return <Activities />;
       case "Groups":
         return <Groups />;
+      case "Products":
+        return <AdminProductList />;
       default:
         return null;
     }
   };
 
   return (
-    <Box className="flex 
-    justify-center">
+    <Box className="flex justify-center">
       <Header />
-      <Sidebar sx={{width: drawerWidth,flexShrink: 0,[`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" },}} onSelect={setSelectedComponent}/>
-
-
+      <Sidebar
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" },
+        }}
+        onSelect={setSelectedComponent}
+      />
       <Box
         component="main"
         sx={{ flexGrow: 1, p: 3, marginLeft: `${drawerWidth}px` }}

@@ -4,6 +4,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 
 ###
 
+# Obtener un producto por su ID
+GET http://localhost:3001/api/products/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNDM5NDI4OSwiZXhwIjoxNzM0Mzk3ODg5fQ.Tfn4sNxXAMnfWEjipbZ5NkVYlqesvAPUJTd7GDmMd8E
+
+###
+
 # Crear un nuevo producto con imagen y archivo
 POST http://localhost:3001/api/products
 Content-Type: multipart/form-data; boundary=boundary

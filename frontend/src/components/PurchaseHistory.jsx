@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context/UserContext';
-import { Box, Typography, List, ListItem, ListItemText, Collapse, Avatar, Button } from '@mui/material';
+import { Box, Typography, List, ListItem, ListItemText, Collapse, Avatar, Button, Dialog, DialogActions, DialogContent, DialogTitle, Rating } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import axios from 'axios';
 import Header from './Header';
@@ -9,6 +9,10 @@ const PurchaseHistory = () => {
     const { user } = useContext(UserContext);
     const [orders, setOrders] = useState([]);
     const [openOrderId, setOpenOrderId] = useState(null);
+    const [openRatingDialog, setOpenRatingDialog] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [rating, setRating] = useState(0);
+    const [userRatings, setUserRatings] = useState([]);
 
     useEffect(() => {
         if (user) {
@@ -19,6 +23,14 @@ const PurchaseHistory = () => {
             })
             .then(response => setOrders(response.data.orders))
             .catch(error => console.error('Error fetching orders:', error));
+
+            axios.get(`http://localhost:3001/api/ratings/user/${user.id}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            })
+            .then(response => setUserRatings(response.data.data))
+            .catch(error => console.error('Error fetching user ratings:', error));
         }
     }, [user]);
 
@@ -39,6 +51,41 @@ const PurchaseHistory = () => {
         } catch (error) {
             console.error('Error downloading the file:', error);
         }
+    };
+
+    const handleOpenRatingDialog = (product) => {
+        setSelectedProduct(product);
+        setOpenRatingDialog(true);
+    };
+
+    const handleCloseRatingDialog = () => {
+        setOpenRatingDialog(false);
+        setSelectedProduct(null);
+        setRating(0);
+    };
+
+    const handleRatingSubmit = () => {
+        if (selectedProduct && rating > 0) {
+            axios.post(`http://localhost:3001/api/ratings`, {
+                userId: user.id,
+                productId: selectedProduct.id,
+                rating,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            })
+            .then(response => {
+                handleCloseRatingDialog();
+                // Actualizar las calificaciones del usuario
+                setUserRatings([...userRatings, { productId: selectedProduct.id, rating }]);
+            })
+            .catch(error => console.error('Error submitting rating:', error));
+        }
+    };
+
+    const hasRatedProduct = (productId) => {
+        return userRatings.some(rating => rating.productId === productId);
     };
 
     return (
@@ -89,6 +136,15 @@ const PurchaseHistory = () => {
                                                         Descargar
                                                     </Button>
                                                 )}
+                                                <Button
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    onClick={() => handleOpenRatingDialog(item.Product)}
+                                                    sx={{ marginLeft: 2 }}
+                                                    disabled={hasRatedProduct(item.Product.id)}
+                                                >
+                                                    {hasRatedProduct(item.Product.id) ? 'Calificado' : 'Calificar'}
+                                                </Button>
                                             </ListItem>
                                         );
                                     })}
@@ -98,6 +154,25 @@ const PurchaseHistory = () => {
                     ))}
                 </List>
             </Box>
+            <Dialog open={openRatingDialog} onClose={handleCloseRatingDialog} maxWidth="sm" fullWidth>
+                <DialogTitle>Calificar Producto</DialogTitle>
+                <DialogContent>
+                    <Rating
+                        name="product-rating"
+                        value={rating}
+                        onChange={(event, newValue) => setRating(newValue)}
+                        precision={1}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseRatingDialog} color="primary">
+                        Cancelar
+                    </Button>
+                    <Button onClick={handleRatingSubmit} color="primary">
+                        Enviar
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };

@@ -11,6 +11,21 @@ const getCategories = async (req, res) => {
     }
 };
 
+// Obtener una categoría por su ID
+const getCategoryById = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const category = await Category.findByPk(id);
+        if (!category) {
+            return res.status(404).json({ message: `Categoría con id ${id} no encontrada` });
+        }
+        res.json({ message: 'Categoría obtenida con éxito', data: category });
+    } catch (error) {
+        console.error('Error al obtener la categoría:', error);
+        res.status(500).json({ message: 'Error al obtener la categoría', error: error.message });
+    }
+};
+
 // Crear una nueva categoría
 const createCategory = async (req, res) => {
     const { name, description } = req.body;
@@ -54,4 +69,4 @@ const deleteCategory = async (req, res) => {
     }
 };
 
-export { getCategories, createCategory, updateCategory, deleteCategory };
+export { getCategories, getCategoryById, createCategory, updateCategory, deleteCategory };

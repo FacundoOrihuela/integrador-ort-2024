@@ -31,6 +31,18 @@ const getProductAverageRating = async (req, res) => {
     }
 };
 
+// Obtener todas las calificaciones de un usuario
+const getUserRatings = async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const ratings = await Rating.findAll({ where: { userId } });
+        res.json({ message: 'Lista de calificaciones del usuario', data: ratings });
+    } catch (error) {
+        console.error('Error al obtener las calificaciones del usuario:', error);
+        res.status(500).json({ message: 'Error al obtener las calificaciones del usuario', error: error.message });
+    }
+};
+
 // Crear una nueva calificación
 const createRating = async (req, res) => {
     const { userId, productId, rating } = req.body;
@@ -90,4 +102,4 @@ const deleteRating = async (req, res) => {
     }
 };
 
-export { getProductRatings, getProductAverageRating, createRating, updateRating, deleteRating };
+export { getProductRatings, getProductAverageRating, getUserRatings, createRating, updateRating, deleteRating };

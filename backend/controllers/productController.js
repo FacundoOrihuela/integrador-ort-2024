@@ -21,6 +21,21 @@ const getProducts = async (req, res) => {
     }
 };
 
+// Obtener un producto por su ID
+const getProductById = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const product = await Product.findByPk(id);
+        if (!product) {
+            return res.status(404).json({ message: `Producto con id ${id} no encontrado` });
+        }
+        res.json({ message: 'Producto obtenido con éxito', data: product });
+    } catch (error) {
+        console.error('Error al obtener el producto:', error);
+        res.status(500).json({ message: 'Error al obtener el producto', error: error.message });
+    }
+};
+
 // Crear un nuevo producto
 const createProduct = async (req, res) => {
     const { name, description, price, stock, categoryId } = req.body;
@@ -161,4 +176,4 @@ const getTopSellingProducts = async (req, res) => {
     }
 };
 
-export { getProducts, createProduct, updateProduct, deleteProduct, getTopSellingProducts, upload };
+export { getProducts, getProductById, createProduct, updateProduct, deleteProduct, getTopSellingProducts, upload };

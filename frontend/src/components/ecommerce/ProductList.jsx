@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../../context/CartContext';
 import { Box, Typography, Select, MenuItem, Grid, Card, CardContent, CardMedia, Button, Rating, IconButton } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -8,7 +9,8 @@ import { FavoriteContext } from "../../context/FavoriteContext";
 const ProductList = ({ products, className }) => {
   const { addToCart } = useContext(CartContext);
   const { favorite, addToFavorite, removeFromFavorite } = useContext(FavoriteContext);
-  const [sortOption, setSortOption] = useState('price-asc'); // Valor inicial
+  const [sortOption, setSortOption] = useState('price-asc');
+  const navigate = useNavigate();
 
   const handleSortChange = (e) => {
     setSortOption(e.target.value);
@@ -31,6 +33,10 @@ const ProductList = ({ products, className }) => {
 
   const isFavorite = (productId) => {
     return favorite.some((item) => item.productId === productId);
+  };
+
+  const handleProductClick = (productId) => {
+    navigate(`/product/detail/${productId}`);
   };
 
   return (
@@ -76,8 +82,9 @@ const ProductList = ({ products, className }) => {
                     component="img"
                     image={`${imgixUrl}?w=400&h=300&fit=crop`}
                     alt={product.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover cursor-pointer"
                     sx={{ borderRadius: '4px' }} // Añadir borde redondeado
+                    onClick={() => handleProductClick(product.id)}
                   />
                   <IconButton
                     onClick={() => isFavorite(product.id) ? removeFromFavorite(product.id) : addToFavorite(product)}
@@ -97,7 +104,13 @@ const ProductList = ({ products, className }) => {
                   </IconButton>
                 </Box>
                 <CardContent className="flex items-center flex-col items-start">
-                  <Typography variant="h6" className="font-bold">{product.name}</Typography>
+                  <Typography
+                    variant="h6"
+                    className="font-bold cursor-pointer"
+                    onClick={() => handleProductClick(product.id)}
+                  >
+                    {product.name}
+                  </Typography>
                   <Typography variant="h5" className="text-colors-1 font-bold">${product.price}</Typography>
                   <Box className="flex items-center">
                     <Rating
