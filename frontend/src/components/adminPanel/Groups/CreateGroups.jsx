@@ -4,7 +4,6 @@ const CreateGroups = ({
   editData,
   isUpdate,
   handleUpdateOrCreate,
-  setIsModalOpen,
 }) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -37,7 +36,7 @@ const CreateGroups = ({
       setFormData({
         name: editData.name,
         description: editData.description,
-        leader: editData.leader || null,
+        leader: editData.userId || null,
       });
     }
   }, [editData, isUpdate]);
@@ -47,36 +46,44 @@ const CreateGroups = ({
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSetLeader = async () => {
-    if (!formData.leader) {
-      setError("Debes seleccionar un profesor antes de asignarlo como líder.");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.name || !formData.description) {
+      setError("El nombre y la descripción son obligatorios.");
       return;
     }
 
+    const formDataToSend = new FormData();
+    formDataToSend.append("name", formData.name);
+    formDataToSend.append("description", formData.description);
+    {!isUpdate ? formDataToSend.append("leaderId", formData.leader):formDataToSend.append("userId", formData.leader)};
+    if (formData.image) { 
+      formDataToSend.append("image", formData.image);
+    }
+
     try {
-      const response = await fetch(`http://localhost:3001/api/groups/${editData.id}/leader`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({ userId: formData.leader }),
-      });
+      const response = await fetch(
+        isUpdate
+          ? `http://localhost:3001/api/groups/${editData.id}`
+          : "http://localhost:3001/api/groups",
+        {
+          method: isUpdate ? "PUT" : "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: formDataToSend,
+        }
+      );
 
       if (response.ok) {
-        setLocalMessage("Líder actualizado correctamente.");
+        handleUpdateOrCreate();
       } else {
-        setError("Error al actualizar el líder.");
+        setError("Error al guardar el grupo.");
       }
     } catch (err) {
       setError("Error al conectar con el servidor.");
     }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    handleUpdateOrCreate(formData);
-    setIsModalOpen(false);
   };
 
   return (
@@ -87,7 +94,9 @@ const CreateGroups = ({
         </h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium">Nombre del grupo</label>
+            <label className="block text-sm font-medium">
+              Nombre del grupo
+            </label>
             <input
               type="text"
               name="name"
@@ -106,12 +115,23 @@ const CreateGroups = ({
             />
           </div>
           <div>
+            <label className="block text-sm font-medium">Imagen</label>
+            <input
+              type="file"
+              onChange={(e) =>
+                setFormData({ ...formData, image: e.target.files[0] })
+              }
+              className="w-full p-2 border rounded"
+            />
+          </div>
+
+          <div>
             <h3 className="text-sm font-medium">Asignar Líder</h3>
             <div className="flex items-center space-x-2">
               <select
                 value={formData.leader || ""}
                 onChange={(e) =>
-                  setFormData({ ...formData, leader: e.target.value })
+                  {setFormData({ ...formData, leader: e.target.value })}
                 }
                 className="w-full p-2 border rounded"
               >
@@ -124,13 +144,6 @@ const CreateGroups = ({
                   </option>
                 ))}
               </select>
-              <button
-                type="button"
-                onClick={handleSetLeader}
-                className="bg-colors-1 text-white px-4 py-2 rounded hover:bg-colors-3"
-              >
-                Agregar Líder
-              </button>
             </div>
           </div>
           <button

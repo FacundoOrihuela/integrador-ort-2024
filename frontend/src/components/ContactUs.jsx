@@ -27,7 +27,6 @@ const ContactUs = () => {
   // Función para manejar el envío del formulario
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
     setFormSubmitted(true);
   };
 

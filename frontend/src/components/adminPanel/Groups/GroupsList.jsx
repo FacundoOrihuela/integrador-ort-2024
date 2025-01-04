@@ -12,6 +12,23 @@ const GroupsList = () => {
     image: null,
   });
   const [error, setError] = useState(null);
+  const [teachers, setTeachers] = useState([]);
+  
+
+    const fetchTeachers = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/api/teachers");
+        if (response.ok) {
+          const data = await response.json();
+          setTeachers(data.data);
+          console.log("teachers:",teachers)
+        } else {
+          setError("Error al cargar los profesores.");
+        }
+      } catch (err) {
+        setError("Error al conectar con el servidor.");
+      }
+    };
 
   const fetchGroups = () => {
     fetch("http://localhost:3001/api/groups", {
@@ -20,14 +37,12 @@ const GroupsList = () => {
       },
     })
       .then((response) => {
-        console.log(response)
         if (!response.ok) {
           throw new Error("Error al obtener los grupos");
         }
         return response.json();
       })
       .then((data) => {
-        console.log(data.data)
         setGroups(data.data);
       })
       .catch((err) => {
@@ -37,6 +52,7 @@ const GroupsList = () => {
 
   useEffect(() => {
     fetchGroups();
+    fetchTeachers();
   }, []);
 
   const handleDelete = async (id) => {
@@ -63,7 +79,11 @@ const GroupsList = () => {
     setEditData(group);
     setIsEditModalOpen(true);
   };
-
+  const leaderName = (leaderId) => {
+    const teacher = teachers.find((teacher) => teacher.User.id === leaderId);
+    return teacher ? teacher.User.name : "No encontrado";
+  };
+  
   const toggleCreateModal = () => setIsCreateModalOpen(!isCreateModalOpen);
   const toggleEditModal = () => setIsEditModalOpen(!isEditModalOpen);
 
@@ -100,9 +120,14 @@ const GroupsList = () => {
             <p className="text-gray-700 mb-2">
               <span className="font-bold">Descripción:</span> {group.description}
             </p>
-            {group.image && (
+            <p className="text-gray-700 mb-2">
+              <span className="font-bold">Lider: </span> 
+              {leaderName(group.userId)}
+            </p>
+
+            {group.photo && (
               <img
-                src={group.image}
+                src={group.photo}
                 alt={group.name}
                 className="w-full h-32 object-cover mb-2"
               />

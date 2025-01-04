@@ -15,7 +15,6 @@ const CreateActivity = ({editData ,isUpdate ,handleUpdateOrCreate ,setIsModalOpe
 
   useEffect(() => {
     if (isUpdate && editData.id) {
-      console.log(editData)
       setFormData({
         name: editData.name,
         description: editData.description,
@@ -38,8 +37,6 @@ const CreateActivity = ({editData ,isUpdate ,handleUpdateOrCreate ,setIsModalOpe
   };
 
   const handleRecurrenceChange = (field, value) => {
-    console.log("field:",field)
-    console.log("value:",value)
     setFormData({
       ...formData,
       recurrencePattern: { ...formData.recurrencePattern, [field]: value },

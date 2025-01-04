@@ -1,25 +1,23 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import Header from '../Header';
-import Footer from '../Footer'; // Importamos el componente Footer
-import { UserContext } from '../../context/UserContext';
+import React, { useEffect, useState, useContext } from "react";
+import { UserContext } from "../../context/UserContext";
+import Header from "../Header";
+import Footer from "../Footer";
 
 const Event = () => {
   const { user } = useContext(UserContext);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [registering, setRegistering] = useState(false);
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/events');
+        const response = await fetch("http://localhost:3001/api/events");
         if (!response.ok) {
-          throw new Error('Error al obtener los eventos');
+          throw new Error("Error al obtener las actividades.");
         }
         const data = await response.json();
-        console.log(data);
         setEvents(data);
       } catch (err) {
         setError(err.message);
@@ -33,16 +31,16 @@ const Event = () => {
 
   const handleRegister = async (eventId) => {
     if (!user) {
-      alert('Por favor, inicia sesión para registrarte en un evento.');
+      alert("Por favor, inicia sesión para registrarte en una actividad.");
       return;
     }
 
     setRegistering(true);
     try {
-      const response = await fetch('http://localhost:3001/api/event-registrations/register', {
-        method: 'POST',
+      const response = await fetch("http://localhost:3001/api/event-registrations/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           userId: user.id,
@@ -51,20 +49,55 @@ const Event = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Error al registrar el evento');
+        throw new Error("Error al registrarte en la actividad.");
       }
 
-      alert('Te has registrado exitosamente en el evento.');
+      alert("Te has registrado exitosamente en la actividad.");
     } catch (err) {
-      console.error(err);
-      alert('Hubo un problema al intentar registrarte. Intenta de nuevo.');
+      alert("Hubo un problema al intentar registrarte. Intenta de nuevo.");
     } finally {
       setRegistering(false);
     }
   };
 
+  const formatEventDate = (event) => {
+    if (event.eventType === "single") {
+      return (
+        <div>
+          <h2 className="font-bold">Desde:</h2>
+          <p>
+            {new Date(event.SingleEvent.startDateTime).toLocaleDateString()}{" "}
+            {new Date(event.SingleEvent.startDateTime).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </p>
+          <h2 className="font-bold">Hasta:</h2>
+          <p>
+            {new Date(event.SingleEvent.endDateTime).toLocaleDateString()}{" "}
+            {new Date(event.SingleEvent.endDateTime).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </p>
+        </div>
+      );
+    } else if (event.eventType === "recurring" && event.RecurringEvent.recurrencePattern) {
+      return (
+        <div>
+          <h2 className="font-bold">Frecuencia:</h2>
+          <p>
+            {event.RecurringEvent.recurrencePattern.days.join(", ")}{" "}
+            de {event.RecurringEvent.recurrencePattern.startTime} a{" "}
+            {event.RecurringEvent.recurrencePattern.endTime}
+          </p>
+        </div>
+      );
+    }
+  };
+
   if (loading) {
-    return <p className="text-center">Cargando eventos...</p>;
+    return <p className="text-center">Cargando actividades...</p>;
   }
 
   if (error) {
@@ -72,48 +105,37 @@ const Event = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div>
       <Header />
-      <main className="flex-grow">
-        <div className="event-container">
-          <h2 className="event-title text-center text-3xl font-bold mb-4">ACTIVIDADES</h2>
-
-          {events.length === 0 ? (
-            <p className="text-center">No hay eventos disponibles.</p>
-          ) : (
-            events.map((event) => (
-              <div key={event.id} className="event-card bg-white shadow-lg rounded-lg p-4 mb-4">
-                <div className="event-info">
-                  <h3 className="text-xl font-bold mb-2">{event.name}</h3>
-                  <p className="mb-2 text-gray-700">{event.description}</p>
-                  <p className="mb-2 text-gray-500">
-                    <h2 className="font-bold">Empieza:</h2>
-                    <p>
-                      {new Date(event.SingleEvent.startDateTime).toLocaleDateString()}
-                      <span className="font-bold"> - </span>
-                      {new Date(event.SingleEvent.startDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </p>
-                    <h2 className="font-bold">Finaliza:</h2>
-                    <p>
-                      {new Date(event.SingleEvent.endDateTime).toLocaleDateString()}
-                      <span className="font-bold"> - </span>
-                      {new Date(event.SingleEvent.endDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </p>
-                  </p>
-                  <button
-                    onClick={() => handleRegister(event.id)}
-                    disabled={registering}
-                    className="event-link bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
-                  >
-                    {registering ? 'Registrando...' : 'ANOTARME'}
-                  </button>
-                </div>
+      <main className="flex-grow mt-[5rem] p-6">
+        <h2 className="text-2xl font-bold mb-4 text-center">Lista de Actividades</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {events.map((event) => (
+            <div
+              key={event.id}
+              className="bg-white rounded-lg shadow-md p-4 hover:shadow-xl"
+            >
+              <h3 className="text-xl font-semibold text-colors-1 mb-2">
+                {event.name}
+              </h3>
+              <p className="text-gray-700 mb-2">
+                <span className="font-bold">Descripción:</span> {event.description}
+              </p>
+              {formatEventDate(event)}
+              <div className="mt-4">
+                <button
+                  onClick={() => handleRegister(event.id)}
+                  disabled={registering}
+                  className="w-full bg-colors-1 text-white px-3 py-2 rounded hover:bg-colors-3 transition duration-200"
+                >
+                  {registering ? "Registrando..." : "ANOTARME"}
+                </button>
               </div>
-            ))
-          )}
+            </div>
+          ))}
         </div>
       </main>
-      <Footer /> {/* Usamos el componente Footer aquí */}
+      <Footer/>
     </div>
   );
 };
