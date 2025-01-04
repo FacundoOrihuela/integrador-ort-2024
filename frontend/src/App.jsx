@@ -27,6 +27,7 @@ import About from "./components/About";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UserProfile from './components/UserProfile';
 import ProductDetail from './components/ecommerce/ProductDetail';
+import ContactUs from "./components/ContactUs";
 
 function App() {
   return (
@@ -57,6 +58,8 @@ function App() {
                   <Route path="/somos" element={<About />} />
                   <Route path="/profile/:userId" element={<UserProfile />} />
                   <Route path="/product/detail/:id" element={<ProductDetail />} />
+
+                  <Route path="/contact" element={<ContactUs/>} />
 
                 </Routes>
                 <ToastContainer />

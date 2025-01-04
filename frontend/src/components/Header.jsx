@@ -63,6 +63,13 @@ const Header = ({ store }) => {
               <Link to="/aula" className="text-secondary hover:text-tertiary text-lg font-bold">
                 Aula virtual
               </Link>
+
+
+              <Link to="/contact" className="text-secondary hover:text-tertiary text-lg font-bold">
+                Contacto
+              </Link>
+
+
             </nav>
 
             <div className="flex items-center gap-4">
