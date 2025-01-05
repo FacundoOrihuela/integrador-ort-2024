@@ -37,3 +37,14 @@ export const sendPasswordResetEmail = async (email, token) => {
         html: `<a href="${resetUrl}">Recupera tu contraseña</a>`, // versión HTML
     });
 };
+
+export const contact = async (email, message) => {
+    
+    await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: process.env.EMAIL_USER,
+        subject: `Contacto de ${email}`,
+        text: `Contacto`,
+        html: `${message}`,
+    });
+};
