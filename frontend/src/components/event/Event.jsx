@@ -105,7 +105,7 @@ const Event = () => {
   }
 
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow mt-[5rem] p-6">
         <h2 className="text-2xl font-bold mb-4 text-center">Lista de Actividades</h2>
@@ -135,7 +135,7 @@ const Event = () => {
           ))}
         </div>
       </main>
-      <Footer/>
+      <Footer />
     </div>
   );
 };
