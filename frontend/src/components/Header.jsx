@@ -1,6 +1,13 @@
 import React, { useContext, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AppBar, Toolbar, IconButton, Container, Typography, Avatar } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Container,
+  Typography,
+  Avatar,
+} from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Favorite from "@mui/icons-material/Favorite";
@@ -19,6 +26,7 @@ const Header = ({ store }) => {
   const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
   const profileButtonRef = useRef(null);
+  const [menu, setMenu] = useState(false);
 
   const handleRestrictedClick = (path) => {
     if (!user) {
@@ -28,6 +36,10 @@ const Header = ({ store }) => {
       console.log(`Usuario logueado. Redirigiendo a: ${path}`);
       navigate(path);
     }
+  };
+
+  const handleMenu = () => {
+    setMenu(!menu);
   };
 
   return (
@@ -45,9 +57,38 @@ const Header = ({ store }) => {
               <Link to="/" className="text-secondary hover:text-tertiary text-lg font-bold">
                 Home
               </Link>
-              <Link to="/somos" className="text-secondary hover:text-tertiary text-lg font-bold">
+
+              <button
+                className="text-secondary hover:text-tertiary text-lg font-bold relative"
+                onClick={() => handleMenu()}
+              >
                 Somos
-              </Link>
+                {menu && (
+                  <ul className="absolute top-full left-0 mt-2 bg-[#FF7F32] text-white shadow-lg p-2 rounded-md w-48 z-10">
+                    <li>
+                      <Link to="/aboutTiferet" className="text-white hover:text-tertiary text-lg font-bold block">
+                        ¿Qué es Tiferet?
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/somos" className="text-white hover:text-tertiary text-lg font-bold block">
+                        Integrantes
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/somos" className="text-white hover:text-tertiary text-lg font-bold block">
+                        Solo Juntos
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/somos" className="text-white hover:text-tertiary text-lg font-bold block">
+                        Nuestra Historia
+                      </Link>
+                    </li>
+                  </ul>
+                )}
+              </button>
+
               <span
                 onClick={() => handleRestrictedClick("/actividades")}
                 className="text-secondary hover:text-tertiary text-lg font-bold cursor-pointer"
@@ -64,69 +105,44 @@ const Header = ({ store }) => {
                 Aula virtual
               </Link>
 
-
               <Link to="/contact" className="text-secondary hover:text-tertiary text-lg font-bold">
                 Contacto
               </Link>
-
-
             </nav>
 
             <div className="flex items-center gap-4">
               {store && (
                 <div>
-                 <IconButton color="inherit" onClick={() => setShowFav(!showFav)}>
-                   <Favorite className="text-white text-3xl" />
-                 </IconButton>
-                 <IconButton color="inherit" onClick={() => setShowCart(!showCart)}>
-                   <ShoppingCartIcon className="text-white text-3xl" />
-                 </IconButton>
-               </div>
+                  <IconButton color="inherit" onClick={() => setShowFav(!showFav)}>
+                    <Favorite className="text-white text-3xl" />
+                  </IconButton>
+                  <IconButton color="inherit" onClick={() => setShowCart(!showCart)}>
+                    <ShoppingCartIcon className="text-white text-3xl" />
+                  </IconButton>
+                </div>
               )}
 
               {user ? (
                 <>
-
-                  <IconButton
-                    color="inherit"
-                    onClick={() => setShowProfile(!showProfile)}
-                    ref={profileButtonRef}>
-
-
+                  <IconButton color="inherit" onClick={() => setShowProfile(!showProfile)} ref={profileButtonRef}>
                     {user.photo ? (
                       <Avatar src={user.photo} alt="Profile Photo" className="h-10 w-10" />
                     ) : (
                       <AccountCircleIcon className="text-white text-3xl" />
                     )}
-
-
                   </IconButton>
 
-                  
                   <Typography variant="body1" className="text-white">
                     ¡Bienvenido, {user.name}!
                   </Typography>
-                  {showProfile && (
-                    <ProfileModal
-                      profileButtonRef={profileButtonRef}
-                      onClose={() => setShowProfile(false)}
-                    />
-                  )}
+                  {showProfile && <ProfileModal profileButtonRef={profileButtonRef} onClose={() => setShowProfile(false)} />}
                 </>
-
-
               ) : (
                 <div className="flex gap-4">
-                  <Link
-                    to="/login"
-                    className="text-secondary hover:text-tertiary text-lg font-bold"
-                  >
+                  <Link to="/login" className="text-secondary hover:text-tertiary text-lg font-bold">
                     Iniciar sesión
                   </Link>
-                  <Link
-                    to="/register"
-                    className="text-secondary hover:text-tertiary text-lg font-bold"
-                  >
+                  <Link to="/register" className="text-secondary hover:text-tertiary text-lg font-bold">
                     Registrarse
                   </Link>
                 </div>

@@ -23,11 +23,11 @@ import Checkout from "./components/ecommerce/Checkout";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "./theme";
-import About from "./components/About";
 import ProtectedRoute from "./components/ProtectedRoute";
 import UserProfile from './components/UserProfile';
 import ProductDetail from './components/ecommerce/ProductDetail';
 import ContactUs from "./components/ContactUs";
+import AboutTiferet from "./components/AboutTiferet";
 
 function App() {
   return (
@@ -50,16 +50,17 @@ function App() {
                   {/* Rutas protegidas */}
                   <Route path="/store" element={<ProtectedRoute><ProductPage /></ProtectedRoute>} />
                   <Route path="/actividades" element={<ProtectedRoute><Event /></ProtectedRoute>} />
-
+                  {/* ----- */}
+                  
                   <Route path="/admin-panel" element={<AdminPanel />} />
                   <Route path="/create-product" element={<ProductFormPage />} />
                   <Route path="/purchase-history" element={<PurchaseHistory />} />
                   <Route path="/checkout" element={<Checkout />} />
-                  <Route path="/somos" element={<About />} />
                   <Route path="/profile/:userId" element={<UserProfile />} />
                   <Route path="/product/detail/:id" element={<ProductDetail />} />
 
                   <Route path="/contact" element={<ContactUs/>} />
+                  <Route path="/aboutTiferet" element={<AboutTiferet />} />
 
                 </Routes>
                 <ToastContainer />
