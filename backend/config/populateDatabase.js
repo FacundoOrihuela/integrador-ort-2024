@@ -257,11 +257,11 @@ const populateDatabase = async () => {
         ]);
         console.log('Favoritos creados correctamente.');
 
-        // Crear 3 registros de eventos
+        // Crear 3 registros de eventos con estado pendiente
         await EventRegistration.bulkCreate([
-            { userId: adminUser.id, eventId: singleEvents[0].id },
-            { userId: adminUser.id, eventId: singleEvents[1].id },
-            { userId: adminUser.id, eventId: singleEvents[2].id },
+            { userId: adminUser.id, eventId: singleEvents[0].id, status: 'pendiente' },
+            { userId: adminUser.id, eventId: singleEvents[1].id, status: 'pendiente' },
+            { userId: adminUser.id, eventId: singleEvents[2].id, status: 'pendiente' },
         ]);
         console.log('Registros de eventos creados correctamente.');
 

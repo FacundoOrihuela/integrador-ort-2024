@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import CreateActivity from "./CreateActivity";
+import ActivityDetails from "./ActivityDetails";
 
 const ActivitiesList = () => {
   const [activities, setActivities] = useState([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editData, setEditData] = useState(null);
+  const [selectedActivity, setSelectedActivity] = useState(null);
   const [error, setError] = useState(null);
 
   const fetchActivities = () => {
@@ -110,7 +112,8 @@ const ActivitiesList = () => {
         {activities.map((activity) => (
           <div
             key={activity.id}
-            className="bg-white rounded-lg shadow-md p-4 hover:shadow-xl"
+            className="bg-white rounded-lg shadow-md p-4 hover:shadow-xl cursor-pointer"
+            onClick={() => setSelectedActivity(activity)}
           >
             <h3 className="text-xl font-semibold text-colors-1 mb-2">
               {activity.name}
@@ -121,13 +124,19 @@ const ActivitiesList = () => {
             {formatEventDate(activity)}
             <div className="mt-4 flex gap-4">
               <button
-                onClick={() => openEditModal(activity)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openEditModal(activity);
+                }}
                 className="w-[50%] bg-yellow-500 text-white px-3 py-2 rounded hover:bg-yellow-600 transition duration-200"
               >
                 Editar
               </button>
               <button
-                onClick={() => handleDelete(activity.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(activity.id);
+                }}
                 className="w-[50%] bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-200"
               >
                 Eliminar
@@ -167,6 +176,13 @@ const ActivitiesList = () => {
             />
           </div>
         </div>
+      )}
+
+      {selectedActivity && (
+        <ActivityDetails
+          activity={selectedActivity}
+          onClose={() => setSelectedActivity(null)}
+        />
       )}
     </div>
   );

@@ -20,6 +20,11 @@ const EventRegistration = sequelize.define('EventRegistration', {
             key: 'id',
         },
     },
+    status: {
+        type: DataTypes.ENUM('pendiente', 'aceptado', 'rechazado'),
+        defaultValue: 'pendiente',
+        allowNull: false,
+    },
 }, {
     tableName: 'event_registrations',
     timestamps: true,
