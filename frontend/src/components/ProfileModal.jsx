@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { saveSessionToken } from '../features/loginSlice';
 import { UserContext } from '../context/UserContext';
 import { Box, Typography, List, ListItemText, ListItemAvatar, ClickAwayListener, ListItemButton } from '@mui/material';
-import { AccountCircle as AccountCircleIcon, School as SchoolIcon, ShoppingCart as ShoppingCartIcon, AdminPanelSettings as AdminPanelSettingsIcon, ExitToApp as ExitToAppIcon } from '@mui/icons-material';
+import { AccountCircle as AccountCircleIcon, Group as GroupIcon, ShoppingCart as ShoppingCartIcon, AdminPanelSettings as AdminPanelSettingsIcon, ExitToApp as ExitToAppIcon } from '@mui/icons-material';
 
 const ProfileModal = ({ onClose }) => {
     const dispatch = useDispatch();
@@ -29,14 +29,12 @@ const ProfileModal = ({ onClose }) => {
                         <ListItemText primary="Gestionar mi perfil" />
                     </ListItemButton>
 
-
-                    <ListItemButton onClick={() => navigate('/courses')}>
+                    <ListItemButton onClick={() => navigate('/groups')}>
                         <ListItemAvatar>
-                            <SchoolIcon className="text-colors-1 bg-transparent" />
+                            <GroupIcon className="text-colors-1 bg-transparent" />
                         </ListItemAvatar>
-                        <ListItemText primary="Mis cursos" />
+                        <ListItemText primary="Mis grupos" />
                     </ListItemButton>
-
 
                     <ListItemButton onClick={() => navigate('/purchase-history')}>
                         <ListItemAvatar>
@@ -45,7 +43,6 @@ const ProfileModal = ({ onClose }) => {
                         <ListItemText primary="Mis compras" />
                     </ListItemButton>
 
-                    
                     {user && user.userType === "administrator" && (
                         <ListItemButton onClick={() => navigate('/admin-panel')}>
                             <ListItemAvatar>
