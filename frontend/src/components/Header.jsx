@@ -7,10 +7,17 @@ import {
   Container,
   Typography,
   Avatar,
+  Menu,
+  MenuItem,
+  ListItemIcon,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Favorite from "@mui/icons-material/Favorite";
+import InfoIcon from "@mui/icons-material/Info";
+import GroupIcon from "@mui/icons-material/Group";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import HistoryIcon from "@mui/icons-material/History";
 import Favorites from "./ecommerce/Favorites";
 import ProfileModal from "./ProfileModal";
 import Cart from "./ecommerce/Cart";
@@ -26,7 +33,7 @@ const Header = ({ store }) => {
   const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
   const profileButtonRef = useRef(null);
-  const [menu, setMenu] = useState(false);
+  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
 
   const handleRestrictedClick = (path) => {
     if (!user) {
@@ -38,8 +45,12 @@ const Header = ({ store }) => {
     }
   };
 
-  const handleMenu = () => {
-    setMenu(!menu);
+  const handleMenuOpen = (event) => {
+    setMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setMenuAnchorEl(null);
   };
 
   return (
@@ -58,36 +69,68 @@ const Header = ({ store }) => {
                 Home
               </Link>
 
-              <button
-                className="text-secondary hover:text-tertiary text-lg font-bold relative"
-                onClick={() => handleMenu()}
-              >
-                Somos
-                {menu && (
-                  <ul className="absolute top-full left-0 mt-2 bg-[#FF7F32] text-white shadow-lg p-2 rounded-md w-48 z-10">
-                    <li>
-                      <Link to="/aboutTiferet" className="text-white hover:text-tertiary text-lg font-bold block">
-                        ¿Qué es Tiferet?
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/members" className="text-white hover:text-tertiary text-lg font-bold block">
-                        Integrantes
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/together" className="text-white hover:text-tertiary text-lg font-bold block">
-                        Solo Juntos
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/history" className="text-white hover:text-tertiary text-lg font-bold block">
-                        Nuestra Historia
-                      </Link>
-                    </li>
-                  </ul>
-                )}
-              </button>
+              <div>
+                <button
+                  className="text-secondary hover:text-tertiary text-lg font-bold relative"
+                  onClick={handleMenuOpen}
+                >
+                  Somos
+                </button>
+                <Menu
+                  anchorEl={menuAnchorEl}
+                  open={Boolean(menuAnchorEl)}
+                  onClose={handleMenuClose}
+                  MenuListProps={{
+                    "aria-labelledby": "basic-button",
+                  }}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                  sx={{
+                    "& .MuiPaper-root": {
+                      borderRadius: 0, // Eliminar bordes redondeados
+                    },
+                  }}
+                >
+                  <MenuItem onClick={handleMenuClose}>
+                    <ListItemIcon>
+                      <InfoIcon fontSize="small" color="primary"/>
+                    </ListItemIcon>
+                    <Link to="/aboutTiferet" className="text-black text-lg block">
+                      ¿Qué es Tiferet?
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleMenuClose}>
+                    <ListItemIcon>
+                      <GroupIcon fontSize="small" color="primary" />
+                    </ListItemIcon>
+                    <Link to="/members" className="text-black text-lg block">
+                      Integrantes
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleMenuClose}>
+                    <ListItemIcon>
+                      <PeopleAltIcon fontSize="small" color="primary"/>
+                    </ListItemIcon>
+                    <Link to="/together" className="text-black text-lg block">
+                      Solo Juntos
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleMenuClose}>
+                    <ListItemIcon>
+                      <HistoryIcon fontSize="small" color="primary"/>
+                    </ListItemIcon>
+                    <Link to="/history" className="text-black text-lg block">
+                      Nuestra Historia
+                    </Link>
+                  </MenuItem>
+                </Menu>
+              </div>
 
               <span
                 onClick={() => handleRestrictedClick("/actividades")}
