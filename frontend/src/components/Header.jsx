@@ -76,12 +76,12 @@ const Header = ({ store }) => {
                       </Link>
                     </li>
                     <li>
-                      <Link to="/somos" className="text-white hover:text-tertiary text-lg font-bold block">
+                      <Link to="/together" className="text-white hover:text-tertiary text-lg font-bold block">
                         Solo Juntos
                       </Link>
                     </li>
                     <li>
-                      <Link to="/somos" className="text-white hover:text-tertiary text-lg font-bold block">
+                      <Link to="/history" className="text-white hover:text-tertiary text-lg font-bold block">
                         Nuestra Historia
                       </Link>
                     </li>

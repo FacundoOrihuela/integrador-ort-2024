@@ -29,6 +29,11 @@ import ProductDetail from './components/ecommerce/ProductDetail';
 import ContactUs from "./components/ContactUs";
 import AboutTiferet from "./components/AboutTiferet";
 import Members from "./components/Members";
+import History from "./components/History";
+import SoloJuntos from "./components/SoloJuntos";
+
+
+
 
 function App() {
   return (
@@ -63,6 +68,8 @@ function App() {
                   <Route path="/contact" element={<ContactUs/>} />
                   <Route path="/aboutTiferet" element={<AboutTiferet />} />
                   <Route path="/members" element={<Members />} />
+                  <Route path="/history" element={<History />} />
+                  <Route path="/together" element={<SoloJuntos />} />
 
 
                 </Routes>
