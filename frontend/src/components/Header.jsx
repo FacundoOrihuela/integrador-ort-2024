@@ -71,7 +71,7 @@ const Header = ({ store }) => {
                       </Link>
                     </li>
                     <li>
-                      <Link to="/somos" className="text-white hover:text-tertiary text-lg font-bold block">
+                      <Link to="/members" className="text-white hover:text-tertiary text-lg font-bold block">
                         Integrantes
                       </Link>
                     </li>

@@ -28,6 +28,7 @@ import UserProfile from './components/UserProfile';
 import ProductDetail from './components/ecommerce/ProductDetail';
 import ContactUs from "./components/ContactUs";
 import AboutTiferet from "./components/AboutTiferet";
+import Members from "./components/Members";
 
 function App() {
   return (
@@ -61,6 +62,8 @@ function App() {
 
                   <Route path="/contact" element={<ContactUs/>} />
                   <Route path="/aboutTiferet" element={<AboutTiferet />} />
+                  <Route path="/members" element={<Members />} />
+
 
                 </Routes>
                 <ToastContainer />
