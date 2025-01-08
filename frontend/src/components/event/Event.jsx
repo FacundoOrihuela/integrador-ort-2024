@@ -151,7 +151,7 @@ const Event = () => {
           padding: "2rem",
           width: "auto",
           maxWidth: "70%",
-          margin: "7rem auto 2rem auto", // Ajustar el margen superior e inferior
+          margin: "2rem auto 2rem auto", // Ajustar el margen superior e inferior
           borderRadius: "8px", // Bordes redondeados
           boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Sombra leve
         }}

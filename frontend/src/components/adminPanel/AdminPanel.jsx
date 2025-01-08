@@ -54,22 +54,24 @@ const AdminPanel = () => {
   };
 
   return (
-    <Box className="flex justify-center">
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <Header />
-      <Sidebar
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" },
-        }}
-        onSelect={setSelectedComponent}
-      />
-      <Box
-        component="main"
-        sx={{ flexGrow: 1, p: 3, marginLeft: `${drawerWidth}px` }}
-      >
-        <Toolbar />
-        {renderComponent()}
+      <Box sx={{ display: "flex", flexGrow: 1 }}>
+        <Sidebar
+          sx={{
+            width: drawerWidth,
+            flexShrink: 0,
+            [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" },
+          }}
+          onSelect={setSelectedComponent}
+        />
+        <Box
+          component="main"
+          sx={{ flexGrow: 1, marginLeft: `${drawerWidth}px` }}
+        >
+          <Toolbar />
+          {renderComponent()}
+        </Box>
       </Box>
     </Box>
   );

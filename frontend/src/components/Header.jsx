@@ -55,7 +55,7 @@ const Header = ({ store }) => {
 
   return (
     <>
-      <AppBar position="fixed" className="bg-colors-1 shadow-md h-[5rem]">
+      <AppBar position="sticky" className="bg-colors-1 shadow-md h-[5rem]">
         <Container maxWidth="lg" className="h-full">
           <Toolbar disableGutters className="flex justify-between items-center h-full">
             <div className="flex items-center">
@@ -82,19 +82,6 @@ const Header = ({ store }) => {
                   onClose={handleMenuClose}
                   MenuListProps={{
                     "aria-labelledby": "basic-button",
-                  }}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                  sx={{
-                    "& .MuiPaper-root": {
-                      borderRadius: 0, // Eliminar bordes redondeados
-                    },
                   }}
                 >
                   <MenuItem onClick={handleMenuClose}>

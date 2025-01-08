@@ -89,7 +89,7 @@ const ProductPage = () => {
         <CartProvider>
             <div>
                 <Header store />
-                <Box className="flex flex-col pt-[5rem]">
+                <Box className="flex flex-col">
                     {!showMemberships && (
                         <Box
                             className="bg-colors-1 text-white text-center py-8 cursor-pointer flex items-center justify-center w-3/4 ml-[25%]"

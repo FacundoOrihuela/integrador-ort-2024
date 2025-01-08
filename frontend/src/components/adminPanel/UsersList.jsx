@@ -45,7 +45,6 @@ const UserList = () => {
         style={{
           justifyContent: "center",
           alignItems: "center",
-          padding: "10px",
           fontSize: "40px",
         }}
       >
