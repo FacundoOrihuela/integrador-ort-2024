@@ -32,20 +32,17 @@ import Members from "./components/Members";
 import History from "./components/History";
 import SoloJuntos from "./components/SoloJuntos";
 
-
-
-
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <BrowserRouter>
+      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <UserProvider>
           <Provider store={store}>
             <CartProvider>
               <FavoriteProvider>
                 <Routes>
-                  <Route path="/" element={<Principal />} />
+                  <Route path="/*" element={<Principal />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="*" element={<NotFound />} />
                   <Route path="/verifyEmail" element={<VerifyEmail />} />
@@ -70,8 +67,6 @@ function App() {
                   <Route path="/members" element={<Members />} />
                   <Route path="/history" element={<History />} />
                   <Route path="/together" element={<SoloJuntos />} />
-
-
                 </Routes>
                 <ToastContainer />
               </FavoriteProvider>
