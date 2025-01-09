@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { UserContext } from "../../context/UserContext"; // Asegúrate de importar el contexto del usuario
 
 const Memberships = () => {
     const [memberships, setMemberships] = useState([]);
     const [error, setError] = useState(null);
+    const [userMembership, setUserMembership] = useState(null);
+    const { user } = useContext(UserContext); // Obtener el usuario del contexto
 
     useEffect(() => {
         fetch("http://localhost:3001/api/memberships")
@@ -18,10 +21,54 @@ const Memberships = () => {
             .catch((err) => {
                 setError(err.message);
             });
-    }, []);
 
-    const comprar = (membresia) => {
-        // Implementar la lógica de compra de membresía
+        // Obtener el cliente y su membresía por email
+        if (user && user.email) {
+            fetch(`http://localhost:3001/api/clients/${user.email}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+            })
+                .then((respuesta) => {
+                    if (!respuesta.ok) {
+                        throw new Error("Error al obtener el cliente");
+                    }
+                    return respuesta.json();
+                })
+                .then((data) => {
+                    setUserMembership(data.data.membershipId);
+                })
+                .catch((err) => {
+                    setError(err.message);
+                });
+        }
+    }, [user]);
+
+    const handleMembershipAction = (membresia) => {
+        const endpoint = userMembership === membresia.id ? "revoke" : "assign";
+        fetch(`http://localhost:3001/api/memberships/${endpoint}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({
+                userId: user.id, // Usar el ID del usuario actual del contexto
+                membershipId: endpoint === "assign" ? membresia.id : null,
+            }),
+        })
+            .then((respuesta) => {
+                if (!respuesta.ok) {
+                    throw new Error(`Error al ${endpoint === "assign" ? "asignar" : "revocar"} la membresía`);
+                }
+                return respuesta.json();
+            })
+            .then(() => {
+                setUserMembership(endpoint === "assign" ? membresia.id : null);
+            })
+            .catch((err) => {
+                setError(err.message);
+            });
     };
 
     if (error) {
@@ -44,10 +91,10 @@ const Memberships = () => {
                         <p className="text-gray-600 mb-4">{membresia.description}</p>
                         <p className="text-lg font-bold text-gray-900 mb-4">${membresia.price}</p>
                         <button
-                            onClick={() => comprar(membresia)}
+                            onClick={() => handleMembershipAction(membresia)}
                             className="bg-colors-1 text-white px-4 py-2 rounded hover:bg-colors-1 transition-colors duration-200"
                         >
-                            Adquirir
+                            {userMembership === membresia.id ? "Revocar" : userMembership ? "Actualizar" : "Adquirir"}
                         </button>
                     </li>
                 ))}

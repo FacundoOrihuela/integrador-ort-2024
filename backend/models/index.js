@@ -16,6 +16,8 @@ import Group from './Group.js';
 import Post from './Post.js';
 import GroupUser from './GroupUser.js';
 import Comment from './Comment.js';
+import Client from './Client.js';
+import Membership from './Membership.js';
 
 // Definir relaciones
 User.hasOne(Cart, { foreignKey: 'userId' });
@@ -75,4 +77,11 @@ Comment.belongsTo(User, { foreignKey: 'userId' });
 Post.hasMany(Comment, { foreignKey: 'postId' });
 Comment.belongsTo(Post, { foreignKey: 'postId' });
 
-export { sequelize, User, Cart, CartItem, Product, Event, SingleEvent, RecurringEvent, EventRegistration, Order, OrderItem, Rating, Category, Favorite, Group, Post, GroupUser, Comment };
+// Definir relaciones para clientes y membresías
+Client.belongsTo(User, { foreignKey: 'userId' });
+User.hasOne(Client, { foreignKey: 'userId', constraints: false, scope: { userType: 'client' } });
+
+Client.belongsTo(Membership, { foreignKey: 'membershipId' });
+Membership.hasMany(Client, { foreignKey: 'membershipId' });
+
+export { sequelize, User, Cart, CartItem, Product, Event, SingleEvent, RecurringEvent, EventRegistration, Order, OrderItem, Rating, Category, Favorite, Group, Post, GroupUser, Comment, Client, Membership };

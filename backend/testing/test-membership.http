@@ -41,3 +41,24 @@ Content-Type: application/json
 # Eliminar una membresía
 DELETE http://localhost:3001/api/memberships/1
 Content-Type: application/json
+
+###
+
+# Asignar una membresía a un cliente
+POST http://localhost:3001/api/memberships/assign
+Content-Type: application/json
+
+{
+    "userId": 5,
+    "membershipId": 2
+}
+
+###
+
+# Revocar una membresía de un cliente
+POST http://localhost:3001/api/memberships/revoke
+Content-Type: application/json
+
+{
+    "userId": 5
+}

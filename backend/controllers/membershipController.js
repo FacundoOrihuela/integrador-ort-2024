@@ -1,4 +1,5 @@
 import Membership from '../models/Membership.js';
+import Client from '../models/Client.js';
 
 const getMemberships = async (req, res) => {
     try {
@@ -64,4 +65,47 @@ const deleteMembership = async (req, res) => {
     }
 };
 
-export { getMemberships, getMembershipById, createMembership, updateMembership, deleteMembership };
+const assignMembership = async (req, res) => {
+    const { userId, membershipId } = req.body;
+
+    try {
+        const client = await Client.findOne({ where: { userId } });
+        if (!client) {
+            return res.status(404).json({ message: `Cliente con id ${userId} no encontrado` });
+        }
+
+        const membership = await Membership.findByPk(membershipId);
+        if (!membership) {
+            return res.status(404).json({ message: `Membresía con id ${membershipId} no encontrada` });
+        }
+
+        client.membershipId = membershipId;
+        await client.save();
+
+        res.json({ message: `Membresía ${membershipId} asignada al cliente ${userId} con éxito` });
+    } catch (error) {
+        console.error('Error al asignar la membresía:', error);
+        res.status(500).json({ message: 'Error al asignar la membresía', error: error.message });
+    }
+};
+
+const revokeMembership = async (req, res) => {
+    const { userId } = req.body;
+
+    try {
+        const client = await Client.findOne({ where: { userId } });
+        if (!client) {
+            return res.status(404).json({ message: `Cliente con id ${userId} no encontrado` });
+        }
+
+        client.membershipId = null;
+        await client.save();
+
+        res.json({ message: `Membresía revocada del cliente ${userId} con éxito` });
+    } catch (error) {
+        console.error('Error al revocar la membresía:', error);
+        res.status(500).json({ message: 'Error al revocar la membresía', error: error.message });
+    }
+};
+
+export { getMemberships, getMembershipById, createMembership, updateMembership, deleteMembership, assignMembership, revokeMembership };
