@@ -21,7 +21,6 @@ const GroupsList = () => {
         if (response.ok) {
           const data = await response.json();
           setTeachers(data.data);
-          console.log("teachers:",teachers)
         } else {
           setError("Error al cargar los profesores.");
         }
@@ -44,6 +43,7 @@ const GroupsList = () => {
       })
       .then((data) => {
         setGroups(data.data);
+        console.log(data.data)
       })
       .catch((err) => {
         setError(err.message);

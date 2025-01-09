@@ -31,6 +31,7 @@ import AboutTiferet from "./components/AboutTiferet";
 import Members from "./components/Members";
 import History from "./components/History";
 import SoloJuntos from "./components/SoloJuntos";
+import Groups from "./components/Groups";
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
                   {/* Rutas protegidas */}
                   <Route path="/store" element={<ProtectedRoute><ProductPage /></ProtectedRoute>} />
                   <Route path="/actividades" element={<ProtectedRoute><Event /></ProtectedRoute>} />
+                  <Route path="/groups" element={<ProtectedRoute><Groups /></ProtectedRoute>} />
                   {/* ----- */}
                   
                   <Route path="/admin-panel" element={<AdminPanel />} />

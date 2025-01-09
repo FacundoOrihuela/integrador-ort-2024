@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from "react";
 
-const CreateGroups = ({
-  editData,
-  isUpdate,
-  handleUpdateOrCreate,
-}) => {
+const CreateGroups = ({ editData, isUpdate, handleUpdateOrCreate }) => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     leader: null,
+    image: null,
   });
-
   const [teachers, setTeachers] = useState([]);
-  const [message, setLocalMessage] = useState("");
+  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchTeachers = async () => {
@@ -25,7 +22,7 @@ const CreateGroups = ({
         } else {
           setError("Error al cargar los profesores.");
         }
-      } catch (err) {
+      } catch {
         setError("Error al conectar con el servidor.");
       }
     };
@@ -41,24 +38,45 @@ const CreateGroups = ({
     }
   }, [editData, isUpdate]);
 
+  const validateForm = () => {
+    if (!formData.name.trim()) {
+      setError("El nombre del grupo es obligatorio.");
+      return false;
+    }
+    if (!formData.description.trim()) {
+      setError("La descripción del grupo es obligatoria.");
+      return false;
+    }
+    if (!formData.leader) {
+      setError("Debe seleccionar un líder para el grupo.");
+      return false;
+    }
+    setError("");
+    return true;
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleFileChange = (e) => {
+    setFormData({ ...formData, image: e.target.files[0] });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.description) {
-      setError("El nombre y la descripción son obligatorios.");
-      return;
-    }
+    if (!validateForm()) return;
+
+    setIsLoading(true);
 
     const formDataToSend = new FormData();
     formDataToSend.append("name", formData.name);
     formDataToSend.append("description", formData.description);
-    {!isUpdate ? formDataToSend.append("leaderId", formData.leader):formDataToSend.append("userId", formData.leader)};
-    if (formData.image) { 
+    formDataToSend.append("leaderId", formData.leader);
+
+    if (formData.image) {
       formDataToSend.append("image", formData.image);
     }
 
@@ -77,11 +95,63 @@ const CreateGroups = ({
       );
 
       if (response.ok) {
+        if (!isUpdate) {
+          const newGroupId = await fetchLatestGroupId();
+          if (newGroupId) {
+            await addLeader(newGroupId, formData.leader);
+          }
+        }
+
         handleUpdateOrCreate();
+        setFormData({ name: "", description: "", leader: null, image: null });
+        setMessage(isUpdate ? "Grupo actualizado correctamente." : "Grupo creado correctamente.");
       } else {
         setError("Error al guardar el grupo.");
       }
-    } catch (err) {
+    } catch {
+      setError("Error al conectar con el servidor.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchLatestGroupId = async () => {
+    try {
+      const response = await fetch("http://localhost:3001/api/groups", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const latestGroup = data.data[data.data.length - 1];
+        return latestGroup.id;
+      } else {
+        setError("Error al obtener los grupos.");
+        return null;
+      }
+    } catch {
+      setError("Error al conectar con el servidor.");
+      return null;
+    }
+  };
+
+  const addLeader = async (groupId, userId) => {
+    try {
+      const response = await fetch("http://localhost:3001/api/groups/add-user", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ groupId, userId }),
+      });
+
+      if (!response.ok) {
+        setError("Error al asignar líder al grupo.");
+      }
+    } catch {
       setError("Error al conectar con el servidor.");
     }
   };
@@ -94,9 +164,7 @@ const CreateGroups = ({
         </h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium">
-              Nombre del grupo
-            </label>
+            <label className="block text-sm font-medium">Nombre del grupo</label>
             <input
               type="text"
               name="name"
@@ -118,20 +186,17 @@ const CreateGroups = ({
             <label className="block text-sm font-medium">Imagen</label>
             <input
               type="file"
-              onChange={(e) =>
-                setFormData({ ...formData, image: e.target.files[0] })
-              }
+              onChange={handleFileChange}
               className="w-full p-2 border rounded"
             />
           </div>
-
           <div>
             <h3 className="text-sm font-medium">Asignar Líder</h3>
             <div className="flex items-center space-x-2">
               <select
                 value={formData.leader || ""}
                 onChange={(e) =>
-                  {setFormData({ ...formData, leader: e.target.value })}
+                  setFormData({ ...formData, leader: e.target.value })
                 }
                 className="w-full p-2 border rounded"
               >
@@ -149,8 +214,9 @@ const CreateGroups = ({
           <button
             type="submit"
             className="w-full bg-colors-1 text-white p-2 rounded hover:bg-colors-3"
+            disabled={isLoading}
           >
-            {isUpdate ? "Actualizar Grupo" : "Crear Grupo"}
+            {isLoading ? "Procesando..." : isUpdate ? "Actualizar Grupo" : "Crear Grupo"}
           </button>
         </form>
         {message && <p className="text-green-500 mt-2">{message}</p>}
