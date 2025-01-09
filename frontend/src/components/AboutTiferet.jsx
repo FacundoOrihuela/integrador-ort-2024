@@ -9,7 +9,7 @@ const AboutTiferet = () => {
       <Header />
       
       {/* Contenido principal */}
-      <div className="flex-grow mt-[7rem] max-w-3xl mx-auto px-4">
+      <div className="flex-grow mt-[2rem] max-w-3xl mx-auto px-4">
         <h1 className="text-2xl font-bold mb-6 text-center">¿Qué es Tiferet?</h1>
         <div className="space-y-6 text-left text-lg leading-relaxed">
           <p>
