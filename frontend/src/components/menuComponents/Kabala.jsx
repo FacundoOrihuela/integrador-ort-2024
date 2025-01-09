@@ -1,5 +1,6 @@
 import { Box, Typography, Grid, Button } from "@mui/material";
 import { useState } from "react";
+import { motion } from "framer-motion";
 import kabalaImage from "../img/kabala.jpg";
 import kabalaVivaIImage from "../img/kabalaVivaI.jpg";
 import kabalaVivaIIImage from "../img/kabalaVivaII.jpg";
@@ -7,6 +8,8 @@ import clasesKabalaImage from "../img/clasesKabala.jpg";
 import sod22Image from "../img/sod22.jpg";
 import kabalaPortraitImage from "../img/kabalaPortrait.jpg";
 import KabalaVivaIDetails from "./Kabala/KabalaVivaIDetails";
+import Footer from "../Footer";
+import Header from "../Header";
 
 const Kabala = () => {
   const [showDetails, setShowDetails] = useState(false);
@@ -37,90 +40,106 @@ const Kabala = () => {
 
   if (showDetails) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          padding: 2,
-          backgroundImage: `url(${kabalaPortraitImage})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col min-h-screen bg-cover bg-center"
+        style={{ backgroundImage: `url(${kabalaPortraitImage})` }}
       >
-        {articles[0].detailsComponent}
-      </Box>
+        <Header/>
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 2,
+          }}
+        >
+          {articles[0].detailsComponent}
+        </Box>
+        <Footer />
+      </motion.div>
     );
   }
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        padding: 2,
-        backgroundImage: `url(${kabalaPortraitImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className="flex flex-col min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: `url(${kabalaPortraitImage})` }}
     >
-      <Box sx={{ width: "70vh" }}>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            marginBottom: 2,
-            backgroundColor: "rgba(255, 255, 255, 0.8)",
-            padding: 2,
-            borderRadius: 1,
-            gap: 1,
-          }}
-        >
-          <Box component="img" src={kabalaImage} alt="Kabalá" sx={{ width: 200, height: 200, borderRadius: "50%", marginRight: 4 }} />
-          <Box>
-            <Typography variant="h4">Kabalá Viva</Typography>
-            <Typography>
-              La Kabalá es un sistema milenario de acercamiento a la realidad, una hoja de ruta para incorporar sus enseñanzas en la vida cotidiana. Nos invita a transitar un sendero de crecimiento emocional, mental y espiritual, de una manera integral y totalizadora. Desde el año 2008 nuestra casa realiza grupos de crecimiento en base a esta sabiduría a través de una propuesta teórica y experiencial que lleva el nombre de Kabalá Viva.
-            </Typography>
+      <Header/>
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 2,
+        }}
+      >
+        <Box sx={{ width: "70vh" }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              marginBottom: 2,
+              backgroundColor: "rgba(255, 255, 255, 0.8)",
+              padding: 2,
+              borderRadius: 1,
+              gap: 1,
+            }}
+          >
+            <Box component="img" src={kabalaImage} alt="Kabalá" sx={{ width: 200, height: 200, borderRadius: "50%", marginRight: 4 }} />
+            <Box>
+              <Typography variant="h4">Kabalá Viva</Typography>
+              <Typography>
+                La Kabalá es un sistema milenario de acercamiento a la realidad, una hoja de ruta para incorporar sus enseñanzas en la vida cotidiana. Nos invita a transitar un sendero de crecimiento emocional, mental y espiritual, de una manera integral y totalizadora. Desde el año 2008 nuestra casa realiza grupos de crecimiento en base a esta sabiduría a través de una propuesta teórica y experiencial que lleva el nombre de Kabalá Viva.
+              </Typography>
+            </Box>
           </Box>
-        </Box>
-        <Grid container spacing={2}>
-          {articles.map((article, index) => (
-            <Grid item xs={12} sm={6} key={index}>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  height: "100%",
-                  backgroundColor: "rgba(255, 255, 255, 0.8)",
-                  padding: 5,
-                  borderRadius: 1,
-                  gap: 1,
-                }}
-              >
-                <Box sx={{ display: "flex", flexDirection: "row", marginBottom: 2 }}>
-                  <Box component="img" src={article.image} alt={article.title} sx={{ width: 100, height: 100, borderRadius: "50%", marginRight: 2 }} />
-                  <Box>
-                    <Typography variant="h6">{article.title}</Typography>
-                    <Typography>{article.description}</Typography>
+          <Grid container spacing={2}>
+            {articles.map((article, index) => (
+              <Grid item xs={12} sm={6} key={index}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    height: "100%",
+                    backgroundColor: "rgba(255, 255, 255, 0.8)",
+                    padding: 5,
+                    borderRadius: 1,
+                    gap: 1,
+                  }}
+                >
+                  <Box sx={{ display: "flex", flexDirection: "row", marginBottom: 2 }}>
+                    <Box component="img" src={article.image} alt={article.title} sx={{ width: 100, height: 100, borderRadius: "50%", marginRight: 2 }} />
+                    <Box>
+                      <Typography variant="h6">{article.title}</Typography>
+                      <Typography>{article.description}</Typography>
+                    </Box>
                   </Box>
+                  {article.title === "Kabalá Viva I" && (
+                    <Box sx={{ marginTop: "auto" }}>
+                      <Button variant="contained" color="secondary" fullWidth onClick={() => setShowDetails(true)}>
+                        Más información
+                      </Button>
+                    </Box>
+                  )}
                 </Box>
-                {article.title === "Kabalá Viva I" && (
-                  <Box sx={{ marginTop: "auto" }}>
-                    <Button variant="contained" color="secondary" fullWidth onClick={() => setShowDetails(true)}>
-                      Más información
-                    </Button>
-                  </Box>
-                )}
-              </Box>
-            </Grid>
-          ))}
-        </Grid>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
       </Box>
-    </Box>
+      <Footer />
+    </motion.div>
   );
 };
 

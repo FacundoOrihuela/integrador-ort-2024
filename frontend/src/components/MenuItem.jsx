@@ -49,8 +49,8 @@ const MenuItem = ({ to, imgSrc, altText, text }) => {
             ml: 2,
             color: "black",
             opacity: 0,
-
             whiteSpace: "nowrap",
+            transition: "opacity 0.3s, margin-left 0.3s",
           }}
           className="button-text"
         >

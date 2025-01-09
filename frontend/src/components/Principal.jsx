@@ -1,8 +1,6 @@
 import { Box } from "@mui/material";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import Header from "./Header";
-import Footer from "./Footer";
 import Menu from "./Menu";
 import MainContent from "./MainContent";
 import Kabala from "./menuComponents/Kabala";
@@ -14,15 +12,12 @@ import Psicoterapias from "./menuComponents/Psicoterapias";
 const pageVariants = {
   initial: {
     opacity: 0,
-    x: "-100vw",
   },
   in: {
     opacity: 1,
-    x: 0,
   },
   out: {
     opacity: 0,
-    x: "100vw",
   },
 };
 
@@ -33,101 +28,109 @@ const pageTransition = {
 };
 
 const Principal = () => {
+  const location = useLocation();
+
   return (
-    <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-      <Header />
-      <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+    <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column", backgroundColor: "white" }}>
+      <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column"}}>
         <Menu />
-        <AnimatePresence mode="wait">
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <motion.div
-                  initial="initial"
-                  animate="in"
-                  exit="out"
-                  variants={pageVariants}
-                  transition={pageTransition}
-                >
-                  <MainContent />
-                </motion.div>
-              }
-            />
-            <Route
-              path="/kabala"
-              element={
-                <motion.div
-                  initial="initial"
-                  animate="in"
-                  exit="out"
-                  variants={pageVariants}
-                  transition={pageTransition}
-                >
-                  <Kabala />
-                </motion.div>
-              }
-            />
-            <Route
-              path="/circulos"
-              element={
-                <motion.div
-                  initial="initial"
-                  animate="in"
-                  exit="out"
-                  variants={pageVariants}
-                  transition={pageTransition}
-                >
-                  <Circulos />
-                </motion.div>
-              }
-            />
-            <Route
-              path="/yoga"
-              element={
-                <motion.div
-                  initial="initial"
-                  animate="in"
-                  exit="out"
-                  variants={pageVariants}
-                  transition={pageTransition}
-                >
-                  <Yoga />
-                </motion.div>
-              }
-            />
-            <Route
-              path="/integraciones"
-              element={
-                <motion.div
-                  initial="initial"
-                  animate="in"
-                  exit="out"
-                  variants={pageVariants}
-                  transition={pageTransition}
-                >
-                  <Integraciones />
-                </motion.div>
-              }
-            />
-            <Route
-              path="/psicoterapias"
-              element={
-                <motion.div
-                  initial="initial"
-                  animate="in"
-                  exit="out"
-                  variants={pageVariants}
-                  transition={pageTransition}
-                >
-                  <Psicoterapias />
-                </motion.div>
-              }
-            />
-          </Routes>
-        </AnimatePresence>
+        <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+              <Route
+                path="/"
+                element={
+                  <motion.div
+                    initial="initial"
+                    animate="in"
+                    exit="out"
+                    variants={pageVariants}
+                    transition={pageTransition}
+                    style={{ width: "100%", height: "100%" }}
+                  >
+                    <MainContent />
+                  </motion.div>
+                }
+              />
+              <Route
+                path="/kabala"
+                element={
+                  <motion.div
+                    initial="initial"
+                    animate="in"
+                    exit="out"
+                    variants={pageVariants}
+                    transition={pageTransition}
+                    style={{ width: "100%", height: "100%" }}
+                  >
+                    <Kabala />
+                  </motion.div>
+                }
+              />
+              <Route
+                path="/circulos"
+                element={
+                  <motion.div
+                    initial="initial"
+                    animate="in"
+                    exit="out"
+                    variants={pageVariants}
+                    transition={pageTransition}
+                    style={{ width: "100%", height: "100%" }}
+                  >
+                    <Circulos />
+                  </motion.div>
+                }
+              />
+              <Route
+                path="/yoga"
+                element={
+                  <motion.div
+                    initial="initial"
+                    animate="in"
+                    exit="out"
+                    variants={pageVariants}
+                    transition={pageTransition}
+                    style={{ width: "100%", height: "100%" }}
+                  >
+                    <Yoga />
+                  </motion.div>
+                }
+              />
+              <Route
+                path="/integraciones"
+                element={
+                  <motion.div
+                    initial="initial"
+                    animate="in"
+                    exit="out"
+                    variants={pageVariants}
+                    transition={pageTransition}
+                    style={{ width: "100%", height: "100%" }}
+                  >
+                    <Integraciones />
+                  </motion.div>
+                }
+              />
+              <Route
+                path="/psicoterapias"
+                element={
+                  <motion.div
+                    initial="initial"
+                    animate="in"
+                    exit="out"
+                    variants={pageVariants}
+                    transition={pageTransition}
+                    style={{ width: "100%", height: "100%" }}
+                  >
+                    <Psicoterapias />
+                  </motion.div>
+                }
+              />
+            </Routes>
+          </AnimatePresence>
+        </Box>
       </Box>
-      <Footer sx={{ flexShrink: 0 }} />
     </Box>
   );
 };
