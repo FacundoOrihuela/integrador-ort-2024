@@ -37,6 +37,7 @@ import favoriteRoutes from './routes/favoriteRoutes.js';
 import groupRoutes from './routes/groupRoutes.js';
 import postRoutes from './routes/postRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
+import newsRoutes from './routes/newsRoutes.js';
 
 app.use('/api/clients', clientsRoutes);
 app.use('/api/administrators', administratorRoutes);
@@ -56,6 +57,8 @@ app.use('/api/favorites', favoriteRoutes);
 app.use('/api/groups', groupRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/comments', commentRoutes);
+app.use('/api/news', newsRoutes);
+
 
 // Error handling
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
