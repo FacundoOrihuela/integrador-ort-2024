@@ -22,9 +22,9 @@ const Menu = () => {
       }}
     >
       <MenuItem to="/kabala" imgSrc={kabalaImg} altText="Escuela Kabalá Viva" text="Escuela Kabalá Viva" />
-      <MenuItem to="/circulos" imgSrc={meditarImg} altText="Círculos de crecimiento" text="Círculos de crecimiento" />
-      <MenuItem to="/yoga" imgSrc={circulosImg} altText="Bienestar corporal" text="Bienestar corporal" />
-      <MenuItem to="/integraciones" imgSrc={integracionesImg} altText="Abordajes holísticos" text="Abordajes holísticos" />
+      <MenuItem to="/yoga" imgSrc={meditarImg} altText="Yoga y meditación" text="Yoga y meditación"/>
+      <MenuItem to="/circulos" imgSrc={circulosImg} altText="Círculos de crecimiento" text="Círculos de crecimiento"/>
+      <MenuItem to="/integraciones" imgSrc={integracionesImg} altText="Integraciones" text="Integraciones" />
       <MenuItem to="/psicoterapias" imgSrc={psicoterapiaImg} altText="Psicoterapia" text="Psicoterapia" />
     </Box>
   );

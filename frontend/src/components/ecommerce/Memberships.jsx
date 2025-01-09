@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
-import { CartContext } from '../../context/CartContext';
+import React, { useEffect, useState } from "react";
 
 const Memberships = () => {
     const [memberships, setMemberships] = useState([]);

@@ -1,0 +1,59 @@
+# Obtener todas las noticias
+GET http://localhost:3001/api/news
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNjQzMzQ5MywiZXhwIjoxNzM2NDM3MDkzfQ.RR_uH8hwo0nFQPgYic-6gSaP60TzOLjUkl7WEyei-h0
+
+###
+
+# Obtener una noticia por su ID
+GET http://localhost:3001/api/news/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNjQzMzQ5MywiZXhwIjoxNzM2NDM3MDkzfQ.RR_uH8hwo0nFQPgYic-6gSaP60TzOLjUkl7WEyei-h0
+
+###
+
+# Crear una nueva noticia con imagen
+POST http://localhost:3001/api/news
+Content-Type: multipart/form-data; boundary=boundary
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNjQzMzQ5MywiZXhwIjoxNzM2NDM3MDkzfQ.RR_uH8hwo0nFQPgYic-6gSaP60TzOLjUkl7WEyei-h0
+
+--boundary
+Content-Disposition: form-data; name="title"
+
+Nueva Noticia
+--boundary
+Content-Disposition: form-data; name="content"
+
+Contenido de la nueva noticia
+--boundary
+Content-Disposition: form-data; name="photo"; filename="image.jpg"
+Content-Type: image/jpeg
+
+< D:/Descargas/tiferet-images/2.jpg
+--boundary--
+
+###
+
+# Actualizar una noticia existente con imagen
+PUT http://localhost:3001/api/news/1
+Content-Type: multipart/form-data; boundary=boundary
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNjQzMzQ5MywiZXhwIjoxNzM2NDM3MDkzfQ.RR_uH8hwo0nFQPgYic-6gSaP60TzOLjUkl7WEyei-h0
+
+--boundary
+Content-Disposition: form-data; name="title"
+
+Noticia Actualizada
+--boundary
+Content-Disposition: form-data; name="content"
+
+Contenido actualizado de la noticia
+--boundary
+Content-Disposition: form-data; name="photo"; filename="image.jpg"
+Content-Type: image/jpeg
+
+< D:/Descargas/tiferet-images/2.jpg
+--boundary--
+
+###
+
+# Eliminar una noticia
+DELETE http://localhost:3001/api/news/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNjQzMzQ5MywiZXhwIjoxNzM2NDM3MDkzfQ.RR_uH8hwo0nFQPgYic-6gSaP60TzOLjUkl7WEyei-h0
