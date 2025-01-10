@@ -14,45 +14,23 @@ const payment = new Payment(client); // eslint-disable-line no-unused-vars
 //*Create order - Crear orden de pago
 export const createOrder = async (req, res) => {
   try {
+    const { email, name, items } = req.body;
+
     const payer = {
-      email: "comprador.nuevo@mail.com",
-      first_name: "John",
-      last_name: "Doe",
-      phone: {
-        area_code: "1",
-        number: "1234567",
-      },
-      address: {
-        street_name: "Calle 123",
-        street_number: "123",
-        zip_code: "123456",
-        city: "Bogotá",
-      },
-      identification: {
-        type: "DNI",
-        number: "12345678",
-      },
+      email,
+      first_name: name,
     };
-    const itemsToSale = [
-      {
-        id: "001",
-        title: "Producto #1",
-        description: "Descripción del producto #1 a pagar",
-        picture_url: "https://www.mercadopago.com/org-img/MP3/home/logomp3.gif",
-        category_id: "1",
-        quantity: 1,
-        unit_price: 10000, //2.29 USD
-      },
-      {
-        id: "002",
-        title: "Producto 2",
-        description: "Descripción del producto 2",
-        picture_url: "https://www.mercadopago.com/org-img/MP3/home/logomp3.gif",
-        category_id: "2",
-        quantity: 2,
-        unit_price: 20000, //4,58 USD
-      },
-    ];
+
+    const itemsToSale = items.map((item) => ({
+      id: item.product.id,
+      title: item.product.name,
+      description: item.product.description,
+      picture_url: item.product.image || "https://www.mercadopago.com/org-img/MP3/home/logomp3.gif",
+      category_id: item.product.categoryId,
+      quantity: item.quantity,
+      unit_price: item.priceAtPurchase,
+    }));
+
     let result;
     const preference = new Preference(client);
     await preference

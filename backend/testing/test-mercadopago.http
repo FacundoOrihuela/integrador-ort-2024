@@ -8,14 +8,30 @@ Content-Type: application/json
     "items": [
         {
             "product": {
-                "name": "Producto 1"
+                "id": 1,
+                "name": "Producto 1",
+                "description": "Descripción del Producto 1",
+                "price": 100,
+                "stock": 10,
+                "categoryId": 1,
+                "image": "https://example.com/producto1.jpg",
+                "file": "https://example.com/producto1.pdf",
+                "timesSold": 5
             },
             "priceAtPurchase": 100,
             "quantity": 1
         },
         {
             "product": {
-                "name": "Producto 2"
+                "id": 2,
+                "name": "Producto 2",
+                "description": "Descripción del Producto 2",
+                "price": 200,
+                "stock": 20,
+                "categoryId": 2,
+                "image": "https://example.com/producto2.jpg",
+                "file": "https://example.com/producto2.pdf",
+                "timesSold": 10
             },
             "priceAtPurchase": 200,
             "quantity": 2
