@@ -18,7 +18,7 @@ export const createOrder = async (req, res) => {
 
     const payer = {
       email,
-      first_name: name,
+      name
     };
 
     const itemsToSale = items.map((item) => ({
