@@ -1,0 +1,24 @@
+# Crear una nueva orden con MercadoPago
+POST http://localhost:3001/api/mercadopago/create-order
+Content-Type: application/json
+
+{
+    "email": "tayet.nunez@gmail.com",
+    "name": "Cliente Ejemplo",
+    "items": [
+        {
+            "product": {
+                "name": "Producto 1"
+            },
+            "priceAtPurchase": 100,
+            "quantity": 1
+        },
+        {
+            "product": {
+                "name": "Producto 2"
+            },
+            "priceAtPurchase": 200,
+            "quantity": 2
+        }
+    ]
+}

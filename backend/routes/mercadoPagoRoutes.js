@@ -1,12 +1,11 @@
 import { Router } from 'express';
-import { createOrder, success , failure, pending} from '../controllers/mercadoPagoController.js';
+import { createOrder, success, failure, pending } from '../controllers/mercadoPagoController.js';
 
 const router = Router();
 
-router.get('/', createOrder);
-router.get('/:id', success);
-router.post('/', failure);
-router.put('/:id', pending);
-
+router.post('/create-order', createOrder);
+router.get('/success', success);
+router.get('/failure', failure);
+router.get('/pending', pending);
 
 export default router;

@@ -9,6 +9,18 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 
 ###
 
+# Crear una nueva orden con productos específicos
+POST http://localhost:3001/api/orders/create-with-products
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNjU0MzIwOCwiZXhwIjoxNzM2NTQ2ODA4fQ.wpnCOB1srRRKtf6KscfJDS-v0LK37CZJDYSlkTaYH28
+
+{
+    "userId": 1,
+    "productIds": [1, 2, 3]
+}
+
+###
+
 # Obtener una orden específica
 GET http://localhost:3001/api/orders/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNTQ5MTUwMCwiZXhwIjoxNzM1NDk1MTAwfQ.UxyLwkrz3O23aJsmIgKom0qyBJloVsKsCaBZsr_J8K0
