@@ -5,7 +5,7 @@ import { Box, Typography, Button, List, ListItem, ListItemText, Avatar } from '@
 import axios from 'axios';
 import Header from '../Header';
 
-const Checkout = () => {
+const CheckoutMP = () => {
     const { cart, setCart, fetchCart } = useContext(CartContext);
     const navigate = useNavigate();
 
@@ -29,25 +29,6 @@ const Checkout = () => {
         })
         .catch(error => console.error('Error placing order:', error));
     };
-
-
-    const handleOrderMP = async () => {
-        try {
-          const response = await fetch("/api/mercadoPago/create", {
-            method: "POST", 
-          });
-      
-          const result = await response.json();
-          console.log("Respuesta de MercadoPago:", result);
-
-        } catch (error) {
-          console.error("Error al crear la sesión de MercadoPago:", error);
-        }
-      };
-      
-      // Uso
-      handleOrderMP();
-      
 
     const handleBackToStore = () => {
         navigate('/store');
@@ -101,7 +82,7 @@ const Checkout = () => {
                             variant="contained"
                             color="primary"
                             className="w-full"
-                            onClick={handleOrderMP}
+                            onClick={handlePlaceOrder}
                         >
                             Finalizar Compra
                         </Button>
@@ -114,4 +95,4 @@ const Checkout = () => {
     );
 };
 
-export default Checkout;
+export default CheckoutMP;

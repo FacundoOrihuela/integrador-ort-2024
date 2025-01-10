@@ -38,6 +38,7 @@ import groupRoutes from './routes/groupRoutes.js';
 import postRoutes from './routes/postRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
 import newsRoutes from './routes/newsRoutes.js';
+import mercadoPagoRoutes from './routes/mercadoPagoRoutes.js';
 
 app.use('/api/clients', clientsRoutes);
 app.use('/api/administrators', administratorRoutes);
@@ -58,6 +59,7 @@ app.use('/api/groups', groupRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/news', newsRoutes);
+app.use('/api/mercadoPago', mercadoPagoRoutes);
 
 
 // Error handling
