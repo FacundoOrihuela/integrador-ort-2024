@@ -75,6 +75,9 @@ const Checkout = () => {
                         >
                             Volver a la tienda
                         </Button>
+
+
+
                         <Button
                             variant="contained"
                             color="primary"
@@ -83,6 +86,8 @@ const Checkout = () => {
                         >
                             Finalizar Compra
                         </Button>
+
+                        
                     </Box>
                 </Box>
             </Box>
