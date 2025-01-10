@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { saveSessionToken } from '../features/loginSlice';
 import { UserContext } from '../context/UserContext';
-import { Box, Typography, List, ListItemText, ListItemAvatar, ClickAwayListener, ListItemButton } from '@mui/material';
+import { Box, List, ListItemText, ListItemAvatar, ClickAwayListener, ListItemButton } from '@mui/material';
 import { AccountCircle as AccountCircleIcon, Group as GroupIcon, ShoppingCart as ShoppingCartIcon, AdminPanelSettings as AdminPanelSettingsIcon, ExitToApp as ExitToAppIcon } from '@mui/icons-material';
 
 const ProfileModal = ({ onClose }) => {
@@ -20,7 +20,6 @@ const ProfileModal = ({ onClose }) => {
     return (
         <ClickAwayListener onClickAway={onClose}>
             <Box className="absolute top-16 right-0 w-64 bg-white shadow-lg p-4">
-                <Typography variant="h6" className="text-black font-bold mb-4">Menú</Typography>
                 <List>
                     <ListItemButton onClick={() => navigate('/profile/' + user.userId)}>
                         <ListItemAvatar>

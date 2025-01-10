@@ -49,6 +49,46 @@ export const createOrder = async (req, res) => {
     }
 };
 
+export const createOrderWithProducts = async (req, res) => {
+    const { userId, productIds } = req.body;
+
+    try {
+        const products = await Product.findAll({
+            where: {
+                id: productIds,
+            },
+        });
+
+        if (products.length !== productIds.length) {
+            return res.status(400).json({ message: 'Algunos productos no fueron encontrados' });
+        }
+
+        const totalAmount = products.reduce((total, product) => total + product.price, 0);
+
+        const order = await Order.create({
+            userId,
+            totalAmount,
+            status: 'pending',
+        });
+
+        const orderItems = await Promise.all(products.map(async (product) => {
+            await Product.increment('timesSold', { by: 1, where: { id: product.id } });
+
+            return await OrderItem.create({
+                orderId: order.id,
+                productId: product.id,
+                quantity: 1, // Asumimos que la cantidad es 1 para cada producto
+                priceAtPurchase: product.price,
+            });
+        }));
+
+        res.json({ message: 'Orden creada exitosamente', order, orderItems });
+    } catch (error) {
+        console.error('Error al crear la orden:', error);
+        res.status(500).json({ message: 'Error interno del servidor', error: error.message });
+    }
+};
+
 export const getOrder = async (req, res) => {
     const userId = req.user.id;
     const { orderId } = req.params;
@@ -92,7 +132,6 @@ export const getOrders = async (req, res) => {
     }
 };
 
-// Nuevo controlador para obtener todas las órdenes
 export const getAllOrders = async (req, res) => {
     try {
         const orders = await Order.findAll({
@@ -102,8 +141,8 @@ export const getAllOrders = async (req, res) => {
                     include: [Product],
                 },
                 {
-                    model: User, // Incluir información del usuario
-                    attributes: ['id', 'name', 'email'], // Seleccionar los atributos que deseas incluir
+                    model: User,
+                    attributes: ['id', 'name', 'email'],
                 },
             ],
         });

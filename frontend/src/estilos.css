@@ -71,10 +71,6 @@ html {
   margin-top: 10px;
 }
 
-.event-link:hover {
-  background-color: #e87a31;
-}
-
 .empty {
   display: none;
 }

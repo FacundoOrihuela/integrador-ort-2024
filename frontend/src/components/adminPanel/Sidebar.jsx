@@ -1,35 +1,57 @@
 import React from "react";
+import { Drawer, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import PeopleIcon from "@mui/icons-material/People";
+import CardMembershipIcon from "@mui/icons-material/CardMembership";
+import EventIcon from "@mui/icons-material/Event";
+import GroupIcon from "@mui/icons-material/Group";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import StoreIcon from "@mui/icons-material/Store";
+import CategoryIcon from "@mui/icons-material/Category";
 
-const Sidebar = ({ onSelect }) => {
+const Sidebar = ({ onSelect, selectedComponent }) => {
+  const menuItems = [
+    { text: "Usuarios", icon: <PeopleIcon />, component: "UserList" },
+    { text: "Membresías", icon: <CardMembershipIcon />, component: "Memberships" },
+    { text: "Actividades", icon: <EventIcon />, component: "Activities" },
+    { text: "Grupos", icon: <GroupIcon />, component: "Groups" },
+    { text: "Compras", icon: <ShoppingCartIcon />, component: "ShoppingList" },
+    { text: "Productos", icon: <StoreIcon />, component: "Products" },
+    { text: "Categorías", icon: <CategoryIcon />, component: "Categories" },
+  ];
+
   return (
-    <aside
-      className="z-[100] bg-gray-100 p-4 flex flex-col shadow-md fixed top-0 left-0 h-full"
-      style={{ width: '240px', marginTop: '64px' }} // Ancho fijo para el sidebar y margen superior para el header
+    <Drawer
+      variant="permanent"
+      className="z-[100] bg-gray-100 shadow-md"
+      PaperProps={{
+        className: "w-60 mt-20",
+      }}
     >
-      <div className="flex flex-col gap-1 mb-8">
-        <button className="py-2 hover:bg-gray-300" onClick={() => onSelect("UserList")}>
-          Lista de Usuarios
-        </button>
-        <button className="py-2 hover:bg-gray-300" onClick={() => onSelect("Memberships")}>
-          Membresías
-        </button>
-        <button className="py-2 hover:bg-gray-300" onClick={() => onSelect("Activities")}>
-          Actividades
-        </button>
-        <button className="py-2 hover:bg-gray-300" onClick={() => onSelect("Groups")}>
-          Grupos
-        </button>
-        <button className="py-2 hover:bg-gray-300" onClick={() => onSelect("ShoppingList")}>
-          Lista de Compras
-        </button>
-        <button className="py-2 hover:bg-gray-300" onClick={() => onSelect("Products")}>
-          Productos
-        </button>
-        <button className="py-2 hover:bg-gray-300" onClick={() => onSelect("Categories")}>
-          Categorías
-        </button>
-      </div>
-    </aside>
+      <List className="flex flex-col gap-1">
+        {menuItems.map((item) => {
+          return (
+            <ListItemButton
+              key={item.text}
+              onClick={() => onSelect(item.component)}
+              sx={{
+                "&:hover": { backgroundColor: "gray.300" },
+                backgroundColor: selectedComponent === item.component ? "primary.main" : "inherit",
+              }}
+              className={`hover:bg-gray-300 ${selectedComponent === item.component ? "text-white" : ""}`}
+            >
+              <ListItemIcon
+                sx={{
+                  color: selectedComponent === item.component ? "white" : "inherit",
+                }}
+              >
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText primary={item.text} className={selectedComponent === item.component ? "text-white" : ""} />
+            </ListItemButton>
+          );
+        })}
+      </List>
+    </Drawer>
   );
 };
 

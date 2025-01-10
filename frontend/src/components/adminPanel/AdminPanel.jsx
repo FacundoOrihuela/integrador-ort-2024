@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import Header from "../Header";
-import UserList from "./UsersList";
+import UserList from "./Users/UsersList";
 import Sidebar from "./Sidebar";
 import Activities from "./Activities/Activities";
 import Groups from "./Groups/Groups";
@@ -10,7 +10,7 @@ import Memberships from "./Memberships/Memberships";
 import ShoppingList from "./Activities/ShoppingList";
 import AdminProductList from "./Products/AdminProductList";
 import CategoryList from "./Categories/CategoryList";
-import { Box, Toolbar } from "@mui/material";
+import { Box } from "@mui/material";
 
 const drawerWidth = 240;
 
@@ -58,18 +58,18 @@ const AdminPanel = () => {
       <Header />
       <Box sx={{ display: "flex", flexGrow: 1 }}>
         <Sidebar
+          selectedComponent={selectedComponent}
+          onSelect={setSelectedComponent}
           sx={{
             width: drawerWidth,
             flexShrink: 0,
             [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: "border-box" },
           }}
-          onSelect={setSelectedComponent}
         />
         <Box
           component="main"
-          sx={{ flexGrow: 1, marginLeft: `${drawerWidth}px` }}
+          sx={{ flexGrow: 1, marginLeft: `${drawerWidth}px`, padding: 2 }}
         >
-          <Toolbar />
           {renderComponent()}
         </Box>
       </Box>

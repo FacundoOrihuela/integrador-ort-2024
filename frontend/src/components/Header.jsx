@@ -1,5 +1,5 @@
 import React, { useContext, useState, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -32,6 +32,7 @@ const Header = ({ store }) => {
   const [showProfile, setShowProfile] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const profileButtonRef = useRef(null);
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
 
@@ -53,25 +54,36 @@ const Header = ({ store }) => {
     setMenuAnchorEl(null);
   };
 
+  const isActive = (path) => location.pathname === path;
+
   return (
     <>
       <AppBar position="sticky" className="bg-colors-1 shadow-md h-[5rem]">
         <Container maxWidth="lg" className="h-full">
           <Toolbar disableGutters className="flex justify-between items-center h-full">
             <div className="flex items-center">
-              <Link to="/principal" className="flex items-center">
+              <Link to="/" className="flex items-center">
                 <img src={logoImg} alt="Logo" className="h-14 w-14 rounded-full" />
               </Link>
             </div>
 
             <nav className="flex-1 flex justify-center space-x-6">
-              <Link to="/" className="text-secondary hover:text-tertiary text-lg font-bold">
+              <Link
+                to="/"
+                className={`text-secondary text-lg font-bold border-b-2 ${
+                  isActive("/") ? "border-white" : "border-transparent"
+                } hover:border-white`}
+              >
                 Home
               </Link>
 
               <div>
                 <button
-                  className="text-secondary hover:text-tertiary text-lg font-bold relative"
+                  className={`text-secondary text-lg font-bold relative border-b-2 ${
+                    isActive("/aboutTiferet") || isActive("/members") || isActive("/together") || isActive("/history")
+                      ? "border-white"
+                      : "border-transparent"
+                  } hover:border-white`}
                   onClick={handleMenuOpen}
                 >
                   Somos
@@ -86,9 +98,14 @@ const Header = ({ store }) => {
                 >
                   <MenuItem onClick={handleMenuClose}>
                     <ListItemIcon>
-                      <InfoIcon fontSize="small" color="primary"/>
+                      <InfoIcon fontSize="small" color="primary" />
                     </ListItemIcon>
-                    <Link to="/aboutTiferet" className="text-black text-lg block">
+                    <Link
+                      to="/aboutTiferet"
+                      className={`text-black text-lg block border-b-2 ${
+                        isActive("/aboutTiferet") ? "border-white" : "border-transparent"
+                      } hover:border-white`}
+                    >
                       ¿Qué es Tiferet?
                     </Link>
                   </MenuItem>
@@ -96,23 +113,38 @@ const Header = ({ store }) => {
                     <ListItemIcon>
                       <GroupIcon fontSize="small" color="primary" />
                     </ListItemIcon>
-                    <Link to="/members" className="text-black text-lg block">
+                    <Link
+                      to="/members"
+                      className={`text-black text-lg block border-b-2 ${
+                        isActive("/members") ? "border-white" : "border-transparent"
+                      } hover:border-white`}
+                    >
                       Integrantes
                     </Link>
                   </MenuItem>
                   <MenuItem onClick={handleMenuClose}>
                     <ListItemIcon>
-                      <PeopleAltIcon fontSize="small" color="primary"/>
+                      <PeopleAltIcon fontSize="small" color="primary" />
                     </ListItemIcon>
-                    <Link to="/together" className="text-black text-lg block">
+                    <Link
+                      to="/together"
+                      className={`text-black text-lg block border-b-2 ${
+                        isActive("/together") ? "border-white" : "border-transparent"
+                      } hover:border-white`}
+                    >
                       Solo Juntos
                     </Link>
                   </MenuItem>
                   <MenuItem onClick={handleMenuClose}>
                     <ListItemIcon>
-                      <HistoryIcon fontSize="small" color="primary"/>
+                      <HistoryIcon fontSize="small" color="primary" />
                     </ListItemIcon>
-                    <Link to="/history" className="text-black text-lg block">
+                    <Link
+                      to="/history"
+                      className={`text-black text-lg block border-b-2 ${
+                        isActive("/history") ? "border-white" : "border-transparent"
+                      } hover:border-white`}
+                    >
                       Nuestra Historia
                     </Link>
                   </MenuItem>
@@ -121,21 +153,35 @@ const Header = ({ store }) => {
 
               <span
                 onClick={() => handleRestrictedClick("/actividades")}
-                className="text-secondary hover:text-tertiary text-lg font-bold cursor-pointer"
+                className={`text-secondary text-lg font-bold cursor-pointer border-b-2 ${
+                  isActive("/actividades") ? "border-white" : "border-transparent"
+                } hover:border-white`}
               >
                 Actividades
               </span>
               <span
                 onClick={() => handleRestrictedClick("/store")}
-                className="text-secondary hover:text-tertiary text-lg font-bold cursor-pointer"
+                className={`text-secondary text-lg font-bold cursor-pointer border-b-2 ${
+                  isActive("/store") ? "border-white" : "border-transparent"
+                } hover:border-white`}
               >
                 Tienda
               </span>
-              <Link to="/aula" className="text-secondary hover:text-tertiary text-lg font-bold">
+              <Link
+                to="/aula"
+                className={`text-secondary text-lg font-bold border-b-2 ${
+                  isActive("/aula") ? "border-white" : "border-transparent"
+                } hover:border-white`}
+              >
                 Aula virtual
               </Link>
 
-              <Link to="/contact" className="text-secondary hover:text-tertiary text-lg font-bold">
+              <Link
+                to="/contact"
+                className={`text-secondary text-lg font-bold border-b-2 ${
+                  isActive("/contact") ? "border-white" : "border-transparent"
+                } hover:border-white`}
+              >
                 Contacto
               </Link>
             </nav>
@@ -169,10 +215,20 @@ const Header = ({ store }) => {
                 </>
               ) : (
                 <div className="flex gap-4">
-                  <Link to="/login" className="text-secondary hover:text-tertiary text-lg font-bold">
+                  <Link
+                    to="/login"
+                    className={`text-secondary text-lg font-bold border-b-2 ${
+                      isActive("/login") ? "border-white" : "border-transparent"
+                    } hover:border-white`}
+                  >
                     Iniciar sesión
                   </Link>
-                  <Link to="/register" className="text-secondary hover:text-tertiary text-lg font-bold">
+                  <Link
+                    to="/register"
+                    className={`text-secondary text-lg font-bold border-b-2 ${
+                      isActive("/register") ? "border-white" : "border-transparent"
+                    } hover:border-white`}
+                  >
                     Registrarse
                   </Link>
                 </div>
