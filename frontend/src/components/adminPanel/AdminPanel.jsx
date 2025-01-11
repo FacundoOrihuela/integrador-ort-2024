@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom";
 import Header from "../Header";
 import UserList from "./Users/UsersList";
 import Sidebar from "./Sidebar";
-import Activities from "./Activities/Activities";
+import ActivitiesList from "./Activities/ActivitiesList";
 import Groups from "./Groups/Groups";
-import Memberships from "./Memberships/Memberships";
-import ShoppingList from "./Activities/ShoppingList";
+import MembershipList from "./Memberships/MembershipList";
+import ShoppingList from "./Orders/ShoppingList";
 import AdminProductList from "./Products/AdminProductList";
 import CategoryList from "./Categories/CategoryList";
 import { Box } from "@mui/material";
@@ -37,11 +37,11 @@ const AdminPanel = () => {
       case "UserList":
         return <UserList />;
       case "Memberships":
-        return <Memberships />;
+        return <MembershipList />;
       case "ShoppingList":
         return <ShoppingList />;
       case "Activities":
-        return <Activities />;
+        return <ActivitiesList />;
       case "Groups":
         return <Groups />;
       case "Products":

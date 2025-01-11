@@ -1,4 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper, CircularProgress, Box, Button, TextField, Pagination, IconButton } from "@mui/material";
+import CategoryIcon from "@mui/icons-material/Category";
+import ErrorIcon from "@mui/icons-material/Error";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import CreateCategory from "./CreateCategory";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -6,6 +12,9 @@ import axios from "axios";
 
 const CategoryList = () => {
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [search, setSearch] = useState("");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editData, setEditData] = useState({
@@ -13,15 +22,18 @@ const CategoryList = () => {
     name: "",
     description: "",
   });
-  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+  const categoriesPerPage = 8;
 
   const fetchCategories = async () => {
     try {
       const response = await axios.get("http://localhost:3001/api/categories");
       setCategories(response.data.data);
+      setLoading(false);
     } catch (err) {
       setError("Error al obtener las categorías");
       toast.error("Error al obtener las categorías");
+      setLoading(false);
     }
   };
 
@@ -31,7 +43,6 @@ const CategoryList = () => {
 
   const handleDelete = async (id) => {
     try {
-      // Verificar si hay productos asignados a la categoría
       const productsResponse = await axios.get(`http://localhost:3001/api/products/category/${id}`);
       const productsData = productsResponse.data;
 
@@ -69,61 +80,109 @@ const CategoryList = () => {
     fetchCategories();
   };
 
+  const handleSearchChange = (event) => {
+    setSearch(event.target.value);
+    setPage(1);
+  };
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
+
+  const filteredCategories = categories.filter((category) => {
+    return category.name.toLowerCase().includes(search.toLowerCase());
+  });
+
+  const paginatedCategories = filteredCategories.slice((page - 1) * categoriesPerPage, page * categoriesPerPage);
+
+  // Mostrar un mensaje si ocurre un error
   if (error) {
-    return <div className="text-red-500">Error: {error}</div>;
+    return (
+      <Paper className="p-4 m-4">
+        <Box className="flex items-center">
+          <ErrorIcon className="mr-2" /> Error: {error}
+        </Box>
+      </Paper>
+    );
+  }
+
+  // Mostrar un mensaje mientras se cargan los datos
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <CircularProgress />
+        <Box className="ml-2">Cargando categorías...</Box>
+      </div>
+    );
   }
 
   return (
-    <div className="container mx-auto p-6 pt-2">
-      <div className="flex justify-center mb-4">
-        <button
-          onClick={toggleCreateModal}
-          className="bg-colors-1 text-white px-4 py-2 rounded hover:bg-colors-1"
-        >
+    <Paper className="p-4 m-4">
+      <Box className="flex justify-between mb-4">
+        <TextField
+          label="Buscar por nombre"
+          variant="outlined"
+          fullWidth
+          value={search}
+          onChange={handleSearchChange}
+          sx={{ marginRight: 2 }}
+        />
+        <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={toggleCreateModal}>
           Crear Categoría
-        </button>
-      </div>
-      <h2 className="text-2xl font-bold mb-4">Lista de Categorías</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {categories.map((category) => (
-          <div
-            key={category.id}
-            className="bg-white rounded-lg shadow-md p-4 hover:shadow-xl transition duration-300 ease-in-out"
-          >
-            <h3 className="text-xl font-semibold text-colors-1 mb-2">
-              {category.name}
-            </h3>
-            <div className="mt-4 flex justify-between gap-4">
-              <button
-                onClick={() => openEditModal(category)}
-                className="w-[50%] bg-yellow-500 text-white px-3 py-2 rounded hover:bg-yellow-600 transition duration-200"
-              >
-                Editar
-              </button>
-              <button
-                onClick={() => handleDelete(category.id)}
-                className="w-[50%] bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-200"
-              >
-                Eliminar
-              </button>
-            </div>
-          </div>
+        </Button>
+      </Box>
+      <List>
+        {paginatedCategories.map((category) => (
+          <ListItem key={category.id} className="mb-2 bg-gray-100 rounded-lg shadow-md">
+            <ListItemAvatar>
+              <Avatar>
+                <CategoryIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Box component="span" className="flex items-center">
+                  {category.name}
+                </Box>
+              }
+              secondary={
+                <>
+                  <Box component="span" className="flex items-center">
+                    Descripción: {category.description}
+                  </Box>
+                </>
+              }
+            />
+            <Box display="flex" gap={1}>
+              <IconButton onClick={() => openEditModal(category)}>
+                <EditIcon />
+              </IconButton>
+              <IconButton color="error" onClick={() => handleDelete(category.id)}>
+                <DeleteIcon />
+              </IconButton>
+            </Box>
+          </ListItem>
         ))}
-      </div>
+      </List>
+      <Box display="flex" justifyContent="center" mt={2}>
+        <Pagination
+          count={Math.ceil(filteredCategories.length / categoriesPerPage)}
+          page={page}
+          onChange={handlePageChange}
+          color="primary"
+        />
+      </Box>
 
       {isCreateModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9000]">
-          <div className="max-h-[90%] bg-white p-6 rounded shadow-lg w-full max-w-md relative z-[10000]">
+          <div className="bg-white p-6 rounded shadow-lg w-full max-w-md relative z-[10000]">
             <button
               onClick={toggleCreateModal}
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
             >
               ✕
             </button>
-            <CreateCategory
-              handleUpdateOrCreate={handleUpdateOrCreate}
-              setIsModalOpen={setIsCreateModalOpen}
-            />
+            <CreateCategory handleUpdateOrCreate={handleUpdateOrCreate} setIsModalOpen={setIsCreateModalOpen} />
           </div>
         </div>
       )}
@@ -147,7 +206,7 @@ const CategoryList = () => {
           </div>
         </div>
       )}
-    </div>
+    </Paper>
   );
 };
 

@@ -1,8 +1,19 @@
 import React, { useEffect, useState } from "react";
+import { List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper, CircularProgress, Box, Button, TextField, Pagination, IconButton } from "@mui/material";
+import MembershipIcon from "@mui/icons-material/CardMembership";
+import ErrorIcon from "@mui/icons-material/Error";
+import AddIcon from "@mui/icons-material/Add";
+import SortIcon from "@mui/icons-material/Sort";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import CreateMemberships from "./CreateMemberships";
 
 const MembershipList = () => {
   const [memberships, setMemberships] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editData, setEditData] = useState({
@@ -12,9 +23,11 @@ const MembershipList = () => {
     price: "",
     duration: "",
   });
-  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+  const membershipsPerPage = 8;
 
   const fetchMemberships = () => {
+    setLoading(true);
     fetch("http://localhost:3001/api/memberships")
       .then((respuesta) => {
         if (!respuesta.ok) {
@@ -24,9 +37,11 @@ const MembershipList = () => {
       })
       .then((dataMembresias) => {
         setMemberships(dataMembresias.data);
+        setLoading(false);
       })
       .catch((err) => {
         setError(err.message);
+        setLoading(false);
       });
   };
 
@@ -68,67 +83,178 @@ const MembershipList = () => {
     fetchMemberships();
   };
 
+  const handleSearchChange = (event) => {
+    setSearch(event.target.value);
+    setPage(1);
+  };
+
+  const handleSortChange = (sortType) => {
+    setSort(sortType);
+    setPage(1);
+  };
+
+  const filteredMemberships = memberships.filter((membership) => {
+    return membership.name.toLowerCase().includes(search.toLowerCase());
+  });
+
+  const sortedMemberships = filteredMemberships.sort((a, b) => {
+    if (sort === "durationAsc") return a.duration - b.duration;
+    if (sort === "durationDesc") return b.duration - a.duration;
+    if (sort === "priceAsc") return a.price - b.price;
+    if (sort === "priceDesc") return b.price - a.price;
+    return 0;
+  });
+
+  const paginatedMemberships = sortedMemberships.slice((page - 1) * membershipsPerPage, page * membershipsPerPage);
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
+
+  // Mostrar un mensaje si ocurre un error
   if (error) {
-    return <div className="text-red-500">Error: {error}</div>;
+    return (
+      <Paper className="p-4 m-4">
+        <Box className="flex items-center">
+          <ErrorIcon className="mr-2" /> Error: {error}
+        </Box>
+      </Paper>
+    );
+  }
+
+  // Mostrar un mensaje mientras se cargan los datos
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <CircularProgress />
+        <Box className="ml-2">Cargando membresías...</Box>
+      </div>
+    );
   }
 
   return (
-    <div className="container mx-auto p-6 pt-2">
-      <div className="flex justify-center mb-4">
-        <button
-          onClick={toggleCreateModal}
-          className="bg-colors-1 text-white px-4 py-2 rounded hover:bg-colors-1"
-        >
+    <Paper className="p-4 m-4">
+      <Box className="flex justify-between mb-4">
+        <TextField
+          label="Buscar por nombre"
+          variant="outlined"
+          fullWidth
+          value={search}
+          onChange={handleSearchChange}
+          sx={{ marginRight: 2 }}
+        />
+        <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={toggleCreateModal}>
           Crear Membresía
-        </button>
-      </div>
-      <h2 className="text-2xl font-bold mb-4">Lista de Membresías</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {memberships.map((membresia) => (
-          <div
-            key={membresia.id}
-            className="bg-white rounded-lg shadow-md p-4 hover:shadow-xl transition duration-300 ease-in-out"
-          >
-            <h3 className="text-xl font-semibold text-colors-1 mb-2">
-              {membresia.name}
-            </h3>
-            <p className="text-gray-700 mb-2">
-              <span className="font-bold">Descripción:</span> {membresia.description}
-            </p>
-            <p className="text-gray-900 font-medium">
-              <span className="font-bold">Precio:</span> ${membresia.price}
-            </p>
-            <div className="mt-4 flex justify-between gap-4">
-              <button
-                onClick={() => openEditModal(membresia)}
-                className="w-[50%] bg-yellow-500 text-white px-3 py-2 rounded hover:bg-yellow-600 transition duration-200"
-              >
-                Editar
-              </button>
-              <button
-                onClick={() => handleDelete(membresia.id)}
-                className="w-[50%] bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-200"
-              >
-                Eliminar
-              </button>
-            </div>
-          </div>
+        </Button>
+      </Box>
+      <Box className="flex gap-2 mb-4">
+        <Button
+          variant="outlined"
+          startIcon={<SortIcon />}
+          onClick={() => handleSortChange("durationAsc")}
+          sx={{
+            backgroundColor: sort === "durationAsc" ? "primary.main" : "inherit",
+            color: sort === "durationAsc" ? "white" : "primary.main",
+            "&:hover": sort === "durationAsc" ? { backgroundColor: "primary.main" } : {},
+          }}
+        >
+          Duración Asc
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<SortIcon />}
+          onClick={() => handleSortChange("durationDesc")}
+          sx={{
+            backgroundColor: sort === "durationDesc" ? "primary.main" : "inherit",
+            color: sort === "durationDesc" ? "white" : "primary.main",
+            "&:hover": sort === "durationDesc" ? { backgroundColor: "primary.main" } : {},
+          }}
+        >
+          Duración Desc
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<SortIcon />}
+          onClick={() => handleSortChange("priceAsc")}
+          sx={{
+            backgroundColor: sort === "priceAsc" ? "primary.main" : "inherit",
+            color: sort === "priceAsc" ? "white" : "primary.main",
+            "&:hover": sort === "priceAsc" ? { backgroundColor: "primary.main" } : {},
+          }}
+        >
+          Precio Asc
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<SortIcon />}
+          onClick={() => handleSortChange("priceDesc")}
+          sx={{
+            backgroundColor: sort === "priceDesc" ? "primary.main" : "inherit",
+            color: sort === "priceDesc" ? "white" : "primary.main",
+            "&:hover": sort === "priceDesc" ? { backgroundColor: "primary.main" } : {},
+          }}
+        >
+          Precio Desc
+        </Button>
+      </Box>
+      <List>
+        {paginatedMemberships.map((membership) => (
+          <ListItem key={membership.id} className="mb-2 bg-gray-100 rounded-lg shadow-md">
+            <ListItemAvatar>
+              <Avatar>
+                <MembershipIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Box component="span" className="flex items-center">
+                  {membership.name}
+                </Box>
+              }
+              secondary={
+                <>
+                  <Box component="span" className="flex items-center">
+                    Descripción: {membership.description}
+                  </Box>
+                  <Box component="span" className="flex items-center">
+                    Precio: ${membership.price}
+                  </Box>
+                  <Box component="span" className="flex items-center">
+                    Duración: {membership.duration} días
+                  </Box>
+                </>
+              }
+            />
+            <Box display="flex" gap={1}>
+              <IconButton onClick={() => openEditModal(membership)}>
+                <EditIcon />
+              </IconButton>
+              <IconButton color="error" onClick={() => handleDelete(membership.id)}>
+                <DeleteIcon />
+              </IconButton>
+            </Box>
+          </ListItem>
         ))}
-      </div>
+      </List>
+      <Box display="flex" justifyContent="center" mt={2}>
+        <Pagination
+          count={Math.ceil(sortedMemberships.length / membershipsPerPage)}
+          page={page}
+          onChange={handlePageChange}
+          color="primary"
+        />
+      </Box>
 
       {isCreateModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9000]">
-          <div className="max-h-[90%] bg-white p-6 rounded shadow-lg w-full max-w-md relative z-[10000]">
+          <div className="bg-white p-6 rounded shadow-lg w-full max-w-md relative z-[10000]">
             <button
               onClick={toggleCreateModal}
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
             >
               ✕
             </button>
-            <CreateMemberships
-              handleUpdateOrCreate={handleUpdateOrCreate}
-              setIsModalOpen={setIsCreateModalOpen}
-            />
+            <CreateMemberships handleUpdateOrCreate={handleUpdateOrCreate} setIsModalOpen={setIsCreateModalOpen} />
           </div>
         </div>
       )}
@@ -152,7 +278,7 @@ const MembershipList = () => {
           </div>
         </div>
       )}
-    </div>
+    </Paper>
   );
 };
 

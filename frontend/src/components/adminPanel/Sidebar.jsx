@@ -34,7 +34,7 @@ const Sidebar = ({ onSelect, selectedComponent }) => {
               key={item.text}
               onClick={() => onSelect(item.component)}
               sx={{
-                "&:hover": { backgroundColor: "gray.300" },
+                "&:hover": { backgroundColor: "primary.main" },
                 backgroundColor: selectedComponent === item.component ? "primary.main" : "inherit",
               }}
               className={`hover:bg-gray-300 ${selectedComponent === item.component ? "text-white" : ""}`}

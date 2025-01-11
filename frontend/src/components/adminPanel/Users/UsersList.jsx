@@ -193,10 +193,54 @@ const UserList = () => {
         </Button>
       </Box>
       <Box className="flex gap-2 mb-4">
-        <Button variant="outlined" startIcon={<SortIcon />} onClick={() => handleSortChange("nameAsc")}>Nombre Asc</Button>
-        <Button variant="outlined" startIcon={<SortIcon />} onClick={() => handleSortChange("nameDesc")}>Nombre Desc</Button>
-        <Button variant="outlined" startIcon={<SortIcon />} onClick={() => handleSortChange("dateAsc")}>Fecha Asc</Button>
-        <Button variant="outlined" startIcon={<SortIcon />} onClick={() => handleSortChange("dateDesc")}>Fecha Desc</Button>
+        <Button
+          variant="outlined"
+          startIcon={<SortIcon />}
+          onClick={() => handleSortChange("nameAsc")}
+          sx={{
+            backgroundColor: sort === "nameAsc" ? "primary.main" : "inherit",
+            color: sort === "nameAsc" ? "white" : "primary.main",
+            "&:hover": sort === "nameAsc" ? { backgroundColor: "primary.main" } : {},
+          }}
+        >
+          Nombre Asc
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<SortIcon />}
+          onClick={() => handleSortChange("nameDesc")}
+          sx={{
+            backgroundColor: sort === "nameDesc" ? "primary.main" : "inherit",
+            color: sort === "nameDesc" ? "white" : "primary.main",
+            "&:hover": sort === "nameDesc" ? { backgroundColor: "primary.main" } : {},
+          }}
+        >
+          Nombre Desc
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<SortIcon />}
+          onClick={() => handleSortChange("dateAsc")}
+          sx={{
+            backgroundColor: sort === "dateAsc" ? "primary.main" : "inherit",
+            color: sort === "dateAsc" ? "white" : "primary.main",
+            "&:hover": sort === "dateAsc" ? { backgroundColor: "primary.main" } : {},
+          }}
+        >
+          Fecha Asc
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<SortIcon />}
+          onClick={() => handleSortChange("dateDesc")}
+          sx={{
+            backgroundColor: sort === "dateDesc" ? "primary.main" : "inherit",
+            color: sort === "dateDesc" ? "white" : "primary.main",
+            "&:hover": sort === "dateDesc" ? { backgroundColor: "primary.main" } : {},
+          }}
+        >
+          Fecha Desc
+        </Button>
       </Box>
       <List>
         {paginatedUsers.map((user) => (

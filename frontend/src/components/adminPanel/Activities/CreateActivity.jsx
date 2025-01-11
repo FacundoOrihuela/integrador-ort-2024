@@ -49,7 +49,7 @@ const CreateActivity = ({editData ,isUpdate ,handleUpdateOrCreate ,setIsModalOpe
       return false;
     }
 
-    if (formData.eventType != "recurring" && (new Date(formData.startDateTime) >= new Date(formData.endDateTime))) {
+    if (formData.eventType !== "recurring" && (new Date(formData.startDateTime) >= new Date(formData.endDateTime))) {
       setError("La fecha de inicio debe ser anterior a la fecha de fin.");
       return false;
     }
