@@ -43,10 +43,10 @@ export const createOrder = async (req, res) => {
             failure: "https://www.example.com/failure",
             pending: "https://www.example.com/pending",
           },
-          back_urls: {
-            success: "http://localhost:3000/api/pago/success",
-            failure: "http://localhost:3000/api/pago/failure",
-            pending: "http://localhost:3000/api/pago/pending",
+          back_urls: { //Cambiar aca para que rediriga al front
+            success: "http://localhost:3001/api/pago/success",
+            failure: "http://localhost:3001/api/pago/failure",
+            pending: "http://localhost:3001/api/pago/pending",
           },
           auto_return: "approved",
         },

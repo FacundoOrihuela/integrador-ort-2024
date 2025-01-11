@@ -15,8 +15,8 @@ const syncDatabase = async () => {
         await sequelize.authenticate();
         console.log('Conexión a la base de datos establecida con éxito.');
         
-        // Sincronizar la base de datos sin eliminar las tablas existentes
-        await sequelize.sync({ alter: true });
+        // Sincronizar la base de datos sin alterar las tablas existentes
+        await sequelize.sync({ alter: false });
         console.log('Base de datos sincronizada correctamente.');
     } catch (error) {
         console.error('Error al conectar o sincronizar la base de datos:', error);

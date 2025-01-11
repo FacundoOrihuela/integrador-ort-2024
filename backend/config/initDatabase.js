@@ -32,7 +32,6 @@ const createDatabase = async () => {
     });
 
     try {
-        // Crear la base de datos si no existe
         await initialSequelize.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME}\`;`);
         console.log(`Base de datos '${process.env.DB_NAME}' creada o ya existe.`);
     } catch (error) {
@@ -42,7 +41,6 @@ const createDatabase = async () => {
         await initialSequelize.close();
     }
 
-    // Esperar un momento antes de conectar a la base de datos recién creada
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     const newSequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
