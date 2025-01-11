@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, List, ListItem, ListItemText, Collapse, Avatar, Paper, CircularProgress } from '@mui/material';
-import { ExpandLess, ExpandMore, Error as ErrorIcon } from '@mui/icons-material';
+import { List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper, CircularProgress, Box, TextField, Pagination, IconButton } from '@mui/material';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ErrorIcon from '@mui/icons-material/Error';
 import axios from 'axios';
+import OrderDetailsModal from './OrderDetailsModal';
 
 const ShoppingList = () => {
     const [orders, setOrders] = useState([]);
-    const [openOrderId, setOpenOrderId] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [search, setSearch] = useState("");
+    const [openOrder, setOpenOrder] = useState(null);
+    const [page, setPage] = useState(1);
+    const ordersPerPage = 8;
 
     useEffect(() => {
         axios.get('http://localhost:3001/api/orders/all', {
@@ -26,9 +31,28 @@ const ShoppingList = () => {
         });
     }, []);
 
-    const handleToggle = (orderId) => {
-        setOpenOrderId(openOrderId === orderId ? null : orderId);
+    const handleOpenOrder = (order) => {
+        setOpenOrder(order);
     };
+
+    const handleCloseOrder = () => {
+        setOpenOrder(null);
+    };
+
+    const handleSearchChange = (event) => {
+        setSearch(event.target.value);
+        setPage(1);
+    };
+
+    const handlePageChange = (event, value) => {
+        setPage(value);
+    };
+
+    const filteredOrders = orders.filter((order) => {
+        return order.User.name.toLowerCase().includes(search.toLowerCase());
+    });
+
+    const paginatedOrders = filteredOrders.slice((page - 1) * ordersPerPage, page * ordersPerPage);
 
     // Mostrar un mensaje si ocurre un error
     if (error) {
@@ -53,45 +77,63 @@ const ShoppingList = () => {
 
     return (
         <Paper className="p-4 m-4">
-            <Typography variant="h4" className="text-black font-bold mb-4">Listado de todas las Compras</Typography>
+            <Box className="flex justify-between mb-4">
+                <TextField
+                    label="Buscar por nombre de usuario"
+                    variant="outlined"
+                    fullWidth
+                    value={search}
+                    onChange={handleSearchChange}
+                    sx={{ marginRight: 2 }}
+                />
+            </Box>
             <List>
-                {orders.map(order => (
-                    <Box key={order.id} className="mb-4 border border-gray-300 rounded-lg p-4">
-                        <ListItem button onClick={() => handleToggle(order.id)}>
-                            <ListItemText
-                                primary={`Fecha: ${new Date(order.createdAt).toLocaleDateString()}`}
-                                secondary={`Total: $${order.totalAmount.toFixed(2)} - Estado: ${order.status}`}
-                                className="text-black"
-                            />
-                            {openOrderId === order.id ? <ExpandLess /> : <ExpandMore />}
-                        </ListItem>
-                        <Collapse in={openOrderId === order.id} timeout="auto" unmountOnExit>
-                            <List component="div" disablePadding>
-                                {order.OrderItems.map(item => {
-                                    const cloudinaryUrl = new URL(item.Product.image);
-                                    const relativePath = cloudinaryUrl.pathname;
-                                    const imgixUrl = `https://tiferet-689097844.imgix.net${relativePath}`;
+        {paginatedOrders.map((order) => {
+          return (
+            <ListItem key={order.id} className="mb-2 bg-gray-100 rounded-lg shadow-md" onClick={() => handleOpenOrder(order)}>
+              <ListItemAvatar>
 
-                                    return (
-                                        <ListItem key={item.id} className="pl-8 flex items-center">
-                                            <Avatar
-                                                src={`${imgixUrl}?w=64&h=64&fit=crop`}
-                                                alt={item.Product.name}
-                                                sx={{ width: 64, height: 64, marginRight: 2 }}
-                                            />
-                                            <ListItemText
-                                                primary={`${item.Product.name} - $${item.priceAtPurchase.toFixed(2)}`}
-                                                secondary={`Cantidad: ${item.quantity}`}
-                                                className="text-black"
-                                            />
-                                        </ListItem>
-                                    );
-                                })}
-                            </List>
-                        </Collapse>
+                  <Avatar>
+                    <ShoppingCartIcon />
+                  </Avatar>
+
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <Box component="span" className="flex items-center">
+                    {order.User.name}
+                  </Box>
+                }
+                secondary={
+                  <>
+                    <Box component="span" className="flex items-center">
+                      Email: {order.User.email}
                     </Box>
-                ))}
-            </List>
+                    <Box component="span" className="flex items-center">
+                      Fecha: {new Date(order.createdAt).toLocaleDateString()}
+                    </Box>
+                  </>
+                }
+              />
+            </ListItem>
+          );
+        })}
+      </List>
+            <Box display="flex" justifyContent="center" mt={2}>
+                <Pagination
+                    count={Math.ceil(filteredOrders.length / ordersPerPage)}
+                    page={page}
+                    onChange={handlePageChange}
+                    color="primary"
+                />
+            </Box>
+
+            {openOrder && (
+                <OrderDetailsModal
+                    order={openOrder}
+                    onClose={handleCloseOrder}
+                />
+            )}
         </Paper>
     );
 };

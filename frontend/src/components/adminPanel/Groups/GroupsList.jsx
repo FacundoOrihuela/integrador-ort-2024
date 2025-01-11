@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper, CircularProgress, Box, Button, TextField, Pagination, IconButton } from "@mui/material";
 import GroupIcon from "@mui/icons-material/Group";
 import ErrorIcon from "@mui/icons-material/Error";
@@ -23,32 +23,59 @@ const GroupsList = () => {
   const [page, setPage] = useState(1);
   const groupsPerPage = 8;
 
-  const fetchGroups = () => {
-    setLoading(true);
-    fetch("http://localhost:3001/api/groups", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Error al obtener los grupos");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setGroups(data.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
+  const fetchLeader = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/user/${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
       });
+
+      if (!response.ok) {
+        throw new Error("Error al conseguir el líder");
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      setError("Error al conectar con el servidor.");
+      return null;
+    }
   };
+
+  const fetchGroups = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:3001/api/groups", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al obtener los grupos");
+      }
+
+      const data = await response.json();
+      const groupsWithLeaders = await Promise.all(
+        data.data.map(async (group) => {
+          const leader = await fetchLeader(group.userId);
+          return { ...group, leader };
+        })
+      );
+
+      setGroups(groupsWithLeaders);
+      setLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     fetchGroups();
-  }, []);
+  }, [fetchGroups]);
 
   const handleDelete = async (id) => {
     try {
@@ -136,37 +163,46 @@ const GroupsList = () => {
         </Button>
       </Box>
       <List>
-        {paginatedGroups.map((group) => (
-          <ListItem key={group.id} className="mb-2 bg-gray-100 rounded-lg shadow-md">
-            <ListItemAvatar>
-              <Avatar>
-                <GroupIcon />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary={
-                <Box component="span" className="flex items-center">
-                  {group.name}
-                </Box>
-              }
-              secondary={
-                <>
+        {paginatedGroups.map((group) => {
+          return (
+            <ListItem key={group.id} className="mb-2 bg-gray-100 rounded-lg shadow-md">
+              <ListItemAvatar>
+                {group.photo ? (
+                  <Avatar src={group.photo} />
+                ) : (
+                  <Avatar>
+                    <GroupIcon />
+                  </Avatar>
+                )}
+              </ListItemAvatar>
+              <ListItemText
+                primary={
                   <Box component="span" className="flex items-center">
-                    Descripción: {group.description}
+                    {group.name}
                   </Box>
-                </>
-              }
-            />
-            <Box display="flex" gap={1}>
-              <IconButton onClick={() => openEditModal(group)}>
-                <EditIcon />
-              </IconButton>
-              <IconButton color="error" onClick={() => handleDelete(group.id)}>
-                <DeleteIcon />
-              </IconButton>
-            </Box>
-          </ListItem>
-        ))}
+                }
+                secondary={
+                  <>
+                    <Box component="span" className="flex items-center">
+                      Descripción: {group.description}
+                    </Box>
+                    <Box component="span" className="flex items-center">
+                      Líder: {group.leader ? group.leader.user.name : "Sin líder"}
+                    </Box>
+                  </>
+                }
+              />
+              <Box display="flex" gap={1}>
+                <IconButton onClick={() => openEditModal(group)}>
+                  <EditIcon />
+                </IconButton>
+                <IconButton color="error" onClick={() => handleDelete(group.id)}>
+                  <DeleteIcon />
+                </IconButton>
+              </Box>
+            </ListItem>
+          );
+        })}
       </List>
       <Box display="flex" justifyContent="center" mt={2}>
         <Pagination
