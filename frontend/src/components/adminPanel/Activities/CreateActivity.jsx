@@ -44,18 +44,21 @@ const CreateActivity = ({editData ,isUpdate ,handleUpdateOrCreate ,setIsModalOpe
   };
 
   const validateForm = () => {
-    if (!formData.name || !formData.description || !formData.startDateTime || !formData.endDateTime) {
+    if (
+      !formData.name ||
+      !formData.description ||
+      (formData.eventType === "recurring"
+        ? !formData.recurrencePattern.days.length ||
+          !formData.recurrencePattern.startTime ||
+          !formData.recurrencePattern.endTime
+        : !formData.startDateTime || !formData.endDateTime)
+    ) {
       setError("Por favor, completa todos los campos.");
       return false;
     }
 
     if (formData.eventType !== "recurring" && (new Date(formData.startDateTime) >= new Date(formData.endDateTime))) {
       setError("La fecha de inicio debe ser anterior a la fecha de fin.");
-      return false;
-    }
-
-    if (formData.eventType === "recurring" && (!formData.recurrencePattern.days.length || !formData.recurrencePattern.startTime || !formData.recurrencePattern.endTime)) {
-      setError("Por favor, completa los detalles de la recurrencia.");
       return false;
     }
 
@@ -129,7 +132,7 @@ const CreateActivity = ({editData ,isUpdate ,handleUpdateOrCreate ,setIsModalOpe
           </div>
         </div>
 
-        <div>
+       {!isUpdate && <div>
           <label className="block text-sm font-medium">Tipo de Evento</label>
           <select
             value={formData.eventType}
@@ -141,7 +144,7 @@ const CreateActivity = ({editData ,isUpdate ,handleUpdateOrCreate ,setIsModalOpe
             <option value="single">Único</option>
             <option value="recurring">Recurrente</option>
           </select>
-        </div>
+        </div>}
 
         {formData.eventType === "recurring" ? (
           <div className="space-y-4">
