@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getGroups, getGroupUsers, getUserGroups, createGroup, updateGroup, deleteGroup, setGroupLeader, addUserToGroup, upload } from '../controllers/groupController.js';
+import { getGroups, getGroupUsers, getUserGroups, createGroup, updateGroup, deleteGroup, setGroupLeader, addUserToGroup, removeUserFromGroup, upload } from '../controllers/groupController.js';
 
 const router = Router();
 
@@ -12,5 +12,6 @@ router.put('/:id', upload.single('image'), updateGroup);  // Actualizar un grupo
 router.delete('/:id', deleteGroup);  // Eliminar un grupo
 router.put('/:id/leader', setGroupLeader);  // Setear el líder del grupo
 router.post('/add-user', addUserToGroup);  // Agregar personas al grupo
+router.post('/remove-user', removeUserFromGroup);  // Eliminar personas del grupo
 
 export default router;

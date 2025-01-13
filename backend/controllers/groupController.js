@@ -26,6 +26,7 @@ const getGroupUsers = async (req, res) => {
         const group = await Group.findByPk(groupId, {
             include: {
                 model: User,
+                where: { status: 'active' },
                 through: { attributes: [] },
             },
         });
@@ -46,6 +47,7 @@ const getUserGroups = async (req, res) => {
         const user = await User.findByPk(userId, {
             include: {
                 model: Group,
+                where: { status: 'active' },
                 through: { attributes: [] },
             },
         });
@@ -65,10 +67,10 @@ const createGroup = async (req, res) => {
     const image = req.file ? req.file.buffer : null;
 
     try {
-        // Verificar si el líder existe
+        // Verificar si el líder existe y está activo
         const leader = await User.findByPk(leaderId);
-        if (!leader) {
-            return res.status(400).json({ message: 'El líder especificado no existe' });
+        if (!leader || leader.status !== 'active') {
+            return res.status(400).json({ message: 'El líder especificado no existe o no está activo' });
         }
 
         // Subir la imagen a Cloudinary
@@ -102,10 +104,10 @@ const updateGroup = async (req, res) => {
     const image = req.file ? req.file.buffer : null;
 
     try {
-        // Verificar si el usuario existe
+        // Verificar si el usuario existe y está activo
         const user = await User.findByPk(userId);
-        if (!user) {
-            return res.status(400).json({ message: 'El usuario especificado no existe' });
+        if (!user || user.status !== 'active') {
+            return res.status(400).json({ message: 'El usuario especificado no existe o no está activo' });
         }
 
         // Obtener el grupo existente
@@ -163,10 +165,10 @@ const setGroupLeader = async (req, res) => {
     const { userId } = req.body;
 
     try {
-        // Verificar si el usuario existe
+        // Verificar si el usuario existe y está activo
         const user = await User.findByPk(userId);
-        if (!user) {
-            return res.status(400).json({ message: 'El usuario especificado no existe' });
+        if (!user || user.status !== 'active') {
+            return res.status(400).json({ message: 'El usuario especificado no existe o no está activo' });
         }
 
         const [updated] = await Group.update({ userId }, { where: { id } });
@@ -186,11 +188,11 @@ const addUserToGroup = async (req, res) => {
     const { groupId, userId } = req.body;
 
     try {
-        // Verificar si el grupo y el usuario existen
+        // Verificar si el grupo y el usuario existen y están activos
         const group = await Group.findByPk(groupId);
         const user = await User.findByPk(userId);
-        if (!group || !user) {
-            return res.status(400).json({ message: 'El grupo o el usuario especificado no existe' });
+        if (!group || !user || user.status !== 'active') {
+            return res.status(400).json({ message: 'El grupo o el usuario especificado no existe o no está activo' });
         }
 
         const newGroupUser = await GroupUser.create({ groupId, userId });
@@ -201,4 +203,29 @@ const addUserToGroup = async (req, res) => {
     }
 };
 
-export { getGroups, getGroupUsers, getUserGroups, createGroup, updateGroup, deleteGroup, setGroupLeader, addUserToGroup, upload };
+// Eliminar personas del grupo
+const removeUserFromGroup = async (req, res) => {
+    const { groupId, userId } = req.body;
+
+    try {
+        // Verificar si el grupo y el usuario existen
+        const group = await Group.findByPk(groupId);
+        const user = await User.findByPk(userId);
+        if (!group || !user) {
+            return res.status(400).json({ message: 'El grupo o el usuario especificado no existe' });
+        }
+
+        // Eliminar la relación entre el grupo y el usuario
+        const deleted = await GroupUser.destroy({ where: { groupId, userId } });
+        if (deleted === 0) {
+            return res.status(404).json({ message: 'El usuario no pertenece al grupo especificado' });
+        }
+
+        res.json({ message: 'Usuario eliminado del grupo con éxito' });
+    } catch (error) {
+        console.error('Error al eliminar usuario del grupo:', error);
+        res.status(500).json({ message: 'Error al eliminar usuario del grupo', error: error.message });
+    }
+};
+
+export { getGroups, getGroupUsers, getUserGroups, createGroup, updateGroup, deleteGroup, setGroupLeader, addUserToGroup, removeUserFromGroup, upload };

@@ -80,7 +80,19 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiO
 
 {
     "groupId": 1,
-    "userId": 1
+    "userId": 6
+}
+
+###
+
+# Eliminar personas del grupo
+POST http://localhost:3001/api/groups/remove-user
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNTAwNzA0MywiZXhwIjoxNzM1MDEwNjQzfQ.-FaFZ17NG_jERM0LhYW2nJAZ5EwP_Mbwlj6R6Uappvw
+
+{
+    "groupId": 1,
+    "userId": 6
 }
 
 ###
