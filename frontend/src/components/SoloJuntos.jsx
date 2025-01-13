@@ -56,6 +56,36 @@ const SoloJuntos = () => {
               </SwiperSlide>
             ))}
           </Swiper>
+
+          <h1 className="text-center text-2xl font-bold mb-6 mt-8">Equipo de Tiferet</h1>
+
+            <Swiper
+            modules={[Pagination, Autoplay]}
+            pagination={{ clickable: true }}
+            autoplay={{ delay: 3000, disableOnInteraction: false }}
+            loop={true}
+            spaceBetween={20}
+            slidesPerView={1}
+            breakpoints={{
+              640: { slidesPerView: 2 }, // 2 slides en pantallas medianas
+              1024: { slidesPerView: 3 }, // 3 slides en pantallas grandes
+            }}
+            className="shadow-lg"
+          >
+            {images.map((image, index) => (
+              <SwiperSlide key={index}>
+                <div className="flex flex-col items-center">
+                  <img
+                    src={image.src}
+                    alt={image.name}
+                    className="w-40 h-40 object-cover rounded-full mb-4"
+                  />
+                  <p className="text-lg font-semibold mb-6">{image.name}</p> {/* Espacio adicional con mb-6 */}
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+
         </div>
       </div>
       <Footer />
