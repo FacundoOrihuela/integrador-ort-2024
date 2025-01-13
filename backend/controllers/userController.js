@@ -54,7 +54,7 @@ const getUserById = async (req, res) => {
 
     try {
         const user = await User.findByPk(userId, {
-            attributes: ['id', 'name', 'email', 'userType', 'photo', 'created', 'isVerified'],
+            attributes: ['id', 'name', 'email', 'userType', 'photo', 'created', 'isVerified', 'status', 'blockReason'],
         });
 
         if (!user) {
@@ -79,6 +79,8 @@ const getUserById = async (req, res) => {
                 photo: user.photo,
                 created: user.created,
                 isVerified: user.isVerified,
+                status: user.status,
+                blockReason: user.blockReason,
                 ...userData?.toJSON(),
             },
         });
@@ -88,12 +90,13 @@ const getUserById = async (req, res) => {
     }
 };
 
+// Obtener los detalles del usuario autenticado
 const getUserDetails = async (req, res) => {
-    const userId = req.user.id; 
+    const userId = req.user.id;
 
     try {
         const user = await User.findByPk(userId, {
-            attributes: ['id', 'name', 'email', 'userType', 'photo', 'created', 'isVerified'],
+            attributes: ['id', 'name', 'email', 'userType', 'photo', 'created', 'isVerified', 'status', 'blockReason'],
         });
 
         if (!user) {
@@ -118,6 +121,8 @@ const getUserDetails = async (req, res) => {
                 photo: user.photo,
                 created: user.created,
                 isVerified: user.isVerified,
+                status: user.status,
+                blockReason: user.blockReason,
                 ...userData?.toJSON(),
             },
         });
@@ -127,10 +132,11 @@ const getUserDetails = async (req, res) => {
     }
 };
 
+// Obtener todos los usuarios
 const getAllUsers = async (req, res) => {
     try {
         const users = await User.findAll({
-            attributes: ['id', 'name', 'email', 'userType', 'photo', 'created', 'isVerified'],
+            attributes: ['id', 'name', 'email', 'userType', 'photo', 'created', 'isVerified', 'status', 'blockReason'],
         });
 
         const userDetails = await Promise.all(users.map(async (user) => {
@@ -151,6 +157,8 @@ const getAllUsers = async (req, res) => {
                 photo: user.photo,
                 created: user.created,
                 isVerified: user.isVerified,
+                status: user.status,
+                blockReason: user.blockReason,
                 ...userData?.toJSON(),
             };
         }));

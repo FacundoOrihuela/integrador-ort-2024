@@ -44,6 +44,15 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    status: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'active', // active, deleted, blocked
+    },
+    blockReason: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
 }, {
     tableName: 'user',
     timestamps: false,
@@ -51,7 +60,7 @@ const User = sequelize.define('User', {
         {
             unique: true,
             fields: ['email'],
-            name: 'user_email_unique', // Añadir un nombre único al índice
+            name: 'user_email_unique',
         },
     ],
 });

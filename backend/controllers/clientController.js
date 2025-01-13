@@ -10,7 +10,8 @@ const getClients = async (req, res) => {
         const clients = await Client.findAll({
             include: {
                 model: User,
-                attributes: ['id', 'name', 'email', 'created', 'isVerified'],
+                attributes: ['id', 'name', 'email', 'created', 'isVerified', 'status', 'blockReason'],
+                where: { status: 'active' },
             },
         });
         res.json({ message: 'Lista de clientes', data: clients });
@@ -27,8 +28,8 @@ const getClientByEmail = async (req, res) => {
         const client = await Client.findOne({
             include: {
                 model: User,
-                where: { email },
-                attributes: ['id', 'name', 'email', 'created', 'isVerified'],
+                where: { email, status: 'active' },
+                attributes: ['id', 'name', 'email', 'created', 'isVerified', 'status', 'blockReason'],
             },
         });
         if (!client) {
@@ -87,7 +88,7 @@ const updateClient = async (req, res) => {
         const updateData = { name, email };
 
         // Actualizar el usuario
-        const [userUpdated] = await User.update(updateData, { where: { id } });
+        const [userUpdated] = await User.update(updateData, { where: { id, status: 'active' } });
 
         if (userUpdated === 0) {
             return res.status(404).json({ message: `Usuario con id ${id} no encontrado` });
@@ -100,17 +101,15 @@ const updateClient = async (req, res) => {
     }
 };
 
-// Eliminar un cliente
+// Eliminar un cliente (borrado lógico)
 const deleteClient = async (req, res) => {
     const { id } = req.params;
     try {
-        const clientDeleted = await Client.destroy({ where: { userId: id } });
+        const [userUpdated] = await User.update({ status: 'deleted' }, { where: { id } });
 
-        if (clientDeleted === 0) {
+        if (userUpdated === 0) {
             return res.status(404).json({ message: `Cliente con id ${id} no encontrado` });
         }
-
-        await User.destroy({ where: { id } });
 
         res.json({ message: `Cliente ${id} eliminado con éxito` });
     } catch (error) {

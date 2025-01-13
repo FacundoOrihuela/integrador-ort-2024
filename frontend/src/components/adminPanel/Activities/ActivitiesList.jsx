@@ -1,14 +1,24 @@
 import React, { useEffect, useState } from "react";
+import { List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper, CircularProgress, Box, TextField, Pagination, IconButton, Button, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import EventIcon from '@mui/icons-material/Event';
+import ErrorIcon from '@mui/icons-material/Error';
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import CreateActivity from "./CreateActivity";
 import ActivityDetails from "./ActivityDetails";
 
 const ActivitiesList = () => {
   const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [search, setSearch] = useState("");
+  const [filterType, setFilterType] = useState("");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editData, setEditData] = useState(null);
   const [selectedActivity, setSelectedActivity] = useState(null);
-  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+  const activitiesPerPage = 8;
 
   const fetchActivities = () => {
     fetch("http://localhost:3001/api/events")
@@ -20,9 +30,11 @@ const ActivitiesList = () => {
       })
       .then((data) => {
         setActivities(data);
+        setLoading(false);
       })
       .catch((err) => {
         setError(err.message);
+        setLoading(false);
       });
   };
 
@@ -62,6 +74,28 @@ const ActivitiesList = () => {
     setIsEditModalOpen(false);
   };
 
+  const handleSearchChange = (event) => {
+    setSearch(event.target.value);
+    setPage(1);
+  };
+
+  const handleFilterTypeChange = (event) => {
+    setFilterType(event.target.value);
+    setPage(1);
+  };
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
+
+  const filteredActivities = activities.filter((activity) => {
+    const matchesSearch = activity.name.toLowerCase().includes(search.toLowerCase());
+    const matchesFilter = filterType === "" || activity.eventType === filterType;
+    return matchesSearch && matchesFilter;
+  });
+
+  const paginatedActivities = filteredActivities.slice((page - 1) * activitiesPerPage, page * activitiesPerPage);
+
   const formatEventDate = (event) => {
     if (event.eventType === "single") {
       return (
@@ -93,58 +127,109 @@ const ActivitiesList = () => {
     }
   };
 
+  // Mostrar un mensaje si ocurre un error
   if (error) {
-    return <div className="text-red-500">Error: {error}</div>;
+    return (
+      <Paper className="p-4 m-4">
+        <Box className="flex items-center">
+          <ErrorIcon className="mr-2" /> Error: {error}
+        </Box>
+      </Paper>
+    );
+  }
+
+  // Mostrar un mensaje mientras se cargan los datos
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <CircularProgress />
+        <Box className="ml-2">Cargando actividades...</Box>
+      </div>
+    );
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="flex justify-center mb-4">
-        <button
-          onClick={toggleCreateModal}
-          className="bg-colors-1 text-white px-4 py-2 rounded"
-        >
-          Crear Actividad
-        </button>
-      </div>
-      <h2 className="text-2xl font-bold mb-4">Lista de Actividades</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {activities.map((activity) => (
-          <div
-            key={activity.id}
-            className="bg-white rounded-lg shadow-md p-4 hover:shadow-xl cursor-pointer"
-            onClick={() => setSelectedActivity(activity)}
+    <Paper className="p-4 m-4">
+      <Box className="flex justify-between mb-4">
+        <TextField
+          label="Buscar por nombre de actividad"
+          variant="outlined"
+          fullWidth
+          value={search}
+          onChange={handleSearchChange}
+          sx={{ marginRight: 2 }}
+        />
+        <FormControl variant="outlined" sx={{ minWidth: 200, marginRight: 2 }}>
+          <InputLabel id="filter-type-label">Tipo de Actividad</InputLabel>
+          <Select
+            labelId="filter-type-label"
+            value={filterType}
+            onChange={handleFilterTypeChange}
+            label="Tipo de Actividad"
           >
-            <h3 className="text-xl font-semibold text-colors-1 mb-2">
-              {activity.name}
-            </h3>
-            <p className="text-gray-700 mb-2">
-              <span className="font-bold">Descripción:</span> {activity.description}
-            </p>
-            {formatEventDate(activity)}
-            <div className="mt-4 flex gap-4">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openEditModal(activity);
-                }}
-                className="w-[50%] bg-yellow-500 text-white px-3 py-2 rounded hover:bg-yellow-600 transition duration-200"
-              >
-                Editar
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDelete(activity.id);
-                }}
-                className="w-[50%] bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-200"
-              >
-                Eliminar
-              </button>
-            </div>
-          </div>
+            <MenuItem value="">Todos</MenuItem>
+            <MenuItem value="single">Único</MenuItem>
+            <MenuItem value="recurring">Recurrente</MenuItem>
+          </Select>
+        </FormControl>
+        <Button variant="contained" color="primary" onClick={toggleCreateModal}>
+          Crear Actividad
+        </Button>
+      </Box>
+      <List>
+        {paginatedActivities.map((activity) => (
+          <ListItem 
+            key={activity.id} 
+            className="mb-2 bg-gray-100 rounded-lg shadow-md" 
+            onClick={() => setSelectedActivity(activity)} 
+            sx={{
+              cursor: 'pointer',
+              '&:hover': {
+                borderColor: 'primary.main',
+                borderWidth: '2px',
+                borderStyle: 'solid',
+              },
+            }}
+          >
+            <ListItemAvatar>
+              <Avatar>
+                <EventIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Box component="span" className="flex items-center">
+                  {activity.name}
+                </Box>
+              }
+              secondary={
+                <>
+                  <Box component="span" className="flex items-center">
+                    Descripción: {activity.description}
+                  </Box>
+                  {formatEventDate(activity)}
+                </>
+              }
+            />
+            <Box display="flex" gap={1}>
+              <IconButton onClick={(e) => { e.stopPropagation(); openEditModal(activity); }}>
+                <EditIcon />
+              </IconButton>
+              <IconButton color="error" onClick={(e) => { e.stopPropagation(); handleDelete(activity.id); }}>
+                <DeleteIcon />
+              </IconButton>
+            </Box>
+          </ListItem>
         ))}
-      </div>
+      </List>
+      <Box display="flex" justifyContent="center" mt={2}>
+        <Pagination
+          count={Math.ceil(filteredActivities.length / activitiesPerPage)}
+          page={page}
+          onChange={handlePageChange}
+          color="primary"
+        />
+      </Box>
 
       {isCreateModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9000]">
@@ -184,7 +269,7 @@ const ActivitiesList = () => {
           onClose={() => setSelectedActivity(null)}
         />
       )}
-    </div>
+    </Paper>
   );
 };
 

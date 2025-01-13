@@ -8,7 +8,8 @@ const getAdministrators = async (req, res) => {
         const administrators = await Administrator.findAll({
             include: {
                 model: User,
-                attributes: ['id', 'name', 'email', 'created', 'isVerified'],
+                attributes: ['id', 'name', 'email', 'created', 'isVerified', 'status', 'blockReason'],
+                where: { status: 'active' },
             },
         });
         res.json({ message: 'Lista de administradores', data: administrators });
@@ -25,8 +26,8 @@ const getAdministratorByEmail = async (req, res) => {
         const administrator = await Administrator.findOne({
             include: {
                 model: User,
-                where: { email },
-                attributes: ['id', 'name', 'email', 'created', 'isVerified'],
+                where: { email, status: 'active' },
+                attributes: ['id', 'name', 'email', 'created', 'isVerified', 'status', 'blockReason'],
             },
         });
         if (!administrator) {
@@ -77,7 +78,7 @@ const updateAdministrator = async (req, res) => {
         const updateData = { name, email };
 
         // Actualizar el usuario
-        const [userUpdated] = await User.update(updateData, { where: { id } });
+        const [userUpdated] = await User.update(updateData, { where: { id, status: 'active' } });
 
         if (userUpdated === 0) {
             return res.status(404).json({ message: `Usuario con id ${id} no encontrado` });
@@ -90,17 +91,15 @@ const updateAdministrator = async (req, res) => {
     }
 };
 
-// Eliminar un administrador
+// Eliminar un administrador (borrado lógico)
 const deleteAdministrator = async (req, res) => {
     const { id } = req.params;
     try {
-        const administratorDeleted = await Administrator.destroy({ where: { userId: id } });
+        const [userUpdated] = await User.update({ status: 'deleted' }, { where: { id } });
 
-        if (administratorDeleted === 0) {
+        if (userUpdated === 0) {
             return res.status(404).json({ message: `Administrador con id ${id} no encontrado` });
         }
-
-        await User.destroy({ where: { id } });
 
         res.json({ message: `Administrador ${id} eliminado con éxito` });
     } catch (error) {

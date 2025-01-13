@@ -5,6 +5,7 @@ import ErrorIcon from "@mui/icons-material/Error";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import SortIcon from "@mui/icons-material/Sort";
 import CreateProduct from "./CreateProduct";
 
 const ProductList = () => {
@@ -12,6 +13,7 @@ const ProductList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editData, setEditData] = useState({
@@ -87,11 +89,24 @@ const ProductList = () => {
     setPage(1);
   };
 
+  const handleSortChange = (sortType) => {
+    setSort(sortType);
+    setPage(1);
+  };
+
   const filteredProducts = products.filter((product) => {
     return product.name.toLowerCase().includes(search.toLowerCase());
   });
 
-  const paginatedProducts = filteredProducts.slice((page - 1) * productsPerPage, page * productsPerPage);
+  const sortedProducts = filteredProducts.sort((a, b) => {
+    if (sort === "priceAsc") return a.price - b.price;
+    if (sort === "priceDesc") return b.price - a.price;
+    if (sort === "nameAsc") return a.name.localeCompare(b.name);
+    if (sort === "nameDesc") return b.name.localeCompare(a.name);
+    return 0;
+  });
+
+  const paginatedProducts = sortedProducts.slice((page - 1) * productsPerPage, page * productsPerPage);
 
   const handlePageChange = (event, value) => {
     setPage(value);
@@ -131,6 +146,56 @@ const ProductList = () => {
         />
         <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={toggleCreateModal}>
           Crear Producto
+        </Button>
+      </Box>
+      <Box className="flex gap-2 mb-4">
+        <Button
+          variant="outlined"
+          startIcon={<SortIcon />}
+          onClick={() => handleSortChange("priceAsc")}
+          sx={{
+            backgroundColor: sort === "priceAsc" ? "primary.main" : "inherit",
+            color: sort === "priceAsc" ? "white" : "primary.main",
+            "&:hover": sort === "priceAsc" ? { backgroundColor: "primary.main" } : {},
+          }}
+        >
+          Precio Asc
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<SortIcon />}
+          onClick={() => handleSortChange("priceDesc")}
+          sx={{
+            backgroundColor: sort === "priceDesc" ? "primary.main" : "inherit",
+            color: sort === "priceDesc" ? "white" : "primary.main",
+            "&:hover": sort === "priceDesc" ? { backgroundColor: "primary.main" } : {},
+          }}
+        >
+          Precio Desc
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<SortIcon />}
+          onClick={() => handleSortChange("nameAsc")}
+          sx={{
+            backgroundColor: sort === "nameAsc" ? "primary.main" : "inherit",
+            color: sort === "nameAsc" ? "white" : "primary.main",
+            "&:hover": sort === "nameAsc" ? { backgroundColor: "primary.main" } : {},
+          }}
+        >
+          Nombre Asc
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<SortIcon />}
+          onClick={() => handleSortChange("nameDesc")}
+          sx={{
+            backgroundColor: sort === "nameDesc" ? "primary.main" : "inherit",
+            color: sort === "nameDesc" ? "white" : "primary.main",
+            "&:hover": sort === "nameDesc" ? { backgroundColor: "primary.main" } : {},
+          }}
+        >
+          Nombre Desc
         </Button>
       </Box>
       <List>
@@ -174,7 +239,7 @@ const ProductList = () => {
       </List>
       <Box display="flex" justifyContent="center" mt={2}>
         <Pagination
-          count={Math.ceil(filteredProducts.length / productsPerPage)}
+          count={Math.ceil(sortedProducts.length / productsPerPage)}
           page={page}
           onChange={handlePageChange}
           color="primary"

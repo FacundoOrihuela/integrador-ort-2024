@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper, CircularProgress, Box, Button, TextField, Pagination, IconButton } from "@mui/material";
+import { List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper, CircularProgress, Box, Button, TextField, Pagination, IconButton, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import CategoryIcon from "@mui/icons-material/Category";
 import ErrorIcon from "@mui/icons-material/Error";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CreateCategory from "./CreateCategory";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
 const CategoryList = () => {
@@ -17,10 +15,11 @@ const CategoryList = () => {
   const [search, setSearch] = useState("");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isProductsModalOpen, setIsProductsModalOpen] = useState(false);
+  const [selectedCategoryProducts, setSelectedCategoryProducts] = useState([]);
   const [editData, setEditData] = useState({
     id: null,
     name: "",
-    description: "",
   });
   const [page, setPage] = useState(1);
   const categoriesPerPage = 8;
@@ -32,7 +31,6 @@ const CategoryList = () => {
       setLoading(false);
     } catch (err) {
       setError("Error al obtener las categorías");
-      toast.error("Error al obtener las categorías");
       setLoading(false);
     }
   };
@@ -47,7 +45,7 @@ const CategoryList = () => {
       const productsData = productsResponse.data;
 
       if (productsData.data.length > 0) {
-        toast.error("No se puede eliminar la categoría porque tiene productos asignados.");
+        alert("No se puede eliminar la categoría porque tiene productos asignados.");
         return;
       }
 
@@ -55,14 +53,14 @@ const CategoryList = () => {
 
       if (response.status === 200) {
         setCategories(categories.filter((category) => category.id !== id));
-        toast.success("Categoría eliminada exitosamente.");
+        alert("Categoría eliminada exitosamente.");
       } else {
         setError(response.data.message || "Error al eliminar la categoría");
-        toast.error(response.data.message || "Error al eliminar la categoría");
+        alert(response.data.message || "Error al eliminar la categoría");
       }
     } catch (error) {
       setError("Error al conectar con el servidor.");
-      toast.error("Error al conectar con el servidor.");
+      alert("Error al conectar con el servidor.");
     }
   };
 
@@ -71,8 +69,20 @@ const CategoryList = () => {
     setIsEditModalOpen(true);
   };
 
+  const openProductsModal = async (categoryId) => {
+    try {
+      const response = await axios.get(`http://localhost:3001/api/products/category/${categoryId}`);
+      setSelectedCategoryProducts(response.data.data);
+      setIsProductsModalOpen(true);
+    } catch (error) {
+      setError("Error al obtener los productos de la categoría");
+      alert("Error al obtener los productos de la categoría");
+    }
+  };
+
   const toggleCreateModal = () => setIsCreateModalOpen(!isCreateModalOpen);
   const toggleEditModal = () => setIsEditModalOpen(!isEditModalOpen);
+  const toggleProductsModal = () => setIsProductsModalOpen(!isProductsModalOpen);
 
   const handleUpdateOrCreate = () => {
     setIsCreateModalOpen(false);
@@ -133,7 +143,7 @@ const CategoryList = () => {
       </Box>
       <List>
         {paginatedCategories.map((category) => (
-          <ListItem key={category.id} className="mb-2 bg-gray-100 rounded-lg shadow-md">
+          <ListItem key={category.id} className="mb-2 bg-gray-100 rounded-lg shadow-md" onClick={() => openProductsModal(category.id)} sx={{ cursor: 'pointer' }}>
             <ListItemAvatar>
               <Avatar>
                 <CategoryIcon />
@@ -145,19 +155,12 @@ const CategoryList = () => {
                   {category.name}
                 </Box>
               }
-              secondary={
-                <>
-                  <Box component="span" className="flex items-center">
-                    Descripción: {category.description}
-                  </Box>
-                </>
-              }
             />
             <Box display="flex" gap={1}>
-              <IconButton onClick={() => openEditModal(category)}>
+              <IconButton onClick={(e) => { e.stopPropagation(); openEditModal(category); }}>
                 <EditIcon />
               </IconButton>
-              <IconButton color="error" onClick={() => handleDelete(category.id)}>
+              <IconButton color="error" onClick={(e) => { e.stopPropagation(); handleDelete(category.id); }}>
                 <DeleteIcon />
               </IconButton>
             </Box>
@@ -205,6 +208,32 @@ const CategoryList = () => {
             />
           </div>
         </div>
+      )}
+
+      {isProductsModalOpen && (
+        <Dialog open={isProductsModalOpen} onClose={toggleProductsModal} maxWidth="md" fullWidth>
+          <DialogTitle>Productos de la Categoría</DialogTitle>
+          <DialogContent>
+            <List>
+              {selectedCategoryProducts.map((product) => (
+                <ListItem key={product.id}>
+                  <ListItemAvatar>
+                    <Avatar src={product.image} />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={product.name}
+                    secondary={`Precio: $${product.price}`}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={toggleProductsModal} color="primary">
+              Cerrar
+            </Button>
+          </DialogActions>
+        </Dialog>
       )}
     </Paper>
   );

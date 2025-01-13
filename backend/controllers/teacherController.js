@@ -8,7 +8,8 @@ const getTeachers = async (req, res) => {
         const teachers = await Teacher.findAll({
             include: {
                 model: User,
-                attributes: ['id', 'name', 'email', 'created', 'isVerified'],
+                attributes: ['id', 'name', 'email', 'created', 'isVerified', 'status', 'blockReason'],
+                where: { status: 'active' },
             },
         });
         res.json({ message: 'Lista de profesores', data: teachers });
@@ -25,8 +26,8 @@ const getTeacherByEmail = async (req, res) => {
         const teacher = await Teacher.findOne({
             include: {
                 model: User,
-                where: { email },
-                attributes: ['id', 'name', 'email', 'created', 'isVerified'],
+                where: { email, status: 'active' },
+                attributes: ['id', 'name', 'email', 'created', 'isVerified', 'status', 'blockReason'],
             },
         });
         if (!teacher) {
@@ -79,7 +80,7 @@ const updateTeacher = async (req, res) => {
         const updateData = { name, email };
 
         // Actualizar el usuario
-        const [userUpdated] = await User.update(updateData, { where: { id } });
+        const [userUpdated] = await User.update(updateData, { where: { id, status: 'active' } });
 
         if (userUpdated === 0) {
             return res.status(404).json({ message: `Usuario con id ${id} no encontrado` });
@@ -102,17 +103,15 @@ const updateTeacher = async (req, res) => {
     }
 };
 
-// Eliminar un profesor
+// Eliminar un profesor (borrado lógico)
 const deleteTeacher = async (req, res) => {
     const { id } = req.params;
     try {
-        const teacherDeleted = await Teacher.destroy({ where: { userId: id } });
+        const [userUpdated] = await User.update({ status: 'deleted' }, { where: { id } });
 
-        if (teacherDeleted === 0) {
+        if (userUpdated === 0) {
             return res.status(404).json({ message: `Profesor con id ${id} no encontrado` });
         }
-
-        await User.destroy({ where: { id } });
 
         res.json({ message: `Profesor ${id} eliminado con éxito` });
     } catch (error) {
