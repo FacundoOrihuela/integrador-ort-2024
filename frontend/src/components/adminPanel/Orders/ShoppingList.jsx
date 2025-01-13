@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper, CircularProgress, Box, TextField, Pagination, IconButton } from '@mui/material';
+import { List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper, CircularProgress, Box, TextField, Pagination } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ErrorIcon from '@mui/icons-material/Error';
 import axios from 'axios';
@@ -88,37 +88,45 @@ const ShoppingList = () => {
                 />
             </Box>
             <List>
-        {paginatedOrders.map((order) => {
-          return (
-            <ListItem key={order.id} className="mb-2 bg-gray-100 rounded-lg shadow-md" onClick={() => handleOpenOrder(order)}>
-              <ListItemAvatar>
-
-                  <Avatar>
-                    <ShoppingCartIcon />
-                  </Avatar>
-
-              </ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Box component="span" className="flex items-center">
-                    {order.User.name}
-                  </Box>
-                }
-                secondary={
-                  <>
-                    <Box component="span" className="flex items-center">
-                      Email: {order.User.email}
-                    </Box>
-                    <Box component="span" className="flex items-center">
-                      Fecha: {new Date(order.createdAt).toLocaleDateString()}
-                    </Box>
-                  </>
-                }
-              />
-            </ListItem>
-          );
-        })}
-      </List>
+                {paginatedOrders.map((order) => (
+                    <ListItem 
+                        key={order.id} 
+                        className="mb-2 bg-gray-100 rounded-lg shadow-md" 
+                        onClick={() => handleOpenOrder(order)} 
+                        sx={{
+                            cursor: 'pointer',
+                            '&:hover': {
+                                borderColor: 'primary.main',
+                                borderWidth: '2px',
+                                borderStyle: 'solid',
+                            },
+                        }}
+                    >
+                        <ListItemAvatar>
+                            <Avatar>
+                                <ShoppingCartIcon />
+                            </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                            primary={
+                                <Box component="span" className="flex items-center">
+                                    {order.User.name}
+                                </Box>
+                            }
+                            secondary={
+                                <>
+                                    <Box component="span" className="flex items-center">
+                                        Email: {order.User.email}
+                                    </Box>
+                                    <Box component="span" className="flex items-center">
+                                        Fecha: {new Date(order.createdAt).toLocaleDateString()}
+                                    </Box>
+                                </>
+                            }
+                        />
+                    </ListItem>
+                ))}
+            </List>
             <Box display="flex" justifyContent="center" mt={2}>
                 <Pagination
                     count={Math.ceil(filteredOrders.length / ordersPerPage)}
