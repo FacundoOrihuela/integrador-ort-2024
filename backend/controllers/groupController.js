@@ -108,8 +108,14 @@ const updateGroup = async (req, res) => {
             return res.status(400).json({ message: 'El usuario especificado no existe' });
         }
 
+        // Obtener el grupo existente
+        const existingGroup = await Group.findByPk(id);
+        if (!existingGroup) {
+            return res.status(404).json({ message: `Grupo con id ${id} no encontrado` });
+        }
+
         // Subir la nueva imagen a Cloudinary si existe
-        let imageUrl = null;
+        let imageUrl = existingGroup.photo;
         if (image) {
             const result = await new Promise((resolve, reject) => {
                 const stream = cloudinary.uploader.upload_stream({ folder: 'groups' }, (error, result) => {

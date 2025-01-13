@@ -5,7 +5,7 @@ import Header from "../Header";
 import UserList from "./Users/UsersList";
 import Sidebar from "./Sidebar";
 import ActivitiesList from "./Activities/ActivitiesList";
-import Groups from "./Groups/Groups";
+import GroupsList from "./Groups/GroupsList";
 import MembershipList from "./Memberships/MembershipList";
 import ShoppingList from "./Orders/ShoppingList";
 import AdminProductList from "./Products/AdminProductList";
@@ -43,7 +43,7 @@ const AdminPanel = () => {
       case "Activities":
         return <ActivitiesList />;
       case "Groups":
-        return <Groups />;
+        return <GroupsList />;
       case "Products":
         return <AdminProductList />;
       case "Categories":

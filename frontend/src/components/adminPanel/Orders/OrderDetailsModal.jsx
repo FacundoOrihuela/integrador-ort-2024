@@ -1,49 +1,32 @@
 import React from 'react';
-import { Modal, Box, Typography, List, ListItem, ListItemText, Avatar, IconButton } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, List, ListItem, ListItemText, Avatar, IconButton, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 const OrderDetailsModal = ({ order, onClose }) => {
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 400,
-        bgcolor: 'background.paper',
-        border: '2px solid #000',
-        boxShadow: 24,
-        p: 4,
-    };
-
     return (
-        <Modal
-            open={!!order}
-            onClose={onClose}
-            aria-labelledby="order-details-title"
-            aria-describedby="order-details-description"
-        >
-            <Box sx={style}>
-                <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <Typography id="order-details-title" variant="h6" component="h2">
-                        Detalles de la Compra
-                    </Typography>
+        <Dialog open={!!order} onClose={onClose} maxWidth="md" fullWidth>
+            <DialogTitle>
+                <Box display="flex" justifyContent="space-between">
+                    Detalles de la Compra
                     <IconButton onClick={onClose}>
                         <CloseIcon />
                     </IconButton>
                 </Box>
-                <Typography id="order-details-description" sx={{ mt: 2 }}>
+            </DialogTitle>
+            <DialogContent>
+                <Typography variant="body1" gutterBottom>
                     Fecha: {new Date(order.createdAt).toLocaleDateString()}
                 </Typography>
-                <Typography>
+                <Typography variant="body1" gutterBottom>
                     Usuario: {order.User.name}
                 </Typography>
-                <Typography>
+                <Typography variant="body1" gutterBottom>
                     Email: {order.User.email}
                 </Typography>
-                <Typography>
+                <Typography variant="body1" gutterBottom>
                     Total: ${order.totalAmount.toFixed(2)}
                 </Typography>
-                <Typography>
+                <Typography variant="body1" gutterBottom>
                     Estado: {order.status}
                 </Typography>
                 <List>
@@ -68,8 +51,13 @@ const OrderDetailsModal = ({ order, onClose }) => {
                         );
                     })}
                 </List>
-            </Box>
-        </Modal>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={onClose} color="primary">
+                    Cerrar
+                </Button>
+            </DialogActions>
+        </Dialog>
     );
 };
 
