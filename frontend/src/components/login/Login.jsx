@@ -7,10 +7,10 @@ const Login = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (window.localStorage.getItem("idUsuarioLogueado") !== null) {
-            navigate("/principal");
+        if (window.localStorage.getItem("token") !== null) {
+            navigate("/");
         }
-    }, []);
+    }, [navigate]);
 
     return (
         <section

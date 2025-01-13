@@ -31,3 +31,28 @@ Content-Type: image/jpeg
 GET http://localhost:3001/api/user/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNDkxNTc2NCwiZXhwIjoxNzM0OTE5MzY0fQ.Q3rvMrAuvUXmEt_gIeDs8Cal56PqJ8nnjGWWxqpE8U0
 Content-Type: application/json
+
+###
+
+# Bloquear un usuario
+POST http://localhost:3001/api/user/block/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNDkxNTc2NCwiZXhwIjoxNzM0OTE5MzY0fQ.Q3rvMrAuvUXmEt_gIeDs8Cal56PqJ8nnjGWWxqpE8U0
+Content-Type: application/json
+
+{
+  "blockReason": "Violación de términos de servicio"
+}
+
+###
+
+# Desbloquear un usuario
+POST http://localhost:3001/api/user/unblock/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNDkxNTc2NCwiZXhwIjoxNzM0OTE5MzY0fQ.Q3rvMrAuvUXmEt_gIeDs8Cal56PqJ8nnjGWWxqpE8U0
+Content-Type: application/json
+
+###
+
+# Eliminar un usuario (borrado lógico)
+DELETE http://localhost:3001/api/user/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNDkxNTc2NCwiZXhwIjoxNzM0OTE5MzY0fQ.Q3rvMrAuvUXmEt_gIeDs8Cal56PqJ8nnjGWWxqpE8U0
+Content-Type: application/json

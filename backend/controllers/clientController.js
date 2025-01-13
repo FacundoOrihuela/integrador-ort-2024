@@ -46,6 +46,17 @@ const getClientByEmail = async (req, res) => {
 const createClient = async (req, res) => {
     const { name, email, password } = req.body;
     try {
+        // Verificar si ya existe un usuario con el mismo correo electrónico
+        let user = await User.findOne({ where: { email } });
+
+        if (user && user.status === 'deleted') {
+            // Si el usuario existe y está eliminado, eliminar el cliente y luego el usuario existente
+            await Client.destroy({ where: { userId: user.id } });
+            await user.destroy();
+        } else if (user) {
+            return res.status(400).json({ message: 'El correo electrónico ya está en uso' });
+        }
+
         // Generar el token de verificación
         const verificationToken = crypto.randomBytes(32).toString('hex');
 
@@ -53,7 +64,7 @@ const createClient = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Crear el usuario
-        const user = await User.create({
+        user = await User.create({
             userType: 'client',
             name,
             email,

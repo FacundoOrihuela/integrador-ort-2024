@@ -1,5 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper, CircularProgress, MenuItem, Select, FormControl, InputLabel, Button, Box, TextField, Pagination } from "@mui/material";
+import React, { useEffect, useState, useContext } from "react";
+import {
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+  Paper,
+  CircularProgress,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+  Button,
+  Box,
+  TextField,
+  Pagination,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -9,11 +31,15 @@ import SchoolIcon from "@mui/icons-material/School";
 import GroupIcon from "@mui/icons-material/Group";
 import SortIcon from "@mui/icons-material/Sort";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
+import BlockIcon from "@mui/icons-material/Block";
 import axios from "axios";
 import CreateUser from "./CreateUser";
 import SendProduct from "./SendProduct";
+import { UserContext } from "../../../context/UserContext";
 
 const UserList = () => {
+  const { user: loggedInUser } = useContext(UserContext);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -27,6 +53,10 @@ const UserList = () => {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [page, setPage] = useState(1);
   const usersPerPage = 8;
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [confirmBlock, setConfirmBlock] = useState(false);
+  const [blockReason, setBlockReason] = useState("");
+  const [selectedUserId, setSelectedUserId] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -42,7 +72,7 @@ const UserList = () => {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Error al obtener los clientes");
+          throw new Error("Error al obtener los usuarios");
         }
         return response.json();
       })
@@ -94,20 +124,92 @@ const UserList = () => {
 
   const handleSendProductSubmit = () => {
     const productIds = selectedProducts.map((product) => product.id);
-    axios.post("http://localhost:3001/api/orders/create", {
-      userId: selectedClient.id,
-      productIds,
-    }, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    })
-    .then(response => {
-      setIsSendProductModalOpen(false);
-      setSelectedProducts([]);
-      console.log("Productos enviados:", response.data);
-    })
-    .catch(error => console.error("Error sending products:", error));
+    axios
+      .post(
+        "http://localhost:3001/api/orders/create",
+        {
+          userId: selectedClient.id,
+          productIds,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((response) => {
+        setIsSendProductModalOpen(false);
+        setSelectedProducts([]);
+        console.log("Productos enviados:", response.data);
+      })
+      .catch((error) => console.error("Error sending products:", error));
+  };
+
+  const handleDeleteUser = async () => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3001/api/user/${selectedUserId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setUsers(users.filter((user) => user.id !== selectedUserId));
+        setConfirmDelete(false);
+        setSelectedUserId(null);
+      } else {
+        setError(response.data.message || "Error al eliminar el usuario");
+      }
+    } catch (error) {
+      setError("Error al conectar con el servidor.");
+    }
+  };
+
+  const handleBlockUser = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:3001/api/user/block/${selectedUserId}`,
+        { blockReason },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        fetchUsers();
+        setConfirmBlock(false);
+        setSelectedUserId(null);
+        setBlockReason("");
+      } else {
+        setError(response.data.message || "Error al bloquear el usuario");
+      }
+    } catch (error) {
+      setError("Error al conectar con el servidor.");
+    }
+  };
+
+  const handleUnblockUser = async (userId) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:3001/api/user/unblock/${userId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        fetchUsers();
+      } else {
+        setError(response.data.message || "Error al desbloquear el usuario");
+      }
+    } catch (error) {
+      setError("Error al conectar con el servidor.");
+    }
   };
 
   const filteredUsers = users.filter((user) => {
@@ -127,7 +229,10 @@ const UserList = () => {
     return 0;
   });
 
-  const paginatedUsers = sortedUsers.slice((page - 1) * usersPerPage, page * usersPerPage);
+  const paginatedUsers = sortedUsers.slice(
+    (page - 1) * usersPerPage,
+    page * usersPerPage
+  );
 
   const handlePageChange = (event, value) => {
     setPage(value);
@@ -149,18 +254,18 @@ const UserList = () => {
     return (
       <div className="flex justify-center items-center h-full">
         <CircularProgress />
-        <Box className="ml-2">Cargando clientes...</Box>
+        <Box className="ml-2">Cargando usuarios...</Box>
       </div>
     );
   }
 
   const getUserTypeIcon = (userType) => {
     switch (userType) {
-      case 'client':
+      case "client":
         return <GroupIcon className="mr-2" />;
-      case 'teacher':
+      case "teacher":
         return <SchoolIcon className="mr-2" />;
-      case 'administrator':
+      case "administrator":
         return <AdminPanelSettingsIcon className="mr-2" />;
       default:
         return <AccountCircleIcon className="mr-2" />;
@@ -180,15 +285,26 @@ const UserList = () => {
           />
           <FormControl variant="outlined" className="w-1/4">
             <InputLabel>Filtrar por tipo</InputLabel>
-            <Select value={filter} onChange={handleFilterChange} label="Filtrar por tipo">
-              <MenuItem value=""><em>Todos</em></MenuItem>
+            <Select
+              value={filter}
+              onChange={handleFilterChange}
+              label="Filtrar por tipo"
+            >
+              <MenuItem value="">
+                <em>Todos</em>
+              </MenuItem>
               <MenuItem value="client">Cliente</MenuItem>
               <MenuItem value="teacher">Profesor</MenuItem>
               <MenuItem value="administrator">Administrador</MenuItem>
             </Select>
           </FormControl>
         </Box>
-        <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={handleCreateUser}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={handleCreateUser}
+        >
           Crear Usuario
         </Button>
       </Box>
@@ -200,7 +316,8 @@ const UserList = () => {
           sx={{
             backgroundColor: sort === "nameAsc" ? "primary.main" : "inherit",
             color: sort === "nameAsc" ? "white" : "primary.main",
-            "&:hover": sort === "nameAsc" ? { backgroundColor: "primary.main" } : {},
+            "&:hover":
+              sort === "nameAsc" ? { backgroundColor: "primary.main" } : {},
           }}
         >
           Nombre Asc
@@ -212,7 +329,8 @@ const UserList = () => {
           sx={{
             backgroundColor: sort === "nameDesc" ? "primary.main" : "inherit",
             color: sort === "nameDesc" ? "white" : "primary.main",
-            "&:hover": sort === "nameDesc" ? { backgroundColor: "primary.main" } : {},
+            "&:hover":
+              sort === "nameDesc" ? { backgroundColor: "primary.main" } : {},
           }}
         >
           Nombre Desc
@@ -224,7 +342,8 @@ const UserList = () => {
           sx={{
             backgroundColor: sort === "dateAsc" ? "primary.main" : "inherit",
             color: sort === "dateAsc" ? "white" : "primary.main",
-            "&:hover": sort === "dateAsc" ? { backgroundColor: "primary.main" } : {},
+            "&:hover":
+              sort === "dateAsc" ? { backgroundColor: "primary.main" } : {},
           }}
         >
           Fecha Asc
@@ -236,7 +355,8 @@ const UserList = () => {
           sx={{
             backgroundColor: sort === "dateDesc" ? "primary.main" : "inherit",
             color: sort === "dateDesc" ? "white" : "primary.main",
-            "&:hover": sort === "dateDesc" ? { backgroundColor: "primary.main" } : {},
+            "&:hover":
+              sort === "dateDesc" ? { backgroundColor: "primary.main" } : {},
           }}
         >
           Fecha Desc
@@ -244,7 +364,10 @@ const UserList = () => {
       </Box>
       <List>
         {paginatedUsers.map((user) => (
-          <ListItem key={user.id} className="mb-2 bg-gray-100 rounded-lg shadow-md">
+          <ListItem
+            key={user.id}
+            className="mb-2 bg-gray-100 rounded-lg shadow-md"
+          >
             <ListItemAvatar>
               {user.photo ? (
                 <Avatar src={user.photo} />
@@ -266,16 +389,56 @@ const UserList = () => {
                     <EmailIcon className="mr-2" /> {user.email}
                   </Box>
                   <Box component="span" className="flex items-center">
-                    {user.userType === 'client' ? 'Cliente' : user.userType === 'teacher' ? 'Profesor' : 'Administrador'}
+                    {user.userType === "client"
+                      ? "Cliente"
+                      : user.userType === "teacher"
+                      ? "Profesor"
+                      : "Administrador"}
                   </Box>
                   <Box component="span" className="flex items-center">
-                    Fecha de creación: {new Date(user.created).toLocaleDateString()}
+                    Fecha de creación:{" "}
+                    {new Date(user.created).toLocaleDateString()}
                   </Box>
                 </>
               }
             />
-            {user.userType === 'client' && (
-              <Button variant="contained" color="secondary" onClick={() => handleSendProduct(user)}>
+            {loggedInUser && loggedInUser.id !== user.id && (
+              <Box display="flex" gap={1}>
+                <IconButton
+                  color="error"
+                  onClick={() => {
+                    setSelectedUserId(user.id);
+                    setConfirmDelete(true);
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+                {user.status === "blocked" ? (
+                  <IconButton
+                    color="success"
+                    onClick={() => handleUnblockUser(user.id)}
+                  >
+                    <BlockIcon />
+                  </IconButton>
+                ) : (
+                  <IconButton
+                    sx={{ color: "grey.500" }}
+                    onClick={() => {
+                      setSelectedUserId(user.id);
+                      setConfirmBlock(true);
+                    }}
+                  >
+                    <BlockIcon />
+                  </IconButton>
+                )}
+              </Box>
+            )}
+            {user.userType === "client" && (
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => handleSendProduct(user)}
+              >
                 Enviar Producto
               </Button>
             )}
@@ -300,7 +463,10 @@ const UserList = () => {
             >
               ✕
             </button>
-            <CreateUser handleUpdateOrCreate={handleUpdateOrCreate} setIsModalOpen={setIsCreateModalOpen} />
+            <CreateUser
+              handleUpdateOrCreate={handleUpdateOrCreate}
+              setIsModalOpen={setIsCreateModalOpen}
+            />
           </div>
         </div>
       )}
@@ -315,6 +481,52 @@ const UserList = () => {
           setIsModalOpen={setIsSendProductModalOpen}
         />
       )}
+
+      <Dialog open={confirmDelete} onClose={() => setConfirmDelete(false)}>
+        <DialogTitle>Confirmar Eliminación</DialogTitle>
+        <DialogContent>
+          <Typography>
+            ¿Estás seguro de que deseas eliminar este usuario? Esta acción es
+            permanente.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmDelete(false)} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={handleDeleteUser} color="primary">
+            Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={confirmBlock}
+        onClose={() => setConfirmBlock(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>Confirmar Bloqueo</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Razón del Bloqueo"
+            variant="outlined"
+            fullWidth
+            multiline
+            rows={6}
+            value={blockReason}
+            onChange={(e) => setBlockReason(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmBlock(false)} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={handleBlockUser} color="primary">
+            Bloquear
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Paper>
   );
 };

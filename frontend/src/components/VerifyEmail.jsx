@@ -1,9 +1,6 @@
-import React, { useEffect, useId, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { saveSessionToken } from "../features/loginSlice";
 import { toast } from 'react-toastify';
-import { validateEmail, validatePassword } from "../utils/validateRegister";
 import '../index.css';
 
 const VerifyEmail = () => {
@@ -35,7 +32,7 @@ const VerifyEmail = () => {
     })
     .then(data => {
             toast.success("Validado con éxito");
-            navigate("/");
+            navigate("/login");
         }
     )
     .catch(error => {

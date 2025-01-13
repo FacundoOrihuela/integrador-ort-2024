@@ -137,6 +137,9 @@ const getAllUsers = async (req, res) => {
     try {
         const users = await User.findAll({
             attributes: ['id', 'name', 'email', 'userType', 'photo', 'created', 'isVerified', 'status', 'blockReason'],
+            where: {
+                status: ['active', 'blocked']
+            }
         });
 
         const userDetails = await Promise.all(users.map(async (user) => {
@@ -170,4 +173,59 @@ const getAllUsers = async (req, res) => {
     }
 };
 
-export { getUserDetails, getAllUsers, uploadProfileImage, getUserById, upload };
+// Eliminar un usuario (borrado lógico)
+const deleteUser = async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const [userUpdated] = await User.update({ status: 'deleted' }, { where: { id: userId } });
+
+        if (userUpdated === 0) {
+            return res.status(404).json({ message: `Usuario con id ${userId} no encontrado` });
+        }
+
+        res.json({ message: `Usuario ${userId} eliminado con éxito` });
+    } catch (error) {
+        console.error('Error al eliminar el usuario:', error);
+        res.status(500).json({ message: 'Error al eliminar el usuario', error: error.message });
+    }
+};
+
+// Bloquear un usuario
+const blockUser = async (req, res) => {
+    const { userId } = req.params;
+    const { blockReason } = req.body;
+
+    try {
+        const [userUpdated] = await User.update({ status: 'blocked', blockReason }, { where: { id: userId } });
+
+        if (userUpdated === 0) {
+            return res.status(404).json({ message: `Usuario con id ${userId} no encontrado` });
+        }
+
+        res.json({ message: `Usuario ${userId} bloqueado con éxito` });
+    } catch (error) {
+        console.error('Error al bloquear el usuario:', error);
+        res.status(500).json({ message: 'Error al bloquear el usuario', error: error.message });
+    }
+};
+
+// Desbloquear un usuario
+const unblockUser = async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const [userUpdated] = await User.update({ status: 'active', blockReason: null }, { where: { id: userId } });
+
+        if (userUpdated === 0) {
+            return res.status(404).json({ message: `Usuario con id ${userId} no encontrado` });
+        }
+
+        res.json({ message: `Usuario ${userId} desbloqueado con éxito` });
+    } catch (error) {
+        console.error('Error al desbloquear el usuario:', error);
+        res.status(500).json({ message: 'Error al desbloquear el usuario', error: error.message });
+    }
+};
+
+export { getUserDetails, getAllUsers, uploadProfileImage, getUserById, deleteUser, blockUser, unblockUser, upload };

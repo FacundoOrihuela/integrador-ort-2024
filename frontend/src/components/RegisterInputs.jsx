@@ -1,6 +1,5 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { validateEmail, validatePassword } from "../utils/validateRegister";
 import '../index.css';
@@ -10,7 +9,6 @@ const RegisterInputs = () => {
     const email = useId();
     const pass = useId();
     const repeatPass = useId();
-    const dispatch = useDispatch();
     const navigate = useNavigate();
     const userField = useRef();
     const emailField = useRef();
@@ -77,6 +75,7 @@ const RegisterInputs = () => {
         })
         .then(() => {
             toast.success("Registro exitoso! Te enviamos un correo electrónico para verificar tu email :)");
+            navigate("/login");
         })
         .catch(error => {
             console.error("Error al registrar:", error);
@@ -88,7 +87,7 @@ const RegisterInputs = () => {
     };
 
     useEffect(() => {
-        if (window.localStorage.getItem("idUsuarioLogueado") !== null) navigate("/principal");
+        if (window.localStorage.getItem("token") !== null) navigate("/");
     }, [navigate]);
 
     return (
@@ -137,7 +136,7 @@ const RegisterInputs = () => {
                 )}
             </button>
 
-            <Link to="/" className="mt-3 text-colors-1 hover:text-colors-3 text-sm font-medium">Login</Link>
+            <Link to="/login" className="mt-3 text-colors-1 hover:text-colors-3 text-sm font-medium">Login</Link>
         </form>
     );
 };

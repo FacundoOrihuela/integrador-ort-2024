@@ -9,7 +9,7 @@ const login = async (req, res) => {
         // Buscar el usuario por email en la tabla User
         const user = await User.findOne({ where: { email } });
 
-        if (!user) {
+        if (!user || user.status === 'deleted') {
             return res.status(401).json({ message: 'Correo electrónico o contraseña incorrectos' });
         }
 
@@ -29,7 +29,7 @@ const login = async (req, res) => {
 
         const token = jwt.sign({ id: user.id, email: user.email, role: user.userType }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.json({ message: 'Inicio de sesión exitoso', token });
+        res.json({ message: 'Inicio de sesión exitoso', token, user });
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
         res.status(500).json({ message: 'Error al iniciar sesión', error: error.message });
