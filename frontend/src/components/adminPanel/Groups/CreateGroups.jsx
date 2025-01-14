@@ -74,7 +74,7 @@ const CreateGroups = ({ editData, isUpdate, handleUpdateOrCreate }) => {
     const formDataToSend = new FormData();
     formDataToSend.append("name", formData.name);
     formDataToSend.append("description", formData.description);
-    {isUpdate? formDataToSend.append("userId", formData.leader):formDataToSend.append("leaderId", formData.leader)}
+    formDataToSend.append(isUpdate ? "userId" : "leaderId", formData.leader);
 
     if (formData.image) {
       formDataToSend.append("image", formData.image);

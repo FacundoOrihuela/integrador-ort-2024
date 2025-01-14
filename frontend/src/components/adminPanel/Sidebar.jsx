@@ -7,6 +7,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import StoreIcon from "@mui/icons-material/Store";
 import CategoryIcon from "@mui/icons-material/Category";
+import ArticleIcon from "@mui/icons-material/Article"; // Importar el icono de noticias
 
 const Sidebar = ({ onSelect, selectedComponent }) => {
   const menuItems = [
@@ -17,6 +18,7 @@ const Sidebar = ({ onSelect, selectedComponent }) => {
     { text: "Compras", icon: <ShoppingCartIcon />, component: "ShoppingList" },
     { text: "Productos", icon: <StoreIcon />, component: "Products" },
     { text: "Categorías", icon: <CategoryIcon />, component: "Categories" },
+    { text: "Noticias", icon: <ArticleIcon />, component: "News" }, // Nueva pestaña de noticias
   ];
 
   return (

@@ -10,6 +10,7 @@ import MembershipList from "./Memberships/MembershipList";
 import ShoppingList from "./Orders/ShoppingList";
 import AdminProductList from "./Products/AdminProductList";
 import CategoryList from "./Categories/CategoryList";
+import NewsList from "./News/NewsList";
 import { Box } from "@mui/material";
 
 const drawerWidth = 240;
@@ -48,6 +49,8 @@ const AdminPanel = () => {
         return <AdminProductList />;
       case "Categories":
         return <CategoryList />;
+      case "News":
+        return <NewsList />;
       default:
         return null;
     }
