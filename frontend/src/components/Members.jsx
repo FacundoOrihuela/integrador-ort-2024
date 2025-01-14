@@ -242,26 +242,24 @@ const Members = () => {
     <div className="flex flex-col min-h-screen">
       <Header />
 
-      <div className="flex-grow mt-[5rem] px-4 flex flex-col items-center">
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 w-full max-w-6xl">
+      <div className="flex-grow mt-[3rem] mb-[3rem] px-4 flex flex-col items-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-7xl">
           {integrantes.map((integrante, index) => (
             <div
               key={index}
-              className="flex flex-col md:flex-row items-center gap-6 p-6 rounded-lg shadow-lg transition-transform duration-300 hover:scale-105"
+              className="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center text-center hover:shadow-2xl transition-shadow duration-300"
             >
-              {/* Imagen */}
               <img
                 src={integrante.img}
                 alt={integrante.nombre}
-                className="w-32 h-32 rounded-full object-cover shadow-md"
+                className="w-32 h-32 rounded-full mb-4 object-cover border-2 border-gray-200"
               />
-
-              {/* Texto */}
-              <div className="text-center md:text-left">
-                <h2 className="text-xl font-semibold text-gray-800">{integrante.nombre}</h2>
-                <p className="text-gray-600 mt-1">{integrante.descripcion}</p>
-              </div>
+              <h2 className="text-lg font-semibold text-gray-900">
+                {integrante.nombre}
+              </h2>
+              <p className="text-sm text-gray-600 mt-2">
+                {integrante.descripcion}
+              </p>
             </div>
           ))}
         </div>
