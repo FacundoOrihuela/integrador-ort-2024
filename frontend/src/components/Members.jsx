@@ -42,6 +42,7 @@ import imgIntegrante38 from '../components/img/silvanacas1.png';
 import imgIntegrante39 from '../components/img/danilo1.png';
 
 const Members = () => {
+  
   const integrantes = [
     {
       img: imgIntegrante1,
