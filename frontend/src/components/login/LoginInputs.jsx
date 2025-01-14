@@ -23,8 +23,8 @@ const LoginInputs = () => {
 
   useEffect(() => {
     // Set default values
-    emailField.current.value = "tayet.nunez@gmail.com";
-    passField.current.value = "Juan1234";
+    emailField.current.value = "admin@gmail.com";
+    passField.current.value = "Admin123";
     checkFields();
   }, []);
 
