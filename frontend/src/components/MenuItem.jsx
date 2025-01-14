@@ -6,8 +6,8 @@ const MenuItem = ({ to, imgSrc, altText, text }) => {
     <Link to={to} style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
       <Box
         sx={{
-          width: 100,
-          height: 100,
+          width: "6rem", // Ajustado a unidades rem
+          height: "6rem", // Ajustado a unidades rem
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -17,7 +17,7 @@ const MenuItem = ({ to, imgSrc, altText, text }) => {
           transition: "all 0.3s",
           overflow: "hidden",
           "&:hover": {
-            width: 270,
+            width: "16rem", // Ajustado a unidades rem
             borderRadius: "25px",
           },
           "&:hover .menu-img": {
@@ -38,8 +38,8 @@ const MenuItem = ({ to, imgSrc, altText, text }) => {
           alt={altText}
           className="menu-img"
           sx={{
-            width: 70,
-            height: 70,
+            width: "4rem", // Ajustado a unidades rem
+            height: "4rem", // Ajustado a unidades rem
             borderRadius: "50%",
             position: "absolute",
           }}
