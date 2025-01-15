@@ -32,8 +32,8 @@ import AboutTiferet from "./components/AboutTiferet";
 import Members from "./components/Members";
 import History from "./components/History";
 import SoloJuntos from "./components/SoloJuntos";
-import Groups from "./components/Groups/Groups";
-import New from "./News/New";
+import Groups from "./components/groups/Groups";
+import New from "./components/News/New";
 
 function App() {
   return (
