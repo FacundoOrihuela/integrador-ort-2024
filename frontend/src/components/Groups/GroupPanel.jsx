@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { UserContext } from "../../context/UserContext";
-import EditGroup from "./EditGroup"; // Importa el componente EditGroup
+import EditGroup from "./EditGroup";
 
 const GroupPanel = ({ group }) => {
   const [participants, setParticipants] = useState([]);
@@ -22,9 +22,15 @@ const GroupPanel = ({ group }) => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [configModalOpen, setConfigModalOpen] = useState(false);
-  const [editGroupModalOpen, setEditGroupModalOpen] = useState(false); // Estado para controlar el modal de editar grupo
+  const [editGroupModalOpen, setEditGroupModalOpen] = useState(false);
   const token = localStorage.getItem("token");
+  const [selectedParticipant, setSelectedParticipant] = useState(null);
+  const [participantModalOpen, setParticipantModalOpen] = useState(false);
   const { user } = useContext(UserContext);
+  const [posts, setPosts] = useState([]);
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [createPostModalOpen, setCreatePostModalOpen] = useState(false);
+  const [newPostContent, setNewPostContent] = useState("");
 
   const loadInfoAsync = async () => {
     await fetchParticipants();
@@ -33,9 +39,13 @@ const GroupPanel = ({ group }) => {
 
   useEffect(() => {
     loadInfoAsync();
-    console.log("grupo:",group)
-    console.log("user:",user)
   }, [group, token]);
+
+  useEffect(() => {
+    if (group) {
+      fetchPosts();
+    }
+  }, [group]);
 
   const fetchAllUsers = async () => {
     if (!token) return;
@@ -86,6 +96,72 @@ const GroupPanel = ({ group }) => {
           "Error al obtener los participantes:",
           response.statusText
         );
+      }
+    } catch (error) {
+      console.error("Error al conectar con el servidor:", error);
+    }
+  };
+  const handleOpenParticipantModal = (participant) => {
+    setSelectedParticipant(participant);
+    setParticipantModalOpen(true);
+  };
+
+  const handleCloseParticipantModal = () => {
+    setParticipantModalOpen(false);
+    setSelectedParticipant(null);
+  };
+
+  const handleOpenCreatePostModal = () => {
+    setCreatePostModalOpen(true);
+  };
+
+  const handleCloseCreatePostModal = () => {
+    setCreatePostModalOpen(false);
+    setNewPostContent("");
+    setSelectedPost(null);
+  };
+
+  const handleCreateOrUpdatePost = async () => {
+    if (newPostContent.trim()) {
+      if (selectedPost) {
+        await updatePost(selectedPost, newPostContent);
+      } else {
+        await createPost(newPostContent);
+      }
+      handleCloseCreatePostModal();
+    } else {
+      alert("El contenido del post no puede estar vacío.");
+    }
+  };
+
+  const handleRemoveParticipant = async () => {
+    if (!selectedParticipant || !token) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:3001/api/groups/remove-user`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            groupId: group.id,
+            userId: selectedParticipant.id,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        setParticipants((prev) =>
+          prev.filter(
+            (participant) => participant.id !== selectedParticipant.id
+          )
+        );
+        handleCloseParticipantModal();
+      } else {
+        console.error("Error al eliminar el usuario:", response.statusText);
       }
     } catch (error) {
       console.error("Error al conectar con el servidor:", error);
@@ -142,55 +218,257 @@ const GroupPanel = ({ group }) => {
     setSelectedUsers(selectedUsers.filter((user) => user.id !== userId));
   };
 
+  const handleEditPost = (post) => {
+    setSelectedPost(post);
+    setNewPostContent(post.content);
+    setCreatePostModalOpen(true);
+  };
+  // Obtener todos los posts del grupo
+  const fetchPosts = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/api/posts/group/${group.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        setPosts(data.data);
+      } else {
+        console.error("Error al obtener los posts:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error al conectar con el servidor:", error);
+    }
+  };
+
+  // Crear un nuevo post
+  const createPost = async (content) => {
+    try {
+      const response = await fetch("http://localhost:3001/api/posts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          groupId: group.id,
+          content,
+        }),
+      });
+      if (response.ok) {
+        await fetchPosts();
+      } else {
+        console.error("Error al crear el post:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error al conectar con el servidor:", error);
+    }
+  };
+
+  // Actualizar un post
+  const updatePost = async (post, content) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/api/posts/${post.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            userId: post.userId,
+            groupId: post.groupId,
+            content: content,
+          }),
+        }
+      );
+      if (response.ok) {
+        await fetchPosts();
+      } else {
+        console.error("Error al actualizar el post:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error al conectar con el servidor:", error);
+    }
+  };
+
+  // Eliminar un post
+  const deletePost = async (postId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/api/posts/${postId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.ok) {
+        await fetchPosts();
+      } else {
+        console.error("Error al eliminar el post:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error al conectar con el servidor:", error);
+    }
+  };
+
   if (!group) {
-    return <p>Selecciona un grupo para ver su información.</p>;
+    return (
+      <div className="p-2 flex flex-col items-center">
+        <h2 className="text-2xl font-bold">
+          Selecciona un grupo para ver su información.
+        </h2>
+      </div>
+    );
   }
 
   return (
     <div className="flex h-screen">
-      <div className="m-4 p-4 rounded flex-grow">
-        <div>
+      <div className="mt-1 flex-grow flex flex-col h-full">
+        <div className="bg-gray-100 p-2 flex flex-col items-center">
           <h2 className="text-2xl font-bold">{group.name}</h2>
           <p className="text-sm text-gray-500">
             {group.description || "Sin descripción disponible"}
           </p>
-          <img
-            src={group.photo}
-            alt={group.name}
-            className="mt-4 w-full h-48 object-cover rounded"
-          />
+        </div>
+
+        <div className="posts-section flex-grow overflow-y-auto p-4 space-y-4">
+          {posts &&
+            posts.map((post) => (
+              <div
+                key={post.id}
+                className="post-item bg-white rounded-md shadow-md border border-gray-200"
+              >
+                <p className="bg-gray-100 mx-3 text-gray-800 my-5 rounded-md">
+                  {post.content}
+                </p>
+
+                <div className="flex bg-gray-200 justify-between gap-2 mt-2 p-2">
+                  <div className="flex flex-col ">
+                    <div className="flex items-center mt-2">
+                      <motion.div
+                        className="relative rounded-full overflow-hidden shadow-lg"
+                        whileHover={{ scale: 1.1 }}
+                      >
+                        {post.User.photo ? (
+                          <Avatar
+                            src={post.User.photo}
+                            alt="Profile Photo"
+                            sx={{ width: 20, height: 20 }}
+                          />
+                        ) : (
+                          <AccountCircleIcon className="w-10 h-10" />
+                        )}
+                      </motion.div>
+                      <p className="ml-2 flex justify-end text-sm font-bold text-gray-700">
+                        {post.User.name}
+                      </p>
+                    </div>
+                    <div className="text-xs text-gray-500 pt-1">
+                      <span>
+                        {post.createdAt !== post.updatedAt ? (
+                          <>
+                            {new Date(post.updatedAt).toLocaleString("es-ES", {
+                              year: "numeric",
+                              month: "2-digit",
+                              day: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: false,
+                            })}
+                            <span className="ml-1 text-xs text-gray-400">
+                              (editado)
+                            </span>
+                          </>
+                        ) : (
+                          new Date(post.createdAt).toLocaleString("es-ES", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: false,
+                          })
+                        )}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-end mt-4">
+                    {(post.userId === user.id || group.userId === user.id) && (
+                      <>
+                        <Button
+                          onClick={() => handleEditPost(post)}
+                          color="inherit"
+                        >
+                          Editar
+                        </Button>
+                        <Button
+                          onClick={() => deletePost(post.id)}
+                          color="inherit"
+                        >
+                          Eliminar
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+        </div>
+
+        {/* Botón para crear post */}
+        <div className="p-4 bg-gray-100">
+          <Button
+            onClick={handleOpenCreatePostModal}
+            variant="contained"
+            color="primary"
+          >
+            Crear Post
+          </Button>
         </div>
       </div>
 
       <div className="bg-gray-100 shadow p-4 rounded-r flex flex-col items-center">
-        {group && user && group.userId === user.id && <button
-          onClick={() => setConfigModalOpen(true)}
-          className="flex items-center space-x-2 border border-black rounded-md py-2 px-4 mb-4 w-full justify-center"
-        >
-          <SettingsIcon />
-          <p className="text-sm font-semibold">Configurar grupo</p>
-        </button>}
+        {group && user && group.userId === user.id && (
+          <button
+            onClick={() => setConfigModalOpen(true)}
+            className="flex items-center space-x-2 border border-black rounded-md py-2 px-4 mb-4 w-full justify-center"
+          >
+            <SettingsIcon />
+            <p className="text-sm font-semibold">Configurar grupo</p>
+          </button>
+        )}
 
         <h3 className="text-sm font-semibold mb-4">Participantes</h3>
-
         <div className="flex flex-col gap-4">
           {participants.map((participant) => (
             <div key={participant.id} className="flex flex-col items-center">
               <motion.div
-                className="relative rounded-full overflow-hidden shadow-lg"
+                className="relative rounded-full overflow-hidden shadow-lg cursor-pointer"
                 whileHover={{ scale: 1.1 }}
+                onClick={() => handleOpenParticipantModal(participant)}
               >
                 {participant.photo ? (
                   <Avatar
                     src={participant.photo}
                     alt="Profile Photo"
                     className="h-full w-full"
+                    sx={{ width: 20, height: 20 }}
                   />
                 ) : (
                   <AccountCircleIcon className="w-full h-full" />
                 )}
               </motion.div>
-
               <p className="text-xs font-bold text-gray-700">
                 {participant.name}
               </p>
@@ -333,6 +611,79 @@ const GroupPanel = ({ group }) => {
                 className="mt-4"
               >
                 Confirmar
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Modal de Participante */}
+      <Modal open={participantModalOpen} onClose={handleCloseParticipantModal}>
+        <div className="flex justify-center items-center h-full bg-gray-500 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg w-96 relative">
+            <CloseIcon
+              onClick={handleCloseParticipantModal}
+              className="absolute top-2 right-2 cursor-pointer text-black"
+              style={{ fontSize: 30 }}
+            />
+            {selectedParticipant && (
+              <>
+                <div className="flex flex-col gap-4">
+                  <h2>Opciones para {selectedParticipant.name}</h2>
+                  {group.userId != selectedParticipant.id && (
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={handleRemoveParticipant}
+                    >
+                      Eliminar usuario del grupo
+                    </Button>
+                  )}
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    href={`/profile/${selectedParticipant.id}`}
+                  >
+                    Ir al perfil
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </Modal>
+
+      {/* Modal de para crear post */}
+      <Modal open={createPostModalOpen} onClose={handleCloseCreatePostModal}>
+        <div className="flex justify-center items-center h-full bg-gray-500 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg w-96 relative">
+            <CloseIcon
+              onClick={handleCloseCreatePostModal}
+              className="absolute top-2 right-2 cursor-pointer text-black"
+              style={{ fontSize: 30 }}
+            />
+            <h3 className="text-xl font-semibold mb-4">Crear nuevo post</h3>
+            <textarea
+              className="w-full border border-gray-300 rounded-lg p-2 mb-4"
+              rows="4"
+              placeholder="Escribe aquí el contenido del post..."
+              value={newPostContent}
+              onChange={(e) => setNewPostContent(e.target.value)}
+            />
+            <div className="flex justify-end gap-2">
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleCloseCreatePostModal}
+              >
+                Cancelar
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleCreateOrUpdatePost}
+              >
+                Publicar
               </Button>
             </div>
           </div>

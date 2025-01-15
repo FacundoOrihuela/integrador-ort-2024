@@ -3,11 +3,18 @@ import { Box, Typography } from "@mui/material";
 
 const MenuItem = ({ to, imgSrc, altText, text }) => {
   return (
-    <Link to={to} style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+    <Link
+      to={to}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        textDecoration: "none",
+      }}
+    >
       <Box
         sx={{
-          width: "6rem", // Ajustado a unidades rem
-          height: "6rem", // Ajustado a unidades rem
+          width: "4vw",
+          height: "4vw",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -17,8 +24,8 @@ const MenuItem = ({ to, imgSrc, altText, text }) => {
           transition: "all 0.3s",
           overflow: "hidden",
           "&:hover": {
-            width: "16rem", // Ajustado a unidades rem
-            borderRadius: "25px",
+            width: "12vw",
+            borderRadius: "25%",
           },
           "&:hover .menu-img": {
             position: "relative",
@@ -28,7 +35,7 @@ const MenuItem = ({ to, imgSrc, altText, text }) => {
           },
           "&:hover .button-text": {
             opacity: 1,
-            marginLeft: 2,
+            marginLeft: "0.5vw",
           },
         }}
       >
@@ -38,19 +45,20 @@ const MenuItem = ({ to, imgSrc, altText, text }) => {
           alt={altText}
           className="menu-img"
           sx={{
-            width: "4rem", // Ajustado a unidades rem
-            height: "4rem", // Ajustado a unidades rem
+            width: "2vw",
+            height: "2vw",
             borderRadius: "50%",
             position: "absolute",
           }}
         />
         <Typography
           sx={{
-            ml: 2,
+            ml: "0.2vw",
             color: "black",
             opacity: 0,
             whiteSpace: "nowrap",
             transition: "opacity 0.3s, margin-left 0.3s",
+            fontSize: "0.8vw",
           }}
           className="button-text"
         >

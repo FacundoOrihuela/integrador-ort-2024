@@ -45,11 +45,11 @@ const MyGroups = ({ onGroupSelect }) => {
               whileHover={{ scale: 1.1 }}
               onClick={() => onGroupSelect(group)}
             >
-              <img
+              {group.photo ?<img
                 src={group.photo}
                 alt={group.name}
                 className="w-full h-full object-cover"
-              />
+              />:<p className="h-full flex items-center justify-center">{group.name}</p>}
               <motion.div
                 className="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center opacity-0"
                 whileHover={{ opacity: 1 }}
