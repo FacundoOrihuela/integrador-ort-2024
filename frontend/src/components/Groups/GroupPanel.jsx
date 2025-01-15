@@ -312,7 +312,7 @@ const GroupPanel = ({ group }) => {
         }
       );
       if (response.ok) {
-        await fetchPosts();
+        setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
       } else {
         console.error("Error al eliminar el post:", response.statusText);
       }
@@ -320,6 +320,7 @@ const GroupPanel = ({ group }) => {
       console.error("Error al conectar con el servidor:", error);
     }
   };
+  
 
   if (!group) {
     return (
@@ -342,8 +343,8 @@ const GroupPanel = ({ group }) => {
         </div>
 
         <div className="posts-section flex-grow overflow-y-auto p-4 space-y-4">
-          {posts &&
-            posts.map((post) => (
+          {
+            posts?.map((post) => (
               <div
                 key={post.id}
                 className="post-item bg-white rounded-md shadow-md border border-gray-200"
@@ -451,7 +452,7 @@ const GroupPanel = ({ group }) => {
 
         <h3 className="text-sm font-semibold mb-4">Participantes</h3>
         <div className="flex flex-col gap-4">
-          {participants.map((participant) => (
+          {participants?.map((participant) => (
             <div key={participant.id} className="flex flex-col items-center">
               <motion.div
                 className="relative rounded-full overflow-hidden shadow-lg cursor-pointer"
@@ -555,11 +556,11 @@ const GroupPanel = ({ group }) => {
               <Select
                 labelId="select-participants-label"
                 multiple
-                value={selectedUsers.map((user) => user.id)}
+                value={selectedUsers?.map((user) => user.id)}
                 onChange={handleSelectChange}
                 disabled={false}
               >
-                {allUsers.filter(
+                {allUsers?.filter(
                   (user) =>
                     !participants.some(
                       (participant) => participant.id === user.id
@@ -591,7 +592,7 @@ const GroupPanel = ({ group }) => {
               <ul
                 style={{ display: "flex", flexDirection: "column", gap: "8px" }}
               >
-                {selectedUsers.map((user) => (
+                {selectedUsers?.map((user) => (
                   <li
                     key={user.id}
                     className="flex justify-between items-center"
@@ -630,7 +631,7 @@ const GroupPanel = ({ group }) => {
               <>
                 <div className="flex flex-col gap-4">
                   <h2>Opciones para {selectedParticipant.name}</h2>
-                  {group.userId != selectedParticipant.id && (
+                  {group.userId != selectedParticipant.id && user.id === group.userId && (
                     <Button
                       variant="outlined"
                       color="primary"
@@ -662,7 +663,7 @@ const GroupPanel = ({ group }) => {
               className="absolute top-2 right-2 cursor-pointer text-black"
               style={{ fontSize: 30 }}
             />
-            <h3 className="text-xl font-semibold mb-4">Crear nuevo post</h3>
+            <h3 className="text-xl font-semibold mb-4">{selectedPost?"Editar post":"Crear nuevo post"}</h3>
             <textarea
               className="w-full border border-gray-300 rounded-lg p-2 mb-4"
               rows="4"
@@ -683,7 +684,7 @@ const GroupPanel = ({ group }) => {
                 color="primary"
                 onClick={handleCreateOrUpdatePost}
               >
-                Publicar
+                {selectedPost?"Confirmar":"Publicar"}
               </Button>
             </div>
           </div>
