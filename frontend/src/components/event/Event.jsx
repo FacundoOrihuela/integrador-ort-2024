@@ -3,7 +3,7 @@ import { UserContext } from "../../context/UserContext";
 import { toast } from "react-toastify";
 import Header from "../Header";
 import Footer from "../Footer";
-import { Container, Grid, Card, CardContent, Typography, Button, CircularProgress, Box } from "@mui/material";
+import { Container, Grid, Card, CardContent, Typography, Button, CircularProgress, Box, Tabs, Tab } from "@mui/material";
 
 const Event = () => {
   const { user } = useContext(UserContext);
@@ -12,6 +12,7 @@ const Event = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [registering, setRegistering] = useState(false);
+  const [tabIndex, setTabIndex] = useState(0);
 
   const fetchEvents = useCallback(async () => {
     try {
@@ -124,6 +125,20 @@ const Event = () => {
     return null;
   };
 
+  const handleTabChange = (event, newValue) => {
+    setTabIndex(newValue);
+  };
+
+  const filteredEvents = events.filter((event) => {
+    if (tabIndex === 0) {
+      return event.eventType === "recurring";
+    } else {
+      const endDateTime = event.SingleEvent?.endDateTime ? new Date(event.SingleEvent.endDateTime) : null;
+      const currentDateTime = new Date();
+      return event.eventType === "single" && endDateTime && endDateTime >= currentDateTime;
+    }
+  });
+
   if (loading) {
     return <Typography className="text-center">Cargando actividades...</Typography>;
   }
@@ -158,35 +173,38 @@ const Event = () => {
       >
         <Container component="main" sx={{ maxWidth: "lg" }}>
           <Typography variant="h4" className="text-center mb-4">Lista de Actividades</Typography>
-          <Grid container spacing={3}>
-            {events.map((event) => {
+          <Tabs value={tabIndex} onChange={handleTabChange} centered>
+            <Tab label="Clases" />
+            <Tab label="Eventos" />
+          </Tabs>
+          <Grid container spacing={3} sx={{ marginTop: 2 }}>
+            {filteredEvents.map((event) => {
               const registrationStatus = getRegistrationStatus(event.id);
               return (
                 <Grid item xs={12} sm={6} lg={4} key={event.id}>
-                  <Card className="hover:shadow-xl">
-                    <CardContent>
+                  <Card className="hover:shadow-xl" sx={{ height: "100%" }}>
+                    <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
                       <Typography variant="h5" className="mb-2">{event.name}</Typography>
                       <Typography className="mb-2"><strong>Descripción:</strong> {event.description}</Typography>
                       {formatEventDate(event)}
-                      <div className="mt-4">
-                        <Button
-                          onClick={() => handleRegister(event.id)}
-                          disabled={registering || registrationStatus !== null}
-                          variant="contained"
-                          color="primary"
-                          fullWidth
-                        >
-                          {registering
-                            ? <CircularProgress size={24} />
-                            : registrationStatus === "aceptado"
-                            ? "Anotado"
-                            : registrationStatus === "pendiente"
-                            ? "Esperando aprobación"
-                            : registrationStatus === "rechazado"
-                            ? "Rechazado"
-                            : "ANOTARME"}
-                        </Button>
-                      </div>
+                      <Box sx={{ flexGrow: 1 }} />
+                      <Button
+                        onClick={() => handleRegister(event.id)}
+                        disabled={registering || registrationStatus !== null}
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                      >
+                        {registering
+                          ? <CircularProgress size={24} />
+                          : registrationStatus === "aceptado"
+                          ? "Anotado"
+                          : registrationStatus === "pendiente"
+                          ? "Esperando aprobación"
+                          : registrationStatus === "rechazado"
+                          ? "Rechazado"
+                          : "ANOTARME"}
+                      </Button>
                     </CardContent>
                   </Card>
                 </Grid>

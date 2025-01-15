@@ -47,7 +47,6 @@ const getUserGroups = async (req, res) => {
         const user = await User.findByPk(userId, {
             include: {
                 model: Group,
-                where: { status: 'active' },
                 through: { attributes: [] },
             },
         });

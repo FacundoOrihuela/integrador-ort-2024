@@ -20,6 +20,7 @@ import AdminPanel from "./components/adminPanel/AdminPanel";
 import ProductFormPage from "./components/ecommerce/ProductFormPage";
 import PurchaseHistory from "./components/PurchaseHistory";
 import Checkout from "./components/ecommerce/Checkout";
+import PaymentStatus from "./components/ecommerce/PaymentStatus";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "./theme";
@@ -64,6 +65,7 @@ function App() {
                   <Route path="/checkout" element={<Checkout />} />
                   <Route path="/profile/:userId" element={<UserProfile />} />
                   <Route path="/product/detail/:id" element={<ProductDetail />} />
+                  <Route path="/payment-status" element={<PaymentStatus />} />
 
                   <Route path="/contact" element={<ContactUs/>} />
                   <Route path="/aboutTiferet" element={<AboutTiferet />} />
