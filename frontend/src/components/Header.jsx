@@ -168,12 +168,12 @@ const Header = ({ store }) => {
                 Tienda
               </span>
               <Link
-                to="/aula"
+                to="/news"
                 className={`text-secondary text-lg font-bold border-b-2 ${
                   isActive("/aula") ? "border-white" : "border-transparent"
                 } hover:border-white`}
               >
-                Aula virtual
+                Noticias
               </Link>
 
               <Link
