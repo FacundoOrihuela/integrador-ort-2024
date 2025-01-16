@@ -33,6 +33,7 @@ import SortIcon from "@mui/icons-material/Sort";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import BlockIcon from "@mui/icons-material/Block";
+import SendIcon from "@mui/icons-material/Send";
 import axios from "axios";
 import CreateUser from "./CreateUser";
 import SendProduct from "./SendProduct";
@@ -402,10 +403,18 @@ const UserList = () => {
                 </>
               }
             />
+            {user.userType === "client" && (
+              <IconButton
+                color="primary"
+                onClick={() => handleSendProduct(user)}
+              >
+                <SendIcon />
+              </IconButton>
+            )}
             {loggedInUser && loggedInUser.id !== user.id && (
               <Box display="flex" gap={1}>
                 <IconButton
-                  color="error"
+                  color="primary"
                   onClick={() => {
                     setSelectedUserId(user.id);
                     setConfirmDelete(true);
@@ -415,14 +424,14 @@ const UserList = () => {
                 </IconButton>
                 {user.status === "blocked" ? (
                   <IconButton
-                    color="success"
+                    color="primary"
                     onClick={() => handleUnblockUser(user.id)}
                   >
                     <BlockIcon />
                   </IconButton>
                 ) : (
                   <IconButton
-                    sx={{ color: "grey.500" }}
+                    sx={{ color: "primary" }}
                     onClick={() => {
                       setSelectedUserId(user.id);
                       setConfirmBlock(true);
@@ -433,15 +442,7 @@ const UserList = () => {
                 )}
               </Box>
             )}
-            {user.userType === "client" && (
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => handleSendProduct(user)}
-              >
-                Enviar Producto
-              </Button>
-            )}
+            
           </ListItem>
         ))}
       </List>
