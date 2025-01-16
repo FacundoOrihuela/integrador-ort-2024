@@ -40,6 +40,8 @@ import commentRoutes from './routes/commentRoutes.js';
 import newsRoutes from './routes/newsRoutes.js';
 import mercadoPagoRoutes from './routes/mercadoPagoRoutes.js';
 
+import contactRoutes from './routes/contactRoutes.js';
+
 app.use('/api/clients', clientsRoutes);
 app.use('/api/administrators', administratorRoutes);
 app.use('/api/teachers', teacherRoutes);
@@ -60,6 +62,8 @@ app.use('/api/posts', postRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/news', newsRoutes);
 app.use('/api/mercadoPago', mercadoPagoRoutes);
+// Rutas de la API
+app.use('/api/contact', contactRoutes);
 
 
 // Error handling
@@ -71,3 +75,4 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
 app.listen(port, () => {
     console.log(`Servidor corriendo en http://localhost:${port}`);
 });
+

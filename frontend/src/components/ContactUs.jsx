@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import Header from './Header';
 import Footer from './Footer';
 
-
 const ContactUs = () => {
- // Estado para los campos del formulario
- const [formData, setFormData] = useState({
+  // Estado para los campos del formulario
+  const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
@@ -25,9 +24,30 @@ const ContactUs = () => {
   };
 
   // Función para manejar el envío del formulario
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setFormSubmitted(true);
+
+    // Enviar datos al backend
+    try {
+      const response = await fetch('http://localhost:3001/api/contact', {  // Asegúrate de que el backend esté corriendo en ese puerto
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        setFormSubmitted(true);
+      } else {
+        setFormSubmitted(false);
+      }
+    } catch (error) {
+      console.error('Error al enviar el formulario:', error);
+      setFormSubmitted(false);
+    }
   };
 
   return (
@@ -120,4 +140,4 @@ const ContactUs = () => {
   );
 }
 
-export default ContactUs
+export default ContactUs;

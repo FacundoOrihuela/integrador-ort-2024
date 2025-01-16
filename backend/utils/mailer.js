@@ -1,4 +1,3 @@
-// utils/mailer.js
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 
@@ -9,11 +8,12 @@ const transporter = nodemailer.createTransport({
     port: 465,
     secure: true,
     auth: {
-        user: process.env.EMAIL_USER,       // Tu correo electrónico
-        pass: process.env.EMAIL_APP_PASSWORD,   // Contraseña de la app o del correo
+        user: process.env.EMAIL_USER, // Tu correo electrónico
+        pass: process.env.EMAIL_APP_PASSWORD, // Contraseña de la app o del correo
     },
 });
 
+// Enviar correo de verificación
 export const sendVerificationEmail = async (email, token) => {
     const verificationUrl = `http://localhost:${process.env.PORT_FRONT}/verifyEmail?token=${token}`;
 
@@ -26,6 +26,7 @@ export const sendVerificationEmail = async (email, token) => {
     });
 };
 
+// Enviar correo de recuperación de contraseña
 export const sendPasswordResetEmail = async (email, token) => {
     const resetUrl = `http://localhost:${process.env.PORT_FRONT}/reset-password?token=${token}`;
 
@@ -38,13 +39,16 @@ export const sendPasswordResetEmail = async (email, token) => {
     });
 };
 
+// Función para enviar correo con los datos del formulario de contacto
 export const contact = async (email, message) => {
-    
     await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: process.env.EMAIL_USER,
-        subject: `Contacto de ${email}`,
-        text: `Contacto`,
-        html: `${message}`,
+      from: process.env.EMAIL_USER,
+      to: process.env.EMAIL_USER,  // Correo al que se envían los mensajes de contacto
+      subject: `Contacto de ${email}`,
+      text: `Nuevo mensaje de contacto:\n\n${message}`,
+      html: `<p><strong>Nuevo mensaje de contacto:</strong></p><p>${message}</p>`,
     });
-};
+  };
+
+
+  

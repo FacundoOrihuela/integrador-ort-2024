@@ -1,27 +1,22 @@
-// import crypto from 'crypto';
-// import bcrypt from 'bcryptjs';
-// import { contact } from '../utils/mailer.js';
-// import User from '../models/User.js';
+import { contact } from '../utils/mailer.js';
 
-// const contact = async (req, res) => {
-//     const { email, messageBody } = req.body;
+const contactController = async (req, res) => {
+  const { firstName, lastName, email, phone, message } = req.body;
 
-//     try {
-//         const user = await User.findOne({ where: { email } });
+  if (!firstName || !lastName || !email || !message) {
+    return res.status(400).json({ message: 'Faltan campos obligatorios.' });
+  }
 
-//         if (!user) {
-//             return res.status(404).json({ message: `Usuario con email ${email} no encontrado` });
-//         }
+  try {
+    // Llamada a la función de mailer para enviar el mensaje al correo
+    await contact(email, `Nombre: ${firstName} ${lastName}\nTeléfono: ${phone}\nMensaje: ${message}`);
 
-//         const resetToken = crypto.randomBytes(32).toString('hex');
-//         user.passwordResetToken = resetToken;
-//         await user.save();
+    // Enviar respuesta de éxito
+    res.status(200).json({ success: true, message: 'Mensaje enviado con éxito.' });
+  } catch (error) {
+    console.error('Error al enviar mensaje:', error);
+    res.status(500).json({ success: false, message: 'Hubo un error al enviar el mensaje.' });
+  }
+};
 
-//         await contact(email, resetToken);
-
-//         res.json({ message: 'Correo de recuperación de contraseña enviado' });
-//     } catch (error) {
-//         console.error('Error al solicitar la recuperación de contraseña:', error);
-//         res.status(500).json({ message: 'Error al solicitar la recuperación de contraseña', error: error.message });
-//     }
-// };
+export { contactController };
