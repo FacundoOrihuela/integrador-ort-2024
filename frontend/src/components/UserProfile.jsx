@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Button, TextField, Card, CardContent, Typography, CircularProgress, Box, Container, Alert, IconButton } from '@mui/material';
+import { Button, TextField, CardContent, Typography, CircularProgress, Box, Paper, IconButton, Avatar, Alert } from '@mui/material';
 import { Edit as EditIcon, AccountCircle as AccountCircleIcon } from '@mui/icons-material';
 import Header from './Header';
 import Footer from './Footer';
@@ -14,11 +14,7 @@ const UserProfile = () => {
     const [userType, setUserType] = useState('');
     const [membershipName, setMembershipName] = useState('');
     const [isEditing, setIsEditing] = useState(false);
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        photo: '',
-    });
+    const [formData, setFormData] = useState({ name: '', email: '', photo: '' });
     const [selectedFile, setSelectedFile] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
     const [isUploading, setIsUploading] = useState(false);
@@ -28,52 +24,35 @@ const UserProfile = () => {
         const fetchProfile = async () => {
             const token = localStorage.getItem('token');
             try {
-                const response = await axios.get(`http://localhost:3001/api/user/${userId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+                const { data: { user } } = await axios.get(`http://localhost:3001/api/user/${userId}`, {
+                    headers: { Authorization: `Bearer ${token}` },
                 });
-                const user = response.data.user;
                 setProfile(user);
                 setUserType(user.userType);
-                setFormData({
-                    name: user.name,
-                    email: user.email,
-                    photo: user.photo,
-                });
+                setFormData({ name: user.name, email: user.email, photo: user.photo });
 
-                // Fetch additional data based on user type
                 if (user.userType === 'client') {
-                    const clientResponse = await axios.get(`http://localhost:3001/api/clients/${user.email}`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
+                    const { data: { data: clientData } } = await axios.get(`http://localhost:3001/api/clients/${user.email}`, {
+                        headers: { Authorization: `Bearer ${token}` },
                     });
-                    setProfile({ ...user, ...clientResponse.data.data });
+                    setProfile({ ...user, ...clientData });
 
-                    // Fetch membership name
-                    if (clientResponse.data.data.membershipId) {
-                        const membershipResponse = await axios.get(`http://localhost:3001/api/memberships/${clientResponse.data.data.membershipId}`, {
-                            headers: {
-                                Authorization: `Bearer ${token}`,
-                            },
+                    if (clientData.membershipId) {
+                        const { data: { data: membership } } = await axios.get(`http://localhost:3001/api/memberships/${clientData.membershipId}`, {
+                            headers: { Authorization: `Bearer ${token}` },
                         });
-                        setMembershipName(membershipResponse.data.data.name);
+                        setMembershipName(membership.name);
                     }
                 } else if (user.userType === 'teacher') {
-                    const teacherResponse = await axios.get(`http://localhost:3001/api/teachers/${user.email}`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
+                    const { data: { data: teacherData } } = await axios.get(`http://localhost:3001/api/teachers/${user.email}`, {
+                        headers: { Authorization: `Bearer ${token}` },
                     });
-                    setProfile({ ...user, ...teacherResponse.data.data });
+                    setProfile({ ...user, ...teacherData });
                 } else if (user.userType === 'administrator') {
-                    const adminResponse = await axios.get(`http://localhost:3001/api/administrators/${user.email}`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
+                    const { data: { data: adminData } } = await axios.get(`http://localhost:3001/api/administrators/${user.email}`, {
+                        headers: { Authorization: `Bearer ${token}` },
                     });
-                    setProfile({ ...user, ...adminResponse.data.data });
+                    setProfile({ ...user, ...adminData });
                 }
             } catch (error) {
                 console.error('Error fetching profile:', error);
@@ -90,10 +69,7 @@ const UserProfile = () => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
+        setFormData({ ...formData, [name]: value });
     };
 
     const handleFileChange = async (e) => {
@@ -111,18 +87,10 @@ const UserProfile = () => {
         imageFormData.append('image', file);
 
         try {
-            const uploadResponse = await axios.post(`http://localhost:3001/api/user/upload-profile-image/${userId}`, imageFormData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data',
-                },
+            const { data: { data: { photo } } } = await axios.post(`http://localhost:3001/api/user/upload-profile-image/${userId}`, imageFormData, {
+                headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
             });
-
-            // Actualizar la URL de la foto en el estado del perfil
-            setProfile((prevProfile) => ({
-                ...prevProfile,
-                photo: uploadResponse.data.data.photo,
-            }));
+            setProfile((prevProfile) => ({ ...prevProfile, photo }));
             setSelectedFile(null);
             setImageError(false);
         } catch (error) {
@@ -132,60 +100,26 @@ const UserProfile = () => {
         }
     };
 
-    const handleImageError = () => {
-        setImageError(true);
-    };
-
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         const token = localStorage.getItem('token');
-        const dataToSend = {
-            name: formData.name,
-            email: formData.email,
-        };
+        const dataToSend = { name: formData.name, email: formData.email };
 
-        // Verificar si los datos nuevos son iguales a los datos existentes
-        if (
-            formData.name === profile.name &&
-            formData.email === profile.email &&
-            !selectedFile
-        ) {
+        if (formData.name === profile.name && formData.email === profile.email && !selectedFile) {
             setErrorMessage('Los datos no pueden ser iguales a los existentes');
             return;
         }
 
         try {
-            // Actualizar los datos del usuario según su tipo
-            if (userType === 'client') {
-                await axios.put(`http://localhost:3001/api/clients/${userId}`, dataToSend, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-            } else if (userType === 'teacher') {
-                await axios.put(`http://localhost:3001/api/teachers/${userId}`, dataToSend, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-            } else if (userType === 'administrator') {
-                await axios.put(`http://localhost:3001/api/administrators/${userId}`, dataToSend, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-            }
-
-            // Obtener el perfil actualizado
-            const response = await axios.get(`http://localhost:3001/api/user/${userId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+            const endpoint = userType === 'client' ? 'clients' : userType === 'teacher' ? 'teachers' : 'administrators';
+            await axios.put(`http://localhost:3001/api/${endpoint}/${userId}`, dataToSend, {
+                headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
             });
-            setProfile(response.data.user);
+
+            const { data: { user: updatedUser } } = await axios.get(`http://localhost:3001/api/user/${userId}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            setProfile(updatedUser);
             setIsEditing(false);
         } catch (error) {
             console.error('Error updating profile:', error);
@@ -193,7 +127,12 @@ const UserProfile = () => {
     };
 
     if (!profile) {
-        return <Box display="flex" justifyContent="center" alignItems="center" height="100vh"><CircularProgress /></Box>;
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+                <CircularProgress />
+                <Box ml={2}>Cargando perfil...</Box>
+            </Box>
+        );
     }
 
     const isOwnProfile = user && user.id === parseInt(userId);
@@ -201,108 +140,91 @@ const UserProfile = () => {
     return (
         <Box display="flex" flexDirection="column" minHeight="100vh">
             <Header />
-            <Box display="flex" flexDirection="column" flexGrow={1}>
-                <Container component="main" sx={{ flexGrow: 1, py: 4, height: '80vh', mt: 6 }}>
-                    <Card sx={{ p: 4, flexGrow: 1, display: 'flex', flexDirection: 'column'}}>
-                        <CardContent sx={{ display: 'flex', justifyContent: 'center', mb: 4, position: 'relative' }}>
-                            <Box sx={{ width: 192, height: 192, position: 'relative' }}>
-                                {isUploading ? (
-                                    <CircularProgress
-                                        size={192}
-                                        sx={{ position: 'absolute', top: 0, left: 0, zIndex: 1 }}
-                                    />
-                                ) : profile.photo ? (
-                                    <img
-                                        src={profile.photo}
-                                        alt="Profile"
-                                        onError={handleImageError}
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
-                                    />
-                                ) : (
-                                    <AccountCircleIcon
-                                        sx={{ width: '100%', height: '100%', color: 'gray' }}
-                                    />
-                                )}
-                                {imageError && (
-                                    <Typography variant="body1" color="error" sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-                                        Error al cargar la imagen
-                                    </Typography>
-                                )}
-                                {isOwnProfile && (
-                                    <IconButton
-                                        component="label"
-                                        sx={{
-                                            position: 'absolute',
-                                            bottom: 0,
-                                            right: 0,
-                                            backgroundColor: 'white',
-                                            color: 'primary.main',
-                                            boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.3)',
-                                            '&:hover': {
-                                                backgroundColor: 'white',
-                                            },
-                                        }}
-                                    >
-                                        <EditIcon />
-                                        <input
-                                            type="file"
-                                            hidden
-                                            onChange={handleFileChange}
-                                        />
-                                    </IconButton>
-                                )}
-                            </Box>
-                        </CardContent>
-                        <CardContent sx={{ flexGrow: 1 }}>
-                            <Typography variant="body1" sx={{ mb: 4 }}><strong>Nombre:</strong> {profile.name}</Typography>
-                            <Typography variant="body1" sx={{ mb: 4 }}><strong>Email:</strong> {profile.email}</Typography>
-                            <Typography variant="body1" sx={{ mb: 4 }}><strong>Tipo de Usuario:</strong> {profile.userType}</Typography>
-                            <Typography variant="body1" sx={{ mb: 4 }}><strong>Fecha de Creación:</strong> {new Date(profile.created).toLocaleDateString()}</Typography>
-                            <Typography variant="body1" sx={{ mb: 4 }}><strong>Verificado:</strong> {profile.isVerified ? 'Sí' : 'No'}</Typography>
-                            {userType === 'client' && (
-                                <Typography variant="body1" sx={{ mb: 4 }}><strong>Membresía:</strong> {membershipName}</Typography>
-                            )}
-                            {userType === 'teacher' && (
-                                <>
-                                    <Typography variant="body1" sx={{ mb: 4 }}><strong>Especialidad:</strong> {profile.specialty}</Typography>
-                                    <Typography variant="body1" sx={{ mb: 4 }}><strong>Descripción:</strong> {profile.description}</Typography>
-                                </>
-                            )}
-                        </CardContent>
-                        {isOwnProfile && (
-                            <CardContent>
-                                <Button variant="contained" color="primary" onClick={handleEditToggle} sx={{ mt: 2 }}>
-                                    {isEditing ? 'Cancelar' : 'Editar Perfil'}
-                                </Button>
-                                {isEditing && (
-                                    <Box component="form" onSubmit={handleFormSubmit} sx={{ mt: 2 }}>
-                                        {errorMessage && <Alert severity="error" sx={{ mb: 2 }}>{errorMessage}</Alert>}
-                                        <TextField
-                                            label="Nombre"
-                                            name="name"
-                                            value={formData.name}
-                                            onChange={handleInputChange}
-                                            fullWidth
-                                            sx={{ mb: 2 }}
-                                        />
-                                        <TextField
-                                            label="Email"
-                                            name="email"
-                                            value={formData.email}
-                                            onChange={handleInputChange}
-                                            fullWidth
-                                            sx={{ mb: 2 }}
-                                        />
-                                        <Button type="submit" variant="contained" color="success" sx={{ mt: 2 }}>
-                                            Guardar Cambios
-                                        </Button>
-                                    </Box>
-                                )}
-                            </CardContent>
+            <Paper className="p-10 m-4" sx={{ flexGrow: 1, maxWidth: 600, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', margin: 'auto' }}>
+                <Box display="flex" justifyContent="center" mb={4} position="relative">
+                    <Box width={192} height={192} position="relative">
+                        {isUploading ? (
+                            <CircularProgress size={192} sx={{ position: 'absolute', top: 0, left: 0, zIndex: 1 }} />
+                        ) : profile.photo ? (
+                            <Avatar
+                                src={profile.photo}
+                                alt="Profile"
+                                onError={() => setImageError(true)}
+                                sx={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+                            />
+                        ) : (
+                            <AccountCircleIcon sx={{ width: '100%', height: '100%', color: 'gray' }} />
                         )}
-                    </Card>
-                </Container>
-            </Box>
+                        {imageError && (
+                            <Typography variant="body1" color="error" sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+                                Error al cargar la imagen
+                            </Typography>
+                        )}
+                        {isOwnProfile && (
+                            <IconButton
+                                component="label"
+                                sx={{
+                                    position: 'absolute',
+                                    bottom: 0,
+                                    right: 0,
+                                    backgroundColor: 'white',
+                                    color: 'primary.main',
+                                    boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.3)',
+                                    '&:hover': { backgroundColor: 'white' },
+                                }}
+                            >
+                                <EditIcon />
+                                <input type="file" hidden onChange={handleFileChange} />
+                            </IconButton>
+                        )}
+                    </Box>
+                </Box>
+                <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography variant="body1" sx={{ mb: 2 }}><strong>{profile.name}</strong> </Typography>
+                    <Typography variant="body1" sx={{ mb: 2 }}>{profile.email}</Typography>
+                    <Typography variant="body1" sx={{ mb: 2 }}><strong>Usuario desde:</strong> {new Date(profile.created).toLocaleDateString()}</Typography>
+                    {userType === 'client' && (
+                        <Typography variant="body1" sx={{ mb: 2 }}><strong>Membresía:</strong> {membershipName ? membershipName : 'Ninguna'}</Typography>
+                    )}
+                    {userType === 'teacher' && (
+                        <>
+                            <Typography variant="body1" sx={{ mb: 2 }}><strong>Especialidad:</strong> {profile.specialty}</Typography>
+                            <Typography variant="body1" sx={{ mb: 2 }}><strong>Descripción:</strong> {profile.description}</Typography>
+                        </>
+                    )}
+                </CardContent>
+                {isOwnProfile && (
+                    <CardContent>
+                        <Button variant="contained" color="primary" onClick={handleEditToggle} sx={{ mt: 2 }}>
+                            {isEditing ? 'Cancelar' : 'Editar Perfil'}
+                        </Button>
+                        {isEditing && (
+                            <Box component="form" onSubmit={handleFormSubmit} sx={{ mt: 2 }}>
+                                {errorMessage && <Alert severity="error" sx={{ mb: 2 }}>{errorMessage}</Alert>}
+                                <TextField
+                                    label="Nombre"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                />
+                                <TextField
+                                    label="Email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                />
+                                <Button type="submit" variant="contained" color="success" sx={{ mt: 2 }}>
+                                    Guardar Cambios
+                                </Button>
+                            </Box>
+                        )}
+                    </CardContent>
+                )}
+            </Paper>
             <Footer />
         </Box>
     );
