@@ -9,8 +9,8 @@ router.get('/:id', getPostById);  // Obtener un post por su id
 router.get('/group/:groupId', getPostsByGroup);  // Obtener todos los posts de un grupo determinado
 router.get('/user/:userId', getPostsByUser);  // Obtener todos los posts de un usuario determinado
 router.get('/user/:userId/group/:groupId', getPostsByUserInGroup);  // Obtener todos los posts de un usuario determinado en un grupo determinado
-router.post('/', createPost);  // Crear un nuevo post
-router.put('/:id', updatePost);  // Actualizar un post
+router.post('/', upload.single('photo'), createPost);  // Crear un nuevo post
+router.put('/:id', upload.single('photo'), updatePost);  // Actualizar un post
 router.delete('/:id', deletePost);  // Eliminar un post
 router.post('/:id/image', upload.single('image'), addImageToPost);  // Agregar una imagen a un post existente
 

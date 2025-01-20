@@ -31,6 +31,7 @@ const GroupPanel = ({ group }) => {
   const [selectedPost, setSelectedPost] = useState(null);
   const [createPostModalOpen, setCreatePostModalOpen] = useState(false);
   const [newPostContent, setNewPostContent] = useState("");
+  const [newPostImage, setNewPostImage] = useState(null);
 
   const loadInfoAsync = async () => {
     await fetchParticipants();
@@ -38,13 +39,13 @@ const GroupPanel = ({ group }) => {
   };
 
   useEffect(() => {
-    loadInfoAsync();
+    loadInfoAsync();// eslint-disable-next-line
   }, [group, token]);
 
   useEffect(() => {
     if (group) {
       fetchPosts();
-    }
+    }// eslint-disable-next-line
   }, [group]);
 
   const fetchAllUsers = async () => {
@@ -247,25 +248,43 @@ const GroupPanel = ({ group }) => {
     }
   };
 
+  const handleFileChange = (e) => {
+    setNewPostImage(e.target.files[0]);
+  };
+
   // Crear un nuevo post
   const createPost = async (content) => {
     try {
+      const formData = new FormData();
+      console.log("user.id:", user.id);
+      console.log("group.id:", group.id);
+      console.log("content:", content);
+      console.log("newPostImage:", newPostImage);
+  
+      formData.append("userId", user.id);
+      formData.append("groupId", group.id);
+      formData.append("content", content);
+      if (newPostImage) {
+        formData.append("photo", newPostImage);
+      }
+  
+      for (let pair of formData.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
+      }
+  
       const response = await fetch("http://localhost:3001/api/posts", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          userId: user.id,
-          groupId: group.id,
-          content,
-        }),
+        body: formData,
       });
+  
       if (response.ok) {
         await fetchPosts();
       } else {
-        console.error("Error al crear el post:", response.statusText);
+        const errorData = await response.json();
+        console.error("Error al crear el post:", errorData.message);
       }
     } catch (error) {
       console.error("Error al conectar con el servidor:", error);
@@ -273,32 +292,38 @@ const GroupPanel = ({ group }) => {
   };
 
   // Actualizar un post
-  const updatePost = async (post, content) => {
-    try {
-      const response = await fetch(
-        `http://localhost:3001/api/posts/${post.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            userId: post.userId,
-            groupId: post.groupId,
-            content: content,
-          }),
-        }
-      );
-      if (response.ok) {
-        await fetchPosts();
-      } else {
-        console.error("Error al actualizar el post:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error al conectar con el servidor:", error);
+// Actualizar un post
+const updatePost = async (post, content) => {
+  try {
+    const formData = new FormData();
+    formData.append("userId", post.userId);
+    formData.append("groupId", post.groupId);
+    formData.append("content", content);
+    if (newPostImage) {
+      formData.append("photo", newPostImage);
     }
-  };
+
+    const response = await fetch(
+      `http://localhost:3001/api/posts/${post.id}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      }
+    );
+
+    if (response.ok) {
+      await fetchPosts();
+    } else {
+      const errorData = await response.json();
+      console.error("Error al actualizar el post:", errorData.message);
+    }
+  } catch (error) {
+    console.error("Error al conectar con el servidor:", error);
+  }
+};
 
   // Eliminar un post
   const deletePost = async (postId) => {
@@ -321,7 +346,6 @@ const GroupPanel = ({ group }) => {
       console.error("Error al conectar con el servidor:", error);
     }
   };
-  
 
   if (!group) {
     return (
@@ -344,69 +368,77 @@ const GroupPanel = ({ group }) => {
         </div>
 
         <div className="posts-section flex-grow overflow-y-auto p-4 space-y-4">
-          {
-            posts?.map((post) => (
-              <div
-                key={post.id}
-                className="post-item bg-white rounded-md shadow-md border border-gray-200"
-              >
-                <p className="bg-gray-100 mx-3 text-gray-800 my-5 rounded-md">
-                  {post.content}
-                </p>
-
-                <div className="flex bg-gray-200 justify-between gap-2 mt-2 p-2">
-                  <div className="flex flex-col ">
-                    <div className="flex items-center mt-2">
-                      <motion.div
-                        className="relative rounded-full overflow-hidden shadow-lg"
-                        whileHover={{ scale: 1.1 }}
-                      >
-                        {post.User.photo ? (
-                          <Avatar
-                            src={post.User.photo}
-                            alt="Profile Photo"
-                            sx={{ width: 20, height: 20 }}
-                          />
-                        ) : (
-                          <AccountCircleIcon className="w-10 h-10" />
-                        )}
-                      </motion.div>
-                      <p className="ml-2 flex justify-end text-sm font-bold text-gray-700">
-                        {post.User.name}
-                      </p>
-                    </div>
-                    <div className="text-xs text-gray-500 pt-1">
-                      <span>
-                        {post.createdAt !== post.updatedAt ? (
-                          <>
-                            {new Date(post.updatedAt).toLocaleString("es-ES", {
-                              year: "numeric",
-                              month: "2-digit",
-                              day: "2-digit",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              hour12: false,
-                            })}
-                            <span className="ml-1 text-xs text-gray-400">
-                              (editado)
-                            </span>
-                          </>
-                        ) : (
-                          new Date(post.createdAt).toLocaleString("es-ES", {
+          {posts?.map((post) => (
+            <div
+              key={post.id}
+              className="post-item bg-white rounded-md shadow-md border border-gray-200"
+            >
+              <p className="bg-gray-100 mx-3 text-gray-800 my-5 rounded-md">
+                {post.content}
+              </p>
+              {post.photo && (
+                <div className="mx-3 mb-5">
+                  <img
+                    src={post.photo}
+                    alt="Post"
+                    className="w-full h-auto rounded-md"
+                  />
+                </div>
+              )}
+              <div className="flex bg-gray-200 justify-between gap-2 mt-2 p-2">
+                <div className="flex flex-col ">
+                  <div className="flex items-center mt-2">
+                    <motion.div
+                      className="relative rounded-full overflow-hidden shadow-lg"
+                      whileHover={{ scale: 1.1 }}
+                    >
+                      {post.User.photo ? (
+                        <Avatar
+                          src={post.User.photo}
+                          alt="Profile Photo"
+                          sx={{ width: 20, height: 20 }}
+                        />
+                      ) : (
+                        <AccountCircleIcon className="w-10 h-10" />
+                      )}
+                    </motion.div>
+                    <p className="ml-2 flex justify-end text-sm font-bold text-gray-700">
+                      {post.User.name}
+                    </p>
+                  </div>
+                  <div className="text-xs text-gray-500 pt-1">
+                    <span>
+                      {post.createdAt !== post.updatedAt ? (
+                        <>
+                          {new Date(post.updatedAt).toLocaleString("es-ES", {
                             year: "numeric",
                             month: "2-digit",
                             day: "2-digit",
                             hour: "2-digit",
                             minute: "2-digit",
                             hour12: false,
-                          })
-                        )}
-                      </span>
-                    </div>
+                          })}
+                          <span className="ml-1 text-xs text-gray-400">
+                            (editado)
+                          </span>
+                        </>
+                      ) : (
+                        new Date(post.createdAt).toLocaleString("es-ES", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: false,
+                        })
+                      )}
+                    </span>
                   </div>
+                </div>
 
-                  <div className="flex items-end mt-4">
-                    {user && (post.userId === user.id || group.userId === user.id) && ( // Add user check
+                <div className="flex items-end mt-4">
+                  {user &&
+                    (post.userId === user.id || group.userId === user.id) && ( // Add user check
                       <>
                         <Button
                           onClick={() => handleEditPost(post)}
@@ -422,10 +454,10 @@ const GroupPanel = ({ group }) => {
                         </Button>
                       </>
                     )}
-                  </div>
                 </div>
               </div>
-            ))}
+            </div>
+          ))}
         </div>
 
         {/* Botón para crear post */}
@@ -632,15 +664,16 @@ const GroupPanel = ({ group }) => {
               <>
                 <div className="flex flex-col gap-4">
                   <h2>Opciones para {selectedParticipant.name}</h2>
-                  {group.userId != selectedParticipant.id && user.id === group.userId && (
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      onClick={handleRemoveParticipant}
-                    >
-                      Eliminar usuario del grupo
-                    </Button>
-                  )}
+                  {group.userId !== selectedParticipant.id &&
+                    user.id === group.userId && (
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={handleRemoveParticipant}
+                      >
+                        Eliminar usuario del grupo
+                      </Button>
+                    )}
                   <Button
                     variant="outlined"
                     color="primary"
@@ -664,13 +697,20 @@ const GroupPanel = ({ group }) => {
               className="absolute top-2 right-2 cursor-pointer text-black"
               style={{ fontSize: 30 }}
             />
-            <h3 className="text-xl font-semibold mb-4">{selectedPost?"Editar post":"Crear nuevo post"}</h3>
+            <h3 className="text-xl font-semibold mb-4">
+              {selectedPost ? "Editar post" : "Crear nuevo post"}
+            </h3>
             <textarea
               className="w-full border border-gray-300 rounded-lg p-2 mb-4"
               rows="4"
               placeholder="Escribe aquí el contenido del post..."
               value={newPostContent}
               onChange={(e) => setNewPostContent(e.target.value)}
+            />
+            <input
+              type="file"
+              onChange={handleFileChange}
+              className="w-full p-2 border rounded mb-4"
             />
             <div className="flex justify-end gap-2">
               <Button
@@ -685,7 +725,7 @@ const GroupPanel = ({ group }) => {
                 color="primary"
                 onClick={handleCreateOrUpdatePost}
               >
-                {selectedPost?"Confirmar":"Publicar"}
+                {selectedPost ? "Confirmar" : "Publicar"}
               </Button>
             </div>
           </div>

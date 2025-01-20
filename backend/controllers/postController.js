@@ -100,81 +100,81 @@ const getPostsByUserInGroup = async (req, res) => {
 
 // Crear un nuevo post
 const createPost = async (req, res) => {
-    const { userId, groupId, content } = req.body;
-    const image = req.file ? req.file.buffer : null;
+  const { userId, groupId, content } = req.body;
+  const image = req.file ? req.file.buffer : null;
 
-    try {
-        // Verificar si el usuario y el grupo existen
-        const user = await User.findByPk(userId);
-        const group = await Group.findByPk(groupId);
-        if (!user || !group) {
-            return res.status(400).json({ message: 'El usuario o el grupo especificado no existe' });
-        }
-
-        // Subir la imagen a Cloudinary
-        let imageUrl = null;
-        if (image) {
-            const result = await new Promise((resolve, reject) => {
-                const stream = cloudinary.uploader.upload_stream({ folder: 'posts' }, (error, result) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        resolve(result);
-                    }
-                });
-                stream.end(image);
-            });
-            imageUrl = result.secure_url;
-        }
-
-        const newPost = await Post.create({ userId, groupId, content, photo: imageUrl });
-        res.json({ message: 'Post creado con éxito', data: newPost });
-    } catch (error) {
-        console.error('Error al crear el post:', error);
-        res.status(500).json({ message: 'Error al crear el post', error: error.message });
+  try {
+    // Verificar si el usuario y el grupo existen
+    const user = await User.findByPk(userId);
+    const group = await Group.findByPk(groupId);
+    if (!user || !group) {
+      return res.status(400).json({ message: 'El usuario o el grupo especificado no existe' });
     }
+
+    // Subir la imagen a Cloudinary
+    let imageUrl = null;
+    if (image) {
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream({ folder: 'posts' }, (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        });
+        stream.end(image);
+      });
+      imageUrl = result.secure_url;
+    }
+
+    const newPost = await Post.create({ userId, groupId, content, photo: imageUrl });
+    res.json({ message: 'Post creado con éxito', data: newPost });
+  } catch (error) {
+    console.error('Error al crear el post:', error);
+    res.status(500).json({ message: 'Error al crear el post', error: error.message });
+  }
 };
 
 // Actualizar un post
 const updatePost = async (req, res) => {
-    const { id } = req.params;
-    const { userId, groupId, content } = req.body;
-    const image = req.file ? req.file.buffer : null;
+  const { id } = req.params;
+  const { userId, groupId, content } = req.body;
+  const image = req.file ? req.file.buffer : null;
 
-    try {
-        // Verificar si el usuario y el grupo existen
-        const user = await User.findByPk(userId);
-        const group = await Group.findByPk(groupId);
-        if (!user || !group) {
-            return res.status(400).json({ message: 'El usuario o el grupo especificado no existe' });
-        }
-
-        // Subir la nueva imagen a Cloudinary si existe
-        let imageUrl = null;
-        if (image) {
-            const result = await new Promise((resolve, reject) => {
-                const stream = cloudinary.uploader.upload_stream({ folder: 'posts' }, (error, result) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        resolve(result);
-                    }
-                });
-                stream.end(image);
-            });
-            imageUrl = result.secure_url;
-        }
-
-        const [updated] = await Post.update({ userId, groupId, content, photo: imageUrl }, { where: { id } });
-        if (updated === 0) {
-            return res.status(404).json({ message: `Post con id ${id} no encontrado` });
-        }
-        const updatedPost = await Post.findByPk(id);
-        res.json({ message: 'Post actualizado con éxito', data: updatedPost });
-    } catch (error) {
-        console.error('Error al actualizar el post:', error);
-        res.status(500).json({ message: 'Error al actualizar el post', error: error.message });
+  try {
+    // Verificar si el usuario y el grupo existen
+    const user = await User.findByPk(userId);
+    const group = await Group.findByPk(groupId);
+    if (!user || !group) {
+      return res.status(400).json({ message: 'El usuario o el grupo especificado no existe' });
     }
+
+    // Subir la nueva imagen a Cloudinary si existe
+    let imageUrl = null;
+    if (image) {
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream({ folder: 'posts' }, (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        });
+        stream.end(image);
+      });
+      imageUrl = result.secure_url;
+    }
+
+    const [updated] = await Post.update({ userId, groupId, content, photo: imageUrl }, { where: { id } });
+    if (updated === 0) {
+      return res.status(404).json({ message: `Post con id ${id} no encontrado` });
+    }
+    const updatedPost = await Post.findByPk(id);
+    res.json({ message: 'Post actualizado con éxito', data: updatedPost });
+  } catch (error) {
+    console.error('Error al actualizar el post:', error);
+    res.status(500).json({ message: 'Error al actualizar el post', error: error.message });
+  }
 };
 
 // Eliminar un post
