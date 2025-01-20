@@ -1,16 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Modal, Button } from "@mui/material";
-import { UserContext } from "../../context/UserContext";
-import ParticipantsList from "./ParticipantsList";
-import PostItem from "./PostItem";
-import CreatePostModal from "./CreatePostModal";
-import ParticipantModal from "./ParticipantModal";
-import ConfigGroupModal from "./ConfigGroupModal";
-import AddParticipantsModal from "./AddParticipantsModal";
-import EditGroup from "./EditGroup";
-import CloseIcon from "@mui/icons-material/Close";
+import { motion } from "framer-motion";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
-
+import CloseIcon from "@mui/icons-material/Close";
+import {
+  Avatar,
+  Modal,
+  Button,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { UserContext } from "../../context/UserContext";
+import EditGroup from "./EditGroup";
 
 const GroupPanel = ({ group }) => {
   const [participants, setParticipants] = useState([]);
@@ -34,13 +38,13 @@ const GroupPanel = ({ group }) => {
   };
 
   useEffect(() => {
-    loadInfoAsync();// eslint-disable-next-line
-  }, [group, token]); 
+    loadInfoAsync();
+  }, [group, token]);
 
   useEffect(() => {
     if (group) {
       fetchPosts();
-    }// eslint-disable-next-line
+    }
   }, [group]);
 
   const fetchAllUsers = async () => {
@@ -97,7 +101,6 @@ const GroupPanel = ({ group }) => {
       console.error("Error al conectar con el servidor:", error);
     }
   };
-
   const handleOpenParticipantModal = (participant) => {
     setSelectedParticipant(participant);
     setParticipantModalOpen(true);
@@ -343,14 +346,85 @@ const GroupPanel = ({ group }) => {
         <div className="posts-section flex-grow overflow-y-auto p-4 space-y-4">
           {
             posts?.map((post) => (
-              <PostItem
+              <div
                 key={post.id}
-                post={post}
-                user={user}
-                group={group}
-                handleEditPost={handleEditPost}
-                deletePost={deletePost}
-              />
+                className="post-item bg-white rounded-md shadow-md border border-gray-200"
+              >
+                <p className="bg-gray-100 mx-3 text-gray-800 my-5 rounded-md">
+                  {post.content}
+                </p>
+
+                <div className="flex bg-gray-200 justify-between gap-2 mt-2 p-2">
+                  <div className="flex flex-col ">
+                    <div className="flex items-center mt-2">
+                      <motion.div
+                        className="relative rounded-full overflow-hidden shadow-lg"
+                        whileHover={{ scale: 1.1 }}
+                      >
+                        {post.User.photo ? (
+                          <Avatar
+                            src={post.User.photo}
+                            alt="Profile Photo"
+                            sx={{ width: 20, height: 20 }}
+                          />
+                        ) : (
+                          <AccountCircleIcon className="w-10 h-10" />
+                        )}
+                      </motion.div>
+                      <p className="ml-2 flex justify-end text-sm font-bold text-gray-700">
+                        {post.User.name}
+                      </p>
+                    </div>
+                    <div className="text-xs text-gray-500 pt-1">
+                      <span>
+                        {post.createdAt !== post.updatedAt ? (
+                          <>
+                            {new Date(post.updatedAt).toLocaleString("es-ES", {
+                              year: "numeric",
+                              month: "2-digit",
+                              day: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: false,
+                            })}
+                            <span className="ml-1 text-xs text-gray-400">
+                              (editado)
+                            </span>
+                          </>
+                        ) : (
+                          new Date(post.createdAt).toLocaleString("es-ES", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: false,
+                          })
+                        )}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-end mt-4">
+                    {user && (post.userId === user.id || group.userId === user.id) && ( // Add user check
+                      <>
+                        <Button
+                          onClick={() => handleEditPost(post)}
+                          color="inherit"
+                        >
+                          Editar
+                        </Button>
+                        <Button
+                          onClick={() => deletePost(post.id)}
+                          color="inherit"
+                        >
+                          Eliminar
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
             ))}
         </div>
 
@@ -378,19 +452,62 @@ const GroupPanel = ({ group }) => {
         )}
 
         <h3 className="text-sm font-semibold mb-4">Participantes</h3>
-        <ParticipantsList
-          participants={participants}
-          handleOpenParticipantModal={handleOpenParticipantModal}
-        />
+        <div className="flex flex-col gap-4">
+          {participants?.map((participant) => (
+            <div key={participant.id} className="flex flex-col items-center">
+              <motion.div
+                className="relative rounded-full overflow-hidden shadow-lg cursor-pointer"
+                whileHover={{ scale: 1.1 }}
+                onClick={() => handleOpenParticipantModal(participant)}
+              >
+                {participant.photo ? (
+                  <Avatar
+                    src={participant.photo}
+                    alt="Profile Photo"
+                    className="h-full w-full"
+                    sx={{ width: 20, height: 20 }}
+                  />
+                ) : (
+                  <AccountCircleIcon className="w-full h-full" />
+                )}
+              </motion.div>
+              <p className="text-xs font-bold text-gray-700">
+                {participant.name}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Modal de Configuración del Grupo */}
-      <ConfigGroupModal
-        configModalOpen={configModalOpen}
-        setConfigModalOpen={setConfigModalOpen}
-        setOpenModal={setOpenModal}
-        setEditGroupModalOpen={setEditGroupModalOpen}
-      />
+      <Modal open={configModalOpen} onClose={() => setConfigModalOpen(false)}>
+        <div className="flex justify-center items-center h-full bg-gray-500 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg w-96 relative">
+            <CloseIcon
+              onClick={() => setConfigModalOpen(false)}
+              className="absolute top-2 right-2 cursor-pointer text-black"
+              style={{ fontSize: 30 }}
+            />
+            <h3 className="text-xl font-semibold mb-4">Configurar grupo</h3>
+            <div className="flex flex-col gap-4">
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => setOpenModal(true)}
+              >
+                Añadir participantes
+              </Button>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => setEditGroupModalOpen(true)}
+              >
+                Editar grupo
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Modal>
 
       {/* Modal para editar el grupo */}
       <Modal
@@ -417,36 +534,163 @@ const GroupPanel = ({ group }) => {
       </Modal>
 
       {/* Modal de Añadir Participantes */}
-      <AddParticipantsModal
-        openModal={openModal}
-        setOpenModal={setOpenModal}
-        allUsers={allUsers}
-        participants={participants}
-        selectedUsers={selectedUsers}
-        handleSelectChange={handleSelectChange}
-        handleRemoveUser={handleRemoveUser}
-        handleAddParticipants={handleAddParticipants}
-      />
+      <Modal open={openModal} onClose={() => setOpenModal(false)}>
+        <div className="flex justify-center items-center h-full bg-gray-500 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg w-96 relative">
+            <CloseIcon
+              onClick={() => setOpenModal(false)}
+              className="absolute top-2 right-2 cursor-pointer text-black"
+              style={{ fontSize: 30 }}
+            />
+
+            <h3 className="text-xl font-semibold mb-4">
+              Selecciona los participantes
+            </h3>
+            <FormControl fullWidth>
+              <InputLabel id="select-participants-label">
+                {allUsers.filter(
+                  (user) => !participants.some((p) => p.id === user.id)
+                ).length > 0
+                  ? "Participantes"
+                  : "No hay usuarios para seleccionar"}
+              </InputLabel>
+              <Select
+                labelId="select-participants-label"
+                multiple
+                value={selectedUsers?.map((user) => user.id)}
+                onChange={handleSelectChange}
+                disabled={false}
+              >
+                {allUsers?.filter(
+                  (user) =>
+                    !participants.some(
+                      (participant) => participant.id === user.id
+                    )
+                ).length > 0 ? (
+                  allUsers
+                    .filter(
+                      (user) =>
+                        !participants.some(
+                          (participant) => participant.id === user.id
+                        )
+                    )
+                    .map((user) => (
+                      <MenuItem
+                        key={user.id}
+                        value={user.id}
+                        disabled={selectedUsers.some((u) => u.id === user.id)}
+                      >
+                        {user.name}
+                      </MenuItem>
+                    ))
+                ) : (
+                  <MenuItem disabled>No hay usuarios para seleccionar</MenuItem>
+                )}
+              </Select>
+            </FormControl>
+            <div className="mt-4">
+              <h4 className="font-semibold text-lg">Usuarios seleccionados</h4>
+              <ul
+                style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+              >
+                {selectedUsers?.map((user) => (
+                  <li
+                    key={user.id}
+                    className="flex justify-between items-center"
+                  >
+                    <span>{user.name}</span>
+                    <DeleteIcon
+                      className="cursor-pointer text-red-500"
+                      onClick={() => handleRemoveUser(user.id)}
+                    />
+                  </li>
+                ))}
+              </ul>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAddParticipants}
+                className="mt-4"
+              >
+                Confirmar
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Modal>
 
       {/* Modal de Participante */}
-      <ParticipantModal
-        participantModalOpen={participantModalOpen}
-        handleCloseParticipantModal={handleCloseParticipantModal}
-        selectedParticipant={selectedParticipant}
-        group={group}
-        user={user}
-        handleRemoveParticipant={handleRemoveParticipant}
-      />
+      <Modal open={participantModalOpen} onClose={handleCloseParticipantModal}>
+        <div className="flex justify-center items-center h-full bg-gray-500 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg w-96 relative">
+            <CloseIcon
+              onClick={handleCloseParticipantModal}
+              className="absolute top-2 right-2 cursor-pointer text-black"
+              style={{ fontSize: 30 }}
+            />
+            {selectedParticipant && (
+              <>
+                <div className="flex flex-col gap-4">
+                  <h2>Opciones para {selectedParticipant.name}</h2>
+                  {group.userId != selectedParticipant.id && user.id === group.userId && (
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={handleRemoveParticipant}
+                    >
+                      Eliminar usuario del grupo
+                    </Button>
+                  )}
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    href={`/profile/${selectedParticipant.id}`}
+                  >
+                    Ir al perfil
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </Modal>
 
       {/* Modal de para crear post */}
-      <CreatePostModal
-        createPostModalOpen={createPostModalOpen}
-        handleCloseCreatePostModal={handleCloseCreatePostModal}
-        newPostContent={newPostContent}
-        setNewPostContent={setNewPostContent}
-        handleCreateOrUpdatePost={handleCreateOrUpdatePost}
-        selectedPost={selectedPost}
-      />
+      <Modal open={createPostModalOpen} onClose={handleCloseCreatePostModal}>
+        <div className="flex justify-center items-center h-full bg-gray-500 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg w-96 relative">
+            <CloseIcon
+              onClick={handleCloseCreatePostModal}
+              className="absolute top-2 right-2 cursor-pointer text-black"
+              style={{ fontSize: 30 }}
+            />
+            <h3 className="text-xl font-semibold mb-4">{selectedPost?"Editar post":"Crear nuevo post"}</h3>
+            <textarea
+              className="w-full border border-gray-300 rounded-lg p-2 mb-4"
+              rows="4"
+              placeholder="Escribe aquí el contenido del post..."
+              value={newPostContent}
+              onChange={(e) => setNewPostContent(e.target.value)}
+            />
+            <div className="flex justify-end gap-2">
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleCloseCreatePostModal}
+              >
+                Cancelar
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleCreateOrUpdatePost}
+              >
+                {selectedPost?"Confirmar":"Publicar"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
