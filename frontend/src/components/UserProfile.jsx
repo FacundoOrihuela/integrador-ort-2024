@@ -12,6 +12,7 @@ const UserProfile = () => {
     const { user } = useContext(UserContext);
     const [profile, setProfile] = useState(null);
     const [userType, setUserType] = useState('');
+    const [membershipName, setMembershipName] = useState('');
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
@@ -49,6 +50,16 @@ const UserProfile = () => {
                         },
                     });
                     setProfile({ ...user, ...clientResponse.data.data });
+
+                    // Fetch membership name
+                    if (clientResponse.data.data.membershipId) {
+                        const membershipResponse = await axios.get(`http://localhost:3001/api/memberships/${clientResponse.data.data.membershipId}`, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        });
+                        setMembershipName(membershipResponse.data.data.name);
+                    }
                 } else if (user.userType === 'teacher') {
                     const teacherResponse = await axios.get(`http://localhost:3001/api/teachers/${user.email}`, {
                         headers: {
@@ -249,7 +260,7 @@ const UserProfile = () => {
                             <Typography variant="body1" sx={{ mb: 4 }}><strong>Fecha de Creación:</strong> {new Date(profile.created).toLocaleDateString()}</Typography>
                             <Typography variant="body1" sx={{ mb: 4 }}><strong>Verificado:</strong> {profile.isVerified ? 'Sí' : 'No'}</Typography>
                             {userType === 'client' && (
-                                <Typography variant="body1" sx={{ mb: 4 }}><strong>Membresía:</strong> {profile.membership}</Typography>
+                                <Typography variant="body1" sx={{ mb: 4 }}><strong>Membresía:</strong> {membershipName}</Typography>
                             )}
                             {userType === 'teacher' && (
                                 <>

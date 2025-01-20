@@ -5,6 +5,7 @@ import OrderItem from '../models/OrderItem.js';
 import Cart from '../models/Cart.js';
 import CartItem from '../models/CartItem.js';
 import Product from '../models/Product.js';
+import Client from '../models/Client.js';
 
 dotenv.config();
 
@@ -31,11 +32,10 @@ export const createOrder = async (req, res) => {
       title: item.product.name,
       description: item.product.description,
       picture_url: item.product.image || "https://www.mercadopago.com/org-img/MP3/home/logomp3.gif",
-      category_id: item.product.categoryId,
       quantity: item.quantity,
       unit_price: item.priceAtPurchase,
     }));
-
+    console.log("Items a vender: ", itemsToSale);
     let result;
     const preference = new Preference(client);
     await preference
@@ -120,6 +120,31 @@ export const handlePaymentStatus = async (req, res) => {
       res.json({ message: 'Orden creada exitosamente', order, orderItems });
     } catch (error) {
       console.error('Error al crear la orden:', error);
+      res.status(500).json({ message: 'Error interno del servidor', error: error.message });
+    }
+  } else {
+    res.status(200).json({ message: 'Pago no completado' });
+  }
+};
+
+//*Handle membership payment status - Manejar el estado del pago de membresía
+export const handleMembershipPaymentStatus = async (req, res) => {
+  const { status, userId, membershipId } = req.body;
+
+  if (status === 'success') {
+    try {
+      const user = await Client.findByPk(userId);
+
+      if (!user) {
+        return res.status(404).json({ message: 'Usuario no encontrado' });
+      }
+
+      user.membershipId = membershipId;
+      await user.save();
+
+      res.json({ message: 'Membresía asignada exitosamente', user });
+    } catch (error) {
+      console.error('Error al asignar la membresía:', error);
       res.status(500).json({ message: 'Error interno del servidor', error: error.message });
     }
   } else {

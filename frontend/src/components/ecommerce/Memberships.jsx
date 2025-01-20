@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../../context/UserContext"; // Asegúrate de importar el contexto del usuario
+import axios from 'axios';
 
 const Memberships = () => {
     const [memberships, setMemberships] = useState([]);
@@ -15,15 +16,15 @@ const Memberships = () => {
                 }
                 return respuesta.json();
             })
-            .then((dataMembresias) => {
-                setMemberships(dataMembresias.data);
+            .then((dataMemberships) => {
+                setMemberships(dataMemberships.data);
             })
             .catch((err) => {
                 setError(err.message);
             });
 
-        // Obtener el cliente y su membresía por email
-        if (user && user.email) {
+        // Verificar el tipo de usuario antes de obtener la membresía
+        if (user && user.userType === "client") {
             fetch(`http://localhost:3001/api/clients/${user.email}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -41,34 +42,63 @@ const Memberships = () => {
                 .catch((err) => {
                     setError(err.message);
                 });
+        } else if (user) {
+            setError("Solo los clientes pueden acceder a una membresía.");
         }
     }, [user]);
 
-    const handleMembershipAction = (membresia) => {
-        const endpoint = userMembership === membresia.id ? "revoke" : "assign";
-        fetch(`http://localhost:3001/api/memberships/${endpoint}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-            body: JSON.stringify({
-                userId: user.id, // Usar el ID del usuario actual del contexto
-                membershipId: endpoint === "assign" ? membresia.id : null,
-            }),
-        })
-            .then((respuesta) => {
-                if (!respuesta.ok) {
-                    throw new Error(`Error al ${endpoint === "assign" ? "asignar" : "revocar"} la membresía`);
+    const handleMembershipAction = async (membership) => {
+        if (userMembership === membership.id) {
+            // Revocar membresía
+            try {
+                const response = await axios.post('http://localhost:3001/api/memberships/revoke', {
+                    userId: user.id,
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                });
+
+                console.log("Respuesta de revocar membresía:", response.data);
+                setUserMembership(null);
+            } catch (error) {
+                console.error("Error al revocar la membresía:", error);
+                setError("Error al revocar la membresía");
+            }
+        } else {
+            try {
+                localStorage.setItem('membershipId', membership.id);
+
+                const response = await axios.post('http://localhost:3001/api/mercadopago/create-order', {
+                    email: user.email,
+                    name: user.name,
+                    items: [{
+                        product: {
+                            id: membership.id,
+                            name: membership.name,
+                            description: membership.description || "none",
+                            price: parseFloat(membership.price), // Asegurarse de que el precio sea un número
+                            categoryId: "none",
+                            image: "none",
+                            file: "none",
+                            timesSold: 0
+                        },
+                        priceAtPurchase: parseFloat(membership.price), // Asegurarse de que el precio sea un número
+                        quantity: 1
+                    }],
+                });
+
+                const result = response.data;
+                console.log("Respuesta de MercadoPago:", result);
+
+                if (result.url) {
+                    window.location.href = result.url; // Redirigir a la URL de pago de MercadoPago
                 }
-                return respuesta.json();
-            })
-            .then(() => {
-                setUserMembership(endpoint === "assign" ? membresia.id : null);
-            })
-            .catch((err) => {
-                setError(err.message);
-            });
+            } catch (error) {
+                console.error("Error al crear la sesión de MercadoPago:", error);
+                setError("Error al iniciar el proceso de pago");
+            }
+        }
     };
 
     if (error) {
@@ -80,21 +110,21 @@ const Memberships = () => {
             <h1 className="text-center text-4xl font-bold text-gray-800 mb-8">Membresías</h1>
 
             <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {memberships.map((membresia) => (
+                {memberships.map((membership) => (
                     <li
-                        key={membresia.id}
+                        key={membership.id}
                         className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow duration-300"
                     >
                         <h2 className="text-2xl font-semibold text-gray-700 mb-2">
-                            {membresia.name}
+                            {membership.name}
                         </h2>
-                        <p className="text-gray-600 mb-4">{membresia.description}</p>
-                        <p className="text-lg font-bold text-gray-900 mb-4">${membresia.price}</p>
+                        <p className="text-gray-600 mb-4">{membership.description}</p>
+                        <p className="text-lg font-bold text-gray-900 mb-4">${membership.price}</p>
                         <button
-                            onClick={() => handleMembershipAction(membresia)}
+                            onClick={() => handleMembershipAction(membership)}
                             className="bg-colors-1 text-white px-4 py-2 rounded hover:bg-colors-1 transition-colors duration-200"
                         >
-                            {userMembership === membresia.id ? "Revocar" : userMembership ? "Actualizar" : "Adquirir"}
+                            {userMembership === membership.id ? "Revoke" : userMembership ? "Update" : "Acquire"}
                         </button>
                     </li>
                 ))}

@@ -1,68 +1,74 @@
 import React, { useEffect, useContext, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Box, Typography, CircularProgress, Paper } from '@mui/material';
 import axios from 'axios';
-import Header from '../Header';
 import { CartContext } from '../../context/CartContext';
+import { UserContext } from '../../context/UserContext';
 
 const PaymentStatus = () => {
-  const navigate = useNavigate();
   const location = useLocation();
+  const navigate = useNavigate();
   const query = new URLSearchParams(location.search);
   const status = query.get('status');
   const { fetchCart } = useContext(CartContext);
-  const isHandledRef = useRef(false); // Para evitar múltiples ejecuciones
+  const { user } = useContext(UserContext);
+  const isHandledRef = useRef(false);
 
   useEffect(() => {
     const handlePayment = async () => {
       try {
-        const response = await axios.post('http://localhost:3001/api/mercadopago/payment-status', {
+        const membershipId = localStorage.getItem('membershipId');
+        console.log('user', user);
+        
+        const endpoint = membershipId ? 'http://localhost:3001/api/mercadopago/membership-payment-status' : 'http://localhost:3001/api/mercadopago/payment-status';
+        const response = await axios.post(endpoint, {
           status,
-          userId: 1,
+          userId: user.id,
+          membershipId: membershipId ? membershipId : undefined,
         });
 
-        if (response.data.message === 'Orden creada exitosamente') {
+        if (response.data.message === 'Orden creada exitosamente' || response.data.message === 'Membresía asignada exitosamente') {
+          console.log(response.data.message);
           fetchCart();
         }
       } catch (error) {
         console.error('Error al manejar el estado del pago:', error);
+      } finally {
+        navigate('/store');
       }
     };
 
-    if (status === 'success' && !isHandledRef.current) {
-      isHandledRef.current = true; // Marcar como manejado
-      handlePayment();
-    }
+    const intervalId = setInterval(() => {
+      if (status === 'success' && user && !isHandledRef.current) {
+        isHandledRef.current = true;
+        handlePayment();
+      }
+    }, 500); // Chequea el estado de user cada segundo
 
-    const timer = setTimeout(() => {
-      navigate('/store');
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [status, navigate, fetchCart]);
+    return () => clearInterval(intervalId); // Limpiar el intervalo cuando el componente se desmonte
+  }, [status, fetchCart, user, navigate]);
 
   const getMessage = () => {
     switch (status) {
       case 'success':
-        return 'Pago realizado con éxito. Redirigiendo a la tienda...';
+        return 'Pago realizado con éxito. Redireccionando a la tienda...';
       case 'failure':
-        return 'El pago ha fallado. Redirigiendo a la tienda...';
+        return 'El pago ha fallado. Redireccionando a la tienda...';
       case 'pending':
-        return 'El pago está pendiente. Redirigiendo a la tienda...';
+        return 'El pago está pendiente. Redireccionando a la tienda...';
       default:
-        return 'Estado desconocido. Redirigiendo a la tienda...';
+        return 'Estado desconocido. Redireccionando a la tienda...';
     }
   };
 
   return (
     <div>
-      <Header />
       <Box
         sx={{
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          minHeight: 'calc(100vh - 64px)', // Ajusta el alto para tener en cuenta la altura del header
+          minHeight: '100vh',
           backgroundColor: 'secondary.main',
           padding: 2,
         }}
