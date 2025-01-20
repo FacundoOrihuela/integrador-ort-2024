@@ -124,7 +124,7 @@ const Memberships = () => {
                             onClick={() => handleMembershipAction(membership)}
                             className="bg-colors-1 text-white px-4 py-2 rounded hover:bg-colors-1 transition-colors duration-200"
                         >
-                            {userMembership === membership.id ? "Revoke" : userMembership ? "Update" : "Acquire"}
+                            {userMembership === membership.id ? "Revocar" : userMembership ? "Actualizar" : "Adquirir"}
                         </button>
                     </li>
                 ))}

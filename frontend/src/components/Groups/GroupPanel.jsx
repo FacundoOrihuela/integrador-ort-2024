@@ -225,6 +225,7 @@ const GroupPanel = ({ group }) => {
   };
   // Obtener todos los posts del grupo
   const fetchPosts = async () => {
+    if (!group) return; // Add this check
     try {
       const response = await fetch(
         `http://localhost:3001/api/posts/group/${group.id}`,
@@ -405,7 +406,7 @@ const GroupPanel = ({ group }) => {
                   </div>
 
                   <div className="flex items-end mt-4">
-                    {(post.userId === user.id || group.userId === user.id) && (
+                    {user && (post.userId === user.id || group.userId === user.id) && ( // Add user check
                       <>
                         <Button
                           onClick={() => handleEditPost(post)}

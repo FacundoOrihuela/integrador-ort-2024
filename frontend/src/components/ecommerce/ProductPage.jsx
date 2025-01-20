@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Header from '../Header';
 import Sidebar from './Sidebar';
 import ProductList from './ProductList';
 import Memberships from './Memberships';
 import { CartProvider } from '../../context/CartContext';
+import { UserContext } from '../../context/UserContext';
 import { Container, Button, Box } from '@mui/material';
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProductPage = () => {
     const [categories, setCategories] = useState([]);
@@ -16,9 +19,9 @@ const ProductPage = () => {
     const [priceRange, setPriceRange] = useState([0, 0]);
     const [maxPrice, setMaxPrice] = useState(0);
     const [tempPriceRange, setTempPriceRange] = useState([0, 0]);
-    const [ratingsLoaded, setRatingsLoaded] = useState(false); // Estado adicional para controlar si las calificaciones ya se han cargado
+    const [ratingsLoaded, setRatingsLoaded] = useState(false);
     const fixedMinPrice = 0;
-
+    const { user } = useContext(UserContext);
     useEffect(() => {
         // Fetch categories from the API
         fetch("http://localhost:3001/api/categories")
@@ -80,6 +83,14 @@ const ProductPage = () => {
         setPriceRange(tempPriceRange);
     };
 
+    const handleShowMemberships = () => {
+        if (user && user.userType === 'client') {
+            setShowMemberships(true);
+        } else {
+            toast.error("Solo los clientes pueden acceder a las membresías.");
+        }
+    };
+
     const filteredProducts = products.filter(product => {
         return (!selectedCategory || product.categoryId === selectedCategory) &&
                product.price >= priceRange[0] && product.price <= priceRange[1];
@@ -89,11 +100,12 @@ const ProductPage = () => {
         <CartProvider>
             <div>
                 <Header store />
+                <ToastContainer />
                 <Box className="flex flex-col">
                     {!showMemberships && (
                         <Box
                             className="bg-colors-1 text-white text-center py-8 cursor-pointer flex items-center justify-center w-3/4 ml-[25%]"
-                            onClick={() => setShowMemberships(true)}
+                            onClick={handleShowMemberships}
                         >
                             <h2 className="text-4xl font-bold">¡Hacete miembro y disfruta de beneficios, clickea aquí para ver mas detalles!</h2>
                         </Box>
