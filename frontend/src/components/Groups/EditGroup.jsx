@@ -55,7 +55,7 @@ const EditGroup = ({ editData, isUpdate, handleUpdateOrCreate }) => {
     const formDataToSend = new FormData();
     formDataToSend.append("name", formData.name);
     formDataToSend.append("description", formData.description);
-    formDataToSend.append("userId", formData.leader);
+    formDataToSend.append("leader", formData.leader);
 
     if (formData.image) {
       if (typeof formData.image === "string") {
