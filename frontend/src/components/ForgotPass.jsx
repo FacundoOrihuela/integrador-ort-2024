@@ -1,9 +1,7 @@
-import React, { useEffect, useId, useRef, useState } from 'react';
+import React, { useEffect, useId, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { saveSessionToken } from "../features/loginSlice";
 import { toast } from 'react-toastify';
-import { validateEmail, validatePassword } from "../utils/validateRegister";
+import { validateEmail } from "../utils/validateRegister";
 import '../index.css';
 
 const ForgotPass = () => { 
@@ -32,7 +30,7 @@ const ForgotPass = () => {
 
     useEffect(() => {
         if (window.localStorage.getItem("idUsuarioLogueado") !== null) navigate("/principal")
-    }, [])
+    }, [navigate])
 
     const forgotPass = (user) => {
         fetch("http://localhost:3001/api/password/request-reset", {
