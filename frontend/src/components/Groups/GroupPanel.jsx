@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
 import CloseIcon from "@mui/icons-material/Close";
+import CommentIcon from '@mui/icons-material/ModeComment';
 import {
   Avatar,
   Modal,
@@ -41,13 +42,13 @@ const GroupPanel = ({ group }) => {
   };
 
   useEffect(() => {
-    loadInfoAsync();// eslint-disable-next-line
+    loadInfoAsync(); // eslint-disable-next-line
   }, [group, token]);
 
   useEffect(() => {
     if (group) {
       fetchPosts();
-    }// eslint-disable-next-line
+    } // eslint-disable-next-line
   }, [group]);
 
   const fetchAllUsers = async () => {
@@ -122,6 +123,10 @@ const GroupPanel = ({ group }) => {
     setCreatePostModalOpen(false);
     setNewPostContent("");
     setSelectedPost(null);
+  };
+
+  const handleCommentClick = () => {
+    console.log("Icono de comentario clickeado");
   };
 
   const handleCreateOrUpdatePost = async () => {
@@ -241,7 +246,7 @@ const GroupPanel = ({ group }) => {
       if (response.ok) {
         const data = await response.json();
         console.log(data);
-        setPosts(data.data);
+        setPosts(data.data.reverse());
       } else {
         console.error("Error al obtener los posts:", response.statusText);
       }
@@ -262,18 +267,18 @@ const GroupPanel = ({ group }) => {
       console.log("group.id:", group.id);
       console.log("content:", content);
       console.log("newPostImage:", newPostImage);
-  
+
       formData.append("userId", user.id);
       formData.append("groupId", group.id);
       formData.append("content", content);
       if (newPostImage) {
         formData.append("photo", newPostImage);
       }
-  
+
       for (let pair of formData.entries()) {
-        console.log(pair[0] + ': ' + pair[1]);
+        console.log(pair[0] + ": " + pair[1]);
       }
-  
+
       const response = await fetch("http://localhost:3001/api/posts", {
         method: "POST",
         headers: {
@@ -281,7 +286,7 @@ const GroupPanel = ({ group }) => {
         },
         body: formData,
       });
-  
+
       if (response.ok) {
         await fetchPosts();
       } else {
@@ -294,38 +299,37 @@ const GroupPanel = ({ group }) => {
   };
 
   // Actualizar un post
-// Actualizar un post
-const updatePost = async (post, content) => {
-  try {
-    const formData = new FormData();
-    formData.append("userId", post.userId);
-    formData.append("groupId", post.groupId);
-    formData.append("content", content);
-    if (newPostImage) {
-      formData.append("photo", newPostImage);
-    }
-
-    const response = await fetch(
-      `http://localhost:3001/api/posts/${post.id}`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
+  const updatePost = async (post, content) => {
+    try {
+      const formData = new FormData();
+      formData.append("userId", post.userId);
+      formData.append("groupId", post.groupId);
+      formData.append("content", content);
+      if (newPostImage) {
+        formData.append("photo", newPostImage);
       }
-    );
 
-    if (response.ok) {
-      await fetchPosts();
-    } else {
-      const errorData = await response.json();
-      console.error("Error al actualizar el post:", errorData.message);
+      const response = await fetch(
+        `http://localhost:3001/api/posts/${post.id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
+
+      if (response.ok) {
+        await fetchPosts();
+      } else {
+        const errorData = await response.json();
+        console.error("Error al actualizar el post:", errorData.message);
+      }
+    } catch (error) {
+      console.error("Error al conectar con el servidor:", error);
     }
-  } catch (error) {
-    console.error("Error al conectar con el servidor:", error);
-  }
-};
+  };
 
   // Eliminar un post
   const deletePost = async (postId) => {
@@ -349,15 +353,15 @@ const updatePost = async (post, content) => {
     }
   };
 
-const handleImageClick = (image) => {
-  setSelectedImage(image);
-  setImageModalOpen(true);
-};
+  const handleImageClick = (image) => {
+    setSelectedImage(image);
+    setImageModalOpen(true);
+  };
 
-const handleCloseImageModal = () => {
-  setImageModalOpen(false);
-  setSelectedImage(null);
-};
+  const handleCloseImageModal = () => {
+    setImageModalOpen(false);
+    setSelectedImage(null);
+  };
 
   if (!group) {
     return (
@@ -379,95 +383,148 @@ const handleCloseImageModal = () => {
           </p>
         </div>
 
+        {/* Botón para crear post */}
+
         <div className="posts-section flex-grow overflow-y-auto p-4 space-y-4">
+          <div className="p-4 max-w-[650px] rounded-md shadow-md border border-gray-200 bg-gray-200 mx-auto">
+            <Button
+              onClick={handleOpenCreatePostModal}
+              variant="contained"
+              color="primary"
+            >
+              Crear Post
+            </Button>
+          </div>
           {posts?.map((post) => (
             <div
               key={post.id}
-              className="post-item bg-white rounded-md shadow-md border border-gray-200"
+              className="post-item max-w-[650px] bg-white rounded-md shadow-md border border-gray-200 mx-auto"
             >
-              <p className="bg-gray-100 mx-3 text-gray-800 my-5 rounded-md">
-                {post.content}
-              </p>
-              {post.photo && (
-                <div className="mx-3 mb-5">
-                  <img
-                    src={post.photo}
-                    alt="Post"
-                    className="w-full max-h-64 object-contain rounded-md cursor-pointer"
-                    onClick={() => handleImageClick(post.photo)}
-                  />
-                </div>
-              )}
-              <div className="flex bg-gray-200 justify-between gap-2 mt-2 p-2">
-                <div className="flex flex-col ">
-                  <div className="flex items-center mt-2">
-                    <motion.div
-                      className="relative rounded-full overflow-hidden shadow-lg"
-                      whileHover={{ scale: 1.1 }}
-                    >
-                      {post.User.photo ? (
-                        <Avatar
-                          src={post.User.photo}
-                          alt="Profile Photo"
-                          sx={{ width: 20, height: 20 }}
-                        />
-                      ) : (
-                        <AccountCircleIcon className="w-10 h-10" />
-                      )}
-                    </motion.div>
-                    <p className="ml-2 flex justify-end text-sm font-bold text-gray-700">
-                      {post.User.name}
-                    </p>
-                  </div>
-                  <div className="text-xs text-gray-500 pt-1">
-                    <span>
-                      {post.createdAt !== post.updatedAt ? (
-                        <>
-                          {new Date(post.updatedAt).toLocaleString("es-ES", {
+              {/* Encabezado del Post */}
+              <div className="flex items-center px-4 py-3 border-b border-gray-200">
+                <motion.div
+                  className="relative rounded-full overflow-hidden shadow-lg mr-3"
+                  whileHover={{ scale: 1.1 }}
+                >
+                  {post.User.photo ? (
+                    <Avatar
+                      src={post.User.photo}
+                      alt="Profile Photo"
+                      sx={{ width: 20, height: 20 }}
+                    />
+                  ) : (
+                    <AccountCircleIcon className="w-10 h-10" />
+                  )}
+                </motion.div>
+                <p className="text-sm font-bold text-gray-700">
+                  <span>{post.User.name}</span>
+                  <span className="mx-1">·</span>
+                </p>
+                <div className="flex flex-col">
+                  <span className="text-xs text-gray-700">
+                    {post.createdAt !== post.updatedAt ? (
+                      <>
+                        {(() => {
+                          const now = new Date();
+                          const updatedDate = new Date(post.updatedAt);
+                          const diffMs = now - updatedDate;
+                          const diffHours = Math.floor(
+                            diffMs / (1000 * 60 * 60)
+                          );
+                          const diffMinutes = Math.floor(diffMs / (1000 * 60));
+
+                          if (diffHours < 1) {
+                            return `Hace ${diffMinutes} minuto${
+                              diffMinutes !== 1 ? "s" : ""
+                            }`;
+                          } else if (diffHours < 24) {
+                            return `Hace ${diffHours} hora${
+                              diffHours !== 1 ? "s" : ""
+                            }`;
+                          } else {
+                            return updatedDate.toLocaleString("es-ES", {
+                              year: "numeric",
+                              month: "2-digit",
+                              day: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: false,
+                            });
+                          }
+                        })()}
+                        <span className="ml-1 text-xs text-gray-400">
+                          (editado)
+                        </span>
+                      </>
+                    ) : (
+                      (() => {
+                        const now = new Date();
+                        const createdDate = new Date(post.createdAt);
+                        const diffMs = now - createdDate;
+                        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                        const diffMinutes = Math.floor(diffMs / (1000 * 60));
+
+                        if (diffHours < 1) {
+                          return `Hace ${diffMinutes} minuto${
+                            diffMinutes !== 1 ? "s" : ""
+                          }`;
+                        } else if (diffHours < 24) {
+                          return `Hace ${diffHours} hora${
+                            diffHours !== 1 ? "s" : ""
+                          }`;
+                        } else {
+                          return createdDate.toLocaleString("es-ES", {
                             year: "numeric",
                             month: "2-digit",
                             day: "2-digit",
                             hour: "2-digit",
                             minute: "2-digit",
                             hour12: false,
-                          })}
-                          <span className="ml-1 text-xs text-gray-400">
-                            (editado)
-                          </span>
-                        </>
-                      ) : (
-                        new Date(post.createdAt).toLocaleString("es-ES", {
-                          year: "numeric",
-                          month: "2-digit",
-                          day: "2-digit",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          hour12: false,
-                        })
-                      )}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-end mt-4">
-                  {user &&
-                    (post.userId === user.id || group.userId === user.id) && ( // Add user check
-                      <>
-                        <Button
-                          onClick={() => handleEditPost(post)}
-                          color="inherit"
-                        >
-                          Editar
-                        </Button>
-                        <Button
-                          onClick={() => deletePost(post.id)}
-                          color="inherit"
-                        >
-                          Eliminar
-                        </Button>
-                      </>
+                          });
+                        }
+                      })()
                     )}
+                  </span>
                 </div>
+              </div>
+
+              {/* Contenido del Post */}
+              <div className="p-4">
+                <p className="mb-2 mx-20 text-left">{post.content}</p>
+                {post.photo && (
+                  <div className="mt-3 mx-20">
+                    <img
+                      src={post.photo}
+                      alt="Post"
+                      className="w-full max-h-64 object-contain rounded-md cursor-pointer"
+                      onClick={() => handleImageClick(post.photo)}
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Controles del Post */}
+              <div className="flex justify-between items-center px-4 py-3 border-t border-gray-200">
+                <div className="flex items-center space-x-2">
+                  <CommentIcon onClick={handleCommentClick} className="cursor-pointer text-gray-600" size="small" />
+                </div>
+                {user &&
+                  (post.userId === user.id || group.userId === user.id) && (
+                    <div className="flex space-x-2">
+                      <Button
+                        onClick={() => handleEditPost(post)}
+                        color="inherit"
+                      >
+                        Editar
+                      </Button>
+                      <Button
+                        onClick={() => deletePost(post.id)}
+                        color="inherit"
+                      >
+                        Eliminar
+                      </Button>
+                    </div>
+                  )}
               </div>
             </div>
           ))}
@@ -495,17 +552,6 @@ const handleCloseImageModal = () => {
               </div>
             </div>
           </Modal>
-        </div>
-
-        {/* Botón para crear post */}
-        <div className="p-4 bg-gray-100">
-          <Button
-            onClick={handleOpenCreatePostModal}
-            variant="contained"
-            color="primary"
-          >
-            Crear Post
-          </Button>
         </div>
       </div>
 
