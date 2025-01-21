@@ -1,6 +1,4 @@
 /* eslint-disable no-restricted-globals */
-// filepath: /C:/Users/Juan/Documents/GitHub/integrador-ort-2024/frontend/public/service-worker.js
-
 const CACHE_NAME = 'tiferet-cache-v1';
 const urlsToCache = [
   '/',
