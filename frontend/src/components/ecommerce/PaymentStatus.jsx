@@ -34,6 +34,7 @@ const PaymentStatus = () => {
       } catch (error) {
         console.error('Error al manejar el estado del pago:', error);
       } finally {
+        localStorage.removeItem('membershipId');
         navigate('/store');
       }
     };
