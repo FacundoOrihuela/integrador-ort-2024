@@ -32,6 +32,8 @@ const GroupPanel = ({ group }) => {
   const [createPostModalOpen, setCreatePostModalOpen] = useState(false);
   const [newPostContent, setNewPostContent] = useState("");
   const [newPostImage, setNewPostImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imageModalOpen, setImageModalOpen] = useState(false);
 
   const loadInfoAsync = async () => {
     await fetchParticipants();
@@ -347,6 +349,16 @@ const updatePost = async (post, content) => {
     }
   };
 
+const handleImageClick = (image) => {
+  setSelectedImage(image);
+  setImageModalOpen(true);
+};
+
+const handleCloseImageModal = () => {
+  setImageModalOpen(false);
+  setSelectedImage(null);
+};
+
   if (!group) {
     return (
       <div className="p-2 flex flex-col items-center">
@@ -381,7 +393,8 @@ const updatePost = async (post, content) => {
                   <img
                     src={post.photo}
                     alt="Post"
-                    className="w-full h-auto rounded-md"
+                    className="w-full max-h-64 object-contain rounded-md cursor-pointer"
+                    onClick={() => handleImageClick(post.photo)}
                   />
                 </div>
               )}
@@ -458,6 +471,30 @@ const updatePost = async (post, content) => {
               </div>
             </div>
           ))}
+          <Modal open={imageModalOpen} onClose={handleCloseImageModal}>
+            <div
+              className="flex justify-center items-center h-full bg-gray-500 bg-opacity-50"
+              onClick={handleCloseImageModal}
+            >
+              <div
+                className="bg-white p-6 rounded-lg relative"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <CloseIcon
+                  onClick={handleCloseImageModal}
+                  className="absolute top-2 right-2 cursor-pointer text-black bg-white rounded-full p-1"
+                  style={{ fontSize: 30 }}
+                />
+                {selectedImage && (
+                  <img
+                    src={selectedImage}
+                    alt="Ampliada"
+                    className="max-w-full max-h-screen object-contain"
+                  />
+                )}
+              </div>
+            </div>
+          </Modal>
         </div>
 
         {/* Botón para crear post */}
