@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 import './models/index.js';
 
 dotenv.config();
@@ -17,11 +18,16 @@ app.use(express.json());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Leer y parsear el archivo config.json
+const configPath = path.join(__dirname, 'config/config.json');
+const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+
 // Servir archivos estáticos del frontend
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Importar rutas
 import clientsRoutes from './routes/clientsRoutes.js';
 import administratorRoutes from './routes/administratorRoutes.js';
 import teacherRoutes from './routes/teacherRoutes.js';
@@ -79,5 +85,5 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
 
 // Iniciar el servidor
 app.listen(port, () => {
-  console.log(`Servidor corriendo en http://localhost:${port}`);
+  console.log(`Servidor corriendo en ${config.apiUrl}`);
 });
