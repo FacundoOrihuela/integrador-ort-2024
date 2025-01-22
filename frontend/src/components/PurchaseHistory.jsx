@@ -6,6 +6,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import StarIcon from '@mui/icons-material/Star';
 import axios from 'axios';
 import Header from './Header';
+import config from "../utils/config.json";
 
 const PurchaseHistory = () => {
     const { user } = useContext(UserContext);
@@ -23,7 +24,7 @@ const PurchaseHistory = () => {
 
     useEffect(() => {
         if (user) {
-            axios.get('http://localhost:3001/api/orders', {
+            axios.get(`${config.apiUrl}/api/orders`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
@@ -38,7 +39,7 @@ const PurchaseHistory = () => {
                 setLoading(false);
             });
 
-            axios.get(`http://localhost:3001/api/ratings/user/${user.id}`, {
+            axios.get(`${config.apiUrl}/api/ratings/user/${user.id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
@@ -76,7 +77,7 @@ const PurchaseHistory = () => {
 
     const handleRatingSubmit = () => {
         if (selectedProduct && rating > 0) {
-            axios.post(`http://localhost:3001/api/ratings`, {
+            axios.post(`${config.apiUrl}/api/ratings`, {
                 userId: user.id,
                 productId: selectedProduct.id,
                 rating,

@@ -6,6 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CreateActivity from "./CreateActivity";
 import ActivityDetails from "./ActivityDetails";
+import config from "../../../utils/config.json";
 
 const ActivitiesList = () => {
   const [activities, setActivities] = useState([]);
@@ -21,7 +22,7 @@ const ActivitiesList = () => {
   const activitiesPerPage = 8;
 
   const fetchActivities = () => {
-    fetch("http://localhost:3001/api/events")
+    fetch(`${config.apiUrl}/api/events`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Error al obtener las actividades.");
@@ -44,7 +45,7 @@ const ActivitiesList = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/events/${id}`, {
+      const response = await fetch(`${config.apiUrl}/api/events/${id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });

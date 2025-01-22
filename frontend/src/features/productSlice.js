@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import config from "../utils/config.json";
 
-// Thunk para obtener los productos desde la API
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
-    const response = await fetch('http://localhost:3001/api/products');
+    const response = await fetch(`${config.apiUrl}/api/products`);
     if (!response.ok) {
         throw new Error('Error al obtener los productos');
     }

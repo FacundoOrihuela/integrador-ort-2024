@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import config from "../../../utils/config.json";
 
 const CreateProduct = ({
   editData,
@@ -35,7 +36,7 @@ const CreateProduct = ({
   }, [editData, isUpdate]);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/categories")
+    fetch(`${config.apiUrl}/api/categories`)
       .then((response) => response.json())
       .then((data) => {
         setCategories(data.data);
@@ -58,8 +59,8 @@ const CreateProduct = ({
 
   const handleSaveProduct = async () => {
     const url = isUpdate
-      ? `http://localhost:3001/api/products/${editData.id}`
-      : "http://localhost:3001/api/products";
+      ? `${config.apiUrl}/api/products/${editData.id}`
+      : `${config.apiUrl}/api/products`;
 
     const method = isUpdate ? "PUT" : "POST";
 

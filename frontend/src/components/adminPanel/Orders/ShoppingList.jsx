@@ -15,6 +15,8 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ErrorIcon from "@mui/icons-material/Error";
 import axios from "axios";
 import OrderDetailsModal from "./OrderDetailsModal";
+import config from "../../../utils/config.json";
+
 
 const ShoppingList = () => {
   const [orders, setOrders] = useState([]);
@@ -29,7 +31,7 @@ const ShoppingList = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/api/orders/all", {
+      .get(`${config.apiUrl}/api/orders/all`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

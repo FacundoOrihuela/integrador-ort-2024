@@ -17,6 +17,9 @@ app.use(express.json());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Servir archivos estáticos del frontend
+app.use(express.static(path.join(__dirname, '../frontend/build')));
+
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 import clientsRoutes from './routes/clientsRoutes.js';
@@ -62,17 +65,19 @@ app.use('/api/posts', postRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/news', newsRoutes);
 app.use('/api/mercadoPago', mercadoPagoRoutes);
-// Rutas de la API
 app.use('/api/contact', contactRoutes);
 
+// Manejar todas las rutas con index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+});
 
 // Error handling
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
-    res.status(500).json({ message: 'Error interno del servidor', error: err.message });
+  res.status(500).json({ message: 'Error interno del servidor', error: err.message });
 });
 
 // Iniciar el servidor
 app.listen(port, () => {
-    console.log(`Servidor corriendo en http://localhost:${port}`);
+  console.log(`Servidor corriendo en http://localhost:${port}`);
 });
-

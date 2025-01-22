@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import config from "../../../utils/config.json";
+
 
 const CreateActivity = ({editData ,isUpdate ,handleUpdateOrCreate ,setIsModalOpen }) => {
   const [formData, setFormData] = useState({
@@ -72,8 +74,8 @@ const CreateActivity = ({editData ,isUpdate ,handleUpdateOrCreate ,setIsModalOpe
     if (!validateForm()) return;
 
     const url = isUpdate
-      ? `http://localhost:3001/api/events/${editData.id}`
-      : "http://localhost:3001/api/events/create";
+      ? `${config.apiUrl}/api/events/${editData.id}`
+      : `${config.apiUrl}/api/events/create`;
 
     const method = isUpdate ? "PUT" : "POST";
 

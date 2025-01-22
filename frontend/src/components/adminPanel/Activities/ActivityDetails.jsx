@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, List, ListItem, ListItemText, ListItemSecondaryAction } from "@mui/material";
 import { Check as CheckIcon, Close as CloseIcon, Delete as DeleteIcon } from "@mui/icons-material";
+import config from "../../../utils/config.json";
 
 const ActivityDetails = ({ activity, onClose }) => {
   const [registrations, setRegistrations] = useState([]);
@@ -14,7 +15,7 @@ const ActivityDetails = ({ activity, onClose }) => {
   useEffect(() => {
     const fetchRegistrations = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/api/event-registrations/event/${activity.id}`);
+        const response = await axios.get(`${config.apiUrl}/api/event-registrations/event/${activity.id}`);
         setRegistrations(response.data);
       } catch (err) {
         setError("Error al obtener los registros de la actividad.");
@@ -26,7 +27,7 @@ const ActivityDetails = ({ activity, onClose }) => {
 
   const handleApprove = async (userId) => {
     try {
-      await axios.post("http://localhost:3001/api/event-registrations/approve", {
+      await axios.post(`${config.apiUrl}/api/event-registrations/approve`, {
         userId,
         eventId: activity.id,
       });
@@ -44,7 +45,7 @@ const ActivityDetails = ({ activity, onClose }) => {
 
   const handleReject = async (userId) => {
     try {
-      await axios.post("http://localhost:3001/api/event-registrations/reject", {
+      await axios.post(`${config.apiUrl}/api/event-registrations/reject`, {
         userId,
         eventId: activity.id,
       });
@@ -62,7 +63,7 @@ const ActivityDetails = ({ activity, onClose }) => {
 
   const handleDelete = async () => {
     try {
-      await axios.post("http://localhost:3001/api/event-registrations/delete", {
+      await axios.post(`${config.apiUrl}/api/event-registrations/delete`, {
         userId: selectedUserId,
         eventId: activity.id,
       });

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography } from "@mui/material";
+import config from "../../../utils/config.json";
+
 
 const CreateUser = ({ handleUpdateOrCreate, setIsModalOpen }) => {
   const [formData, setFormData] = useState({
@@ -20,7 +22,7 @@ const CreateUser = ({ handleUpdateOrCreate, setIsModalOpen }) => {
 
     switch (formData.userType) {
       case "teacher":
-        endpoint = "http://localhost:3001/api/teachers";
+        endpoint = `${config.apiUrl}/api/teachers`;
         body = {
           name: formData.name,
           email: formData.email,
@@ -30,7 +32,7 @@ const CreateUser = ({ handleUpdateOrCreate, setIsModalOpen }) => {
         };
         break;
       case "administrator":
-        endpoint = "http://localhost:3001/api/administrators";
+        endpoint = `${config.apiUrl}/api/administrators`;
         body = {
           name: formData.name,
           email: formData.email,

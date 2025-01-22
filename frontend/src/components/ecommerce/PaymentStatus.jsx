@@ -4,6 +4,7 @@ import { Box, Typography, CircularProgress, Paper } from '@mui/material';
 import axios from 'axios';
 import { CartContext } from '../../context/CartContext';
 import { UserContext } from '../../context/UserContext';
+import config from "../../utils/config.json";
 
 const PaymentStatus = () => {
   const location = useLocation();
@@ -20,7 +21,7 @@ const PaymentStatus = () => {
         const membershipId = localStorage.getItem('membershipId');
         console.log('user', user);
         
-        const endpoint = membershipId ? 'http://localhost:3001/api/mercadopago/membership-payment-status' : 'http://localhost:3001/api/mercadopago/payment-status';
+        const endpoint = membershipId ? `${config.apiUrl}/api/mercadopago/membership-payment-status` : `${config.apiUrl}/api/mercadopago/payment-status`;
         const response = await axios.post(endpoint, {
           status,
           userId: user.id,

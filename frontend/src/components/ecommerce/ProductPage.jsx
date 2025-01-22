@@ -9,6 +9,7 @@ import { Container, Button, Box } from '@mui/material';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import config from "../../utils/config.json";
 
 const ProductPage = () => {
     const [categories, setCategories] = useState([]);
@@ -24,13 +25,13 @@ const ProductPage = () => {
     const { user } = useContext(UserContext);
     useEffect(() => {
         // Fetch categories from the API
-        fetch("http://localhost:3001/api/categories")
+        fetch(`${config.apiUrl}/api/categories`)
             .then((response) => response.json())
             .then((data) => setCategories(data.data))
             .catch((error) => console.error("Error fetching categories:", error));
 
         // Fetch products from the API
-        fetch("http://localhost:3001/api/products")
+        fetch(`${config.apiUrl}/api/products`)
             .then((response) => response.json())
             .then((data) => {
                 setProducts(data.data);
@@ -44,7 +45,7 @@ const ProductPage = () => {
             .catch((error) => console.error("Error fetching products:", error));
 
         // Fetch top-selling products from the API
-        fetch("http://localhost:3001/api/products/top-selling")
+        fetch(`${config.apiUrl}/api/products/top-selling`)
             .then((response) => response.json())
             .then((data) => setFeaturedProducts(data.data))
             .catch((error) => console.error("Error fetching top-selling products:", error));
@@ -55,7 +56,7 @@ const ProductPage = () => {
         const fetchRatings = async () => {
             const updatedProducts = await Promise.all(products.map(async (product) => {
                 try {
-                    const response = await axios.get(`http://localhost:3001/api/ratings/product/${product.id}/average`);
+                    const response = await axios.get(`${config.apiUrl}/api/ratings/product/${product.id}/average`);
                     return { ...product, averageRating: response.data.averageRating, ratingCount: response.data.ratingCount };
                 } catch (error) {
                     console.error(`Error fetching ratings for product ${product.id}:`, error);

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { validateEmail, validatePassword } from "../utils/validateRegister";
 import '../index.css';
+import config from "../utils/config.json";
 
 const RegisterInputs = () => {
     const user = useId();
@@ -62,7 +63,7 @@ const RegisterInputs = () => {
 
     const registerUser = (newUser) => {
         setIsLoading(true);
-        fetch("http://localhost:3001/api/clients", {
+        fetch(`${config.apiUrl}/api/clients`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

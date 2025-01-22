@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import config from "../../../utils/config.json";
 
 const CreateMemberships = ({
   editData,
@@ -29,8 +30,8 @@ const CreateMemberships = ({
 
   const handleSaveMembership = async () => {
     const url = isUpdate
-      ? `http://localhost:3001/api/memberships/${editData.id}`
-      : "http://localhost:3001/api/memberships";
+      ? `${config.apiUrl}/api/memberships/${editData.id}`
+      : `${config.apiUrl}/api/memberships`;
 
     const method = isUpdate ? "PUT" : "POST";
 

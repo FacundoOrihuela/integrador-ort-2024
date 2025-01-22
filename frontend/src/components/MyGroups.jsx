@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { motion } from "framer-motion";
 import { UserContext } from "../context/UserContext";
+import config from "../utils/config.json";
 
 const MyGroups = ({ onGroupSelect }) => {
   const [groups, setGroups] = useState([]);
@@ -13,7 +14,7 @@ const MyGroups = ({ onGroupSelect }) => {
 
       try {
         const response = await fetch(
-          `http://localhost:3001/api/groups/user/${user.id}/groups`,
+          `${config.apiUrl}/api/groups/user/${user.id}/groups`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

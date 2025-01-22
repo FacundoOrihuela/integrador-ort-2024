@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {validatePassword } from "../utils/validateRegister";
 import '../index.css';
+import config from "../utils/config.json";
 
 const ResetPass = () => {
     
@@ -51,7 +52,7 @@ const ResetPass = () => {
     };
 
     const resetPass = (pass) => {
-        fetch("http://localhost:3001/api/password/reset", {
+        fetch(`${config.apiUrl}/api/password/reset`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

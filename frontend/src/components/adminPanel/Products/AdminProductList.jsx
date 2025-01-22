@@ -7,6 +7,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SortIcon from "@mui/icons-material/Sort";
 import CreateProduct from "./CreateProduct";
+import config from "../../../utils/config.json";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -29,7 +30,7 @@ const ProductList = () => {
 
   const fetchProducts = () => {
     setLoading(true);
-    fetch("http://localhost:3001/api/products")
+    fetch(`${config.apiUrl}/api/products`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Error al obtener los productos");
@@ -52,7 +53,7 @@ const ProductList = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/products/${id}`, {
+      const response = await fetch(`${config.apiUrl}/api/products/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

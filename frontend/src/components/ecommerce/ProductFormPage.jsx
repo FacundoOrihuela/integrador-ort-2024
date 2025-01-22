@@ -1,11 +1,12 @@
 // ProductFormPage.jsx
 import React from 'react';
 import ProductForm from './ProductForm';
+import config from "../../utils/config.json";
 
 const ProductFormPage = () => {
   const handleSubmit = (formData) => {
     // Aquí puedes manejar el envío del formulario, por ejemplo, enviarlo a tu API
-    fetch('http://localhost:3001/api/products', {
+    fetch(`${config.apiUrl}/api/products`, {
       method: 'POST',
       body: formData,
     })

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { validateEmail } from "../utils/validateRegister";
 import '../index.css';
+import config from "../utils/config.json";
 
 const ForgotPass = () => { 
     const email = useId();
@@ -33,7 +34,7 @@ const ForgotPass = () => {
     }, [navigate])
 
     const forgotPass = (user) => {
-        fetch("http://localhost:3001/api/password/request-reset", {
+        fetch(`${config.apiUrl}/api/password/request-reset`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

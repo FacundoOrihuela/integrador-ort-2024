@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import config from "../../utils/config.json";
 
 const LoginInputs = () => {
   const emailField = useRef();
@@ -33,18 +34,19 @@ const LoginInputs = () => {
     setPassFieldLength(passField.current.value.length);
   };
 
-  const loginHandler = () => {
+  const loginHandler = async () => {
     const email = emailField.current.value.trim();
     const pass = passField.current.value.trim();
     if (!email) return toast.error("El email es un campo obligatorio.");
     if (!pass) return toast.error("La contraseña es un campo obligatorio.");
+    
     executeLogin({ email: email, password: pass });
   };
 
   const executeLogin = (loginData) => {
     setIsLoading(true);
     setTimeout(() => {
-      fetch("http://localhost:3001/api/auth/login", {
+      fetch(`${config.apiUrl}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(loginData),

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import config from "../../../utils/config.json";
 
 const CreateCategory = ({
   editData,
@@ -26,8 +27,8 @@ const CreateCategory = ({
 
   const handleSaveCategory = async () => {
     const url = isUpdate
-      ? `http://localhost:3001/api/categories/${editData.id}`
-      : "http://localhost:3001/api/categories";
+      ? `${config.apiUrl}/api/categories/${editData.id}`
+      : `${config.apiUrl}/api/categories`;
 
     const method = isUpdate ? "PUT" : "POST";
 

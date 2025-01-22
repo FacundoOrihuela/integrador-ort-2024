@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import config from "../../utils/config.json";
 
 const EditGroup = ({ editData, isUpdate, handleUpdateOrCreate }) => {
   const [formData, setFormData] = useState({
@@ -68,8 +69,8 @@ const EditGroup = ({ editData, isUpdate, handleUpdateOrCreate }) => {
     try {
       const response = await fetch(
         isUpdate
-          ? `http://localhost:3001/api/groups/${editData.id}`
-          : "http://localhost:3001/api/groups",
+          ? `${config.apiUrl}/api/groups/${editData.id}`
+          : `${config.apiUrl}/api/groups`,
         {
           method: isUpdate ? "PUT" : "POST",
           headers: {

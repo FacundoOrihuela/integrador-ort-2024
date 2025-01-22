@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../../context/UserContext"; // Asegúrate de importar el contexto del usuario
 import axios from 'axios';
+import config from "../../utils/config.json";
 
 const Memberships = () => {
     const [memberships, setMemberships] = useState([]);
@@ -9,7 +10,7 @@ const Memberships = () => {
     const { user } = useContext(UserContext); // Obtener el usuario del contexto
 
     useEffect(() => {
-        fetch("http://localhost:3001/api/memberships")
+        fetch(`${config.apiUrl}/api/memberships`)
             .then((respuesta) => {
                 if (!respuesta.ok) {
                     throw new Error("Error al obtener las membresías");
@@ -25,7 +26,7 @@ const Memberships = () => {
 
         // Verificar el tipo de usuario antes de obtener la membresía
         if (user && user.userType === "client") {
-            fetch(`http://localhost:3001/api/clients/${user.email}`, {
+            fetch(`${config.apiUrl}/api/clients/${user.email}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
@@ -51,7 +52,7 @@ const Memberships = () => {
         if (userMembership === membership.id) {
             // Revocar membresía
             try {
-                const response = await axios.post('http://localhost:3001/api/memberships/revoke', {
+                const response = await axios.post(`${config.apiUrl}/api/memberships/revoke`, {
                     userId: user.id,
                 }, {
                     headers: {
@@ -69,7 +70,7 @@ const Memberships = () => {
             try {
                 localStorage.setItem('membershipId', membership.id);
 
-                const response = await axios.post('http://localhost:3001/api/mercadopago/create-order', {
+                const response = await axios.post(`${config.apiUrl}/api/mercadopago/create-order`, {
                     email: user.email,
                     name: user.name,
                     items: [{

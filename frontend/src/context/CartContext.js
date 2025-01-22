@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
 import axios from 'axios';
 import { UserContext } from './UserContext';
+import config from "../utils/config.json";
 
 export const CartContext = createContext();
 
@@ -11,7 +12,7 @@ export const CartProvider = ({ children }) => {
     const fetchCart = useCallback(async () => {
         if (user) {
             try {
-                const response = await axios.get('http://localhost:3001/api/cart', {
+                const response = await axios.get(`${config.apiUrl}/api/cart`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
@@ -32,7 +33,7 @@ export const CartProvider = ({ children }) => {
     const addToCart = async (product) => {
         if (user) {
             try {
-                const response = await axios.post('http://localhost:3001/api/cart/add', {
+                const response = await axios.post(`${config.apiUrl}/api/cart/add`, {
                     productId: product.id,
                     quantity: 1,
                 }, {
@@ -60,7 +61,7 @@ export const CartProvider = ({ children }) => {
     const removeFromCart = async (productId) => {
         if (user) {
             try {
-                await axios.post('http://localhost:3001/api/cart/remove', {
+                await axios.post(`${config.apiUrl}/api/cart/remove`, {
                     productId,
                 }, {
                     headers: {
@@ -78,7 +79,7 @@ export const CartProvider = ({ children }) => {
     const decreaseQuantity = async (productId) => {
         if (user) {
             try {
-                await axios.post('http://localhost:3001/api/cart/decrease', {
+                await axios.post(`${config.apiUrl}/api/cart/decrease`, {
                     productId,
                 }, {
                     headers: {

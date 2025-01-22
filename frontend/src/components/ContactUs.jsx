@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Header from './Header';
 import Footer from './Footer';
+import config from "../utils/config.json";
 
 const ContactUs = () => {
   // Estado para los campos del formulario
@@ -30,7 +31,7 @@ const ContactUs = () => {
 
     // Enviar datos al backend
     try {
-      const response = await fetch('http://localhost:3001/api/contact', {  // Asegúrate de que el backend esté corriendo en ese puerto
+      const response = await fetch(`${config.apiUrl}/api/contact`, {  // Asegúrate de que el backend esté corriendo en ese puerto
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

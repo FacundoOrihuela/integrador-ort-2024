@@ -38,6 +38,8 @@ import axios from "axios";
 import CreateUser from "./CreateUser";
 import SendProduct from "./SendProduct";
 import { UserContext } from "../../../context/UserContext";
+import config from "../../../utils/config.json";
+
 
 const UserList = () => {
   const { user: loggedInUser } = useContext(UserContext);
@@ -66,7 +68,7 @@ const UserList = () => {
 
   const fetchUsers = () => {
     setLoading(true);
-    fetch("http://localhost:3001/api/user/all", {
+    fetch(`${config.apiUrl}/api/user/all`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -88,7 +90,7 @@ const UserList = () => {
   };
 
   const fetchProducts = () => {
-    fetch("http://localhost:3001/api/products")
+    fetch(`${config.apiUrl}/api/products`)
       .then((response) => response.json())
       .then((data) => setProducts(data.data))
       .catch((error) => console.error("Error fetching products:", error));
@@ -127,7 +129,7 @@ const UserList = () => {
     const productIds = selectedProducts.map((product) => product.id);
     axios
       .post(
-        "http://localhost:3001/api/orders/create",
+        `${config.apiUrl}/api/orders/create`,
         {
           userId: selectedClient.id,
           productIds,
@@ -149,7 +151,7 @@ const UserList = () => {
   const handleDeleteUser = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3001/api/user/${selectedUserId}`,
+        `${config.apiUrl}/api/user/${selectedUserId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -171,7 +173,7 @@ const UserList = () => {
   const handleBlockUser = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:3001/api/user/block/${selectedUserId}`,
+        `${config.apiUrl}/api/user/block/${selectedUserId}`,
         { blockReason },
         {
           headers: {
@@ -195,7 +197,7 @@ const UserList = () => {
   const handleUnblockUser = async (userId) => {
     try {
       const response = await axios.post(
-        `http://localhost:3001/api/user/unblock/${userId}`,
+        `${config.apiUrl}/api/user/unblock/${userId}`,
         {},
         {
           headers: {

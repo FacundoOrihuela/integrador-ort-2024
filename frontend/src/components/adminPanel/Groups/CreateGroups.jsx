@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import config from "../../../utils/config.json";
 
 const CreateGroups = ({ editData, isUpdate, handleUpdateOrCreate }) => {
   const [formData, setFormData] = useState({
@@ -15,7 +16,7 @@ const CreateGroups = ({ editData, isUpdate, handleUpdateOrCreate }) => {
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
-        const response = await fetch("http://localhost:3001/api/teachers");
+        const response = await fetch(`${config.apiUrl}/api/teachers`);
         if (response.ok) {
           const data = await response.json();
           setTeachers(data.data);
@@ -83,8 +84,8 @@ const CreateGroups = ({ editData, isUpdate, handleUpdateOrCreate }) => {
     try {
       const response = await fetch(
         isUpdate
-          ? `http://localhost:3001/api/groups/${editData.id}`
-          : "http://localhost:3001/api/groups",
+          ? `${config.apiUrl}/api/groups/${editData.id}`
+          : `${config.apiUrl}/api/groups`,
         {
           method: isUpdate ? "PUT" : "POST",
           headers: {
@@ -117,7 +118,7 @@ const CreateGroups = ({ editData, isUpdate, handleUpdateOrCreate }) => {
 
   const fetchLatestGroupId = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/groups", {
+      const response = await fetch(`${config.apiUrl}/api/groups`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -139,7 +140,7 @@ const CreateGroups = ({ editData, isUpdate, handleUpdateOrCreate }) => {
 
   const addLeader = async (groupId, userId) => {
     try {
-      const response = await fetch("http://localhost:3001/api/groups/add-user", {
+      const response = await fetch(`${config.apiUrl}/api/groups/add-user`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

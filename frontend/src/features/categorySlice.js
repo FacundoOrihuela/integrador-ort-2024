@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import config from "../utils/config.json";
 
-// Thunk para obtener las categorías desde la API
 export const fetchCategories = createAsyncThunk('categories/fetchCategories', async () => {
-    const response = await fetch('http://localhost:3001/api/categories');
+    const response = await fetch(`${config.apiUrl}/api/categories`);
     if (!response.ok) {
         throw new Error('Error al obtener las categorías');
     }

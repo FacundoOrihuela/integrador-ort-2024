@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import '../index.css';
+import config from "../utils/config.json";
 
 const VerifyEmail = () => {
   const [token, setToken] = useState('');
@@ -20,7 +21,7 @@ const VerifyEmail = () => {
   }, [token])
 
   const verify = () => {
-    fetch(`http://localhost:3001/api/clients/verify-email?token=${token}`, {
+    fetch(`${config.apiUrl}/api/clients/verify-email?token=${token}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

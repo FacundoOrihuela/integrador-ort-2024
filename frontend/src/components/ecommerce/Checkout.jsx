@@ -6,6 +6,7 @@ import { Box, Typography, Button, List, ListItem, ListItemText, Avatar, Circular
 import axios from 'axios';
 import Header from '../Header';
 import Footer from '../Footer'; // Asegúrate de tener un componente Footer
+import config from "../../utils/config.json";
 
 const Checkout = () => {
     const { cart, fetchCart } = useContext(CartContext);
@@ -24,7 +25,7 @@ const Checkout = () => {
     const handleOrderMP = async () => {
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:3001/api/mercadopago/create-order', {
+            const response = await axios.post(`${config.apiUrl}/api/mercadopago/create-order`, {
                 email: user.email,
                 name: user.name,
                 items: cart.map(item => ({

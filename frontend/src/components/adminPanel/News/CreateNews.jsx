@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { TextField, Button } from "@mui/material";
+import config from "../../../utils/config.json";
 
 const CreateNews = ({ handleUpdateOrCreate, editData, setEditData, isUpdate, setIsModalOpen }) => {
   const [formData, setFormData] = useState({
@@ -32,8 +33,8 @@ const CreateNews = ({ handleUpdateOrCreate, editData, setEditData, isUpdate, set
 
   const handleSaveNews = async () => {
     const url = isUpdate
-      ? `http://localhost:3001/api/news/${editData.id}`
-      : "http://localhost:3001/api/news";
+      ? `${config.apiUrl}/api/news/${editData.id}`
+      : `${config.apiUrl}/api/news`;
 
     const method = isUpdate ? "PUT" : "POST";
 

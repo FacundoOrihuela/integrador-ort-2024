@@ -6,6 +6,7 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CreateGroups from "./CreateGroups";
+import config from "../../../utils/config.json";
 
 const GroupsList = () => {
   const [groups, setGroups] = useState([]);
@@ -25,7 +26,7 @@ const GroupsList = () => {
 
   const fetchLeader = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/user/${id}`, {
+      const response = await fetch(`${config.apiUrl}/api/user/${id}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -47,7 +48,7 @@ const GroupsList = () => {
   const fetchGroups = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:3001/api/groups", {
+      const response = await fetch(`${config.apiUrl}/api/groups`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -79,7 +80,7 @@ const GroupsList = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/groups/${id}`, {
+      const response = await fetch(`${config.apiUrl}/api/groups/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,

@@ -16,6 +16,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import { UserContext } from "../../context/UserContext";
 import EditGroup from "./EditGroup";
+import config from "../../utils/config.json";
 
 const GroupPanel = ({ group }) => {
   const [participants, setParticipants] = useState([]);
@@ -55,7 +56,7 @@ const GroupPanel = ({ group }) => {
     if (!token) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/user/all`, {
+      const response = await fetch(`${config.apiUrl}/api/user/all`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -84,7 +85,7 @@ const GroupPanel = ({ group }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/api/groups/${group.id}/users`,
+        `${config.apiUrl}/api/groups/${group.id}/users`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -147,7 +148,7 @@ const GroupPanel = ({ group }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/api/groups/remove-user`,
+        `${config.apiUrl}/api/groups/remove-user`,
         {
           method: "POST",
           headers: {
@@ -182,7 +183,7 @@ const GroupPanel = ({ group }) => {
     try {
       for (const selectedUser of selectedUsers) {
         const response = await fetch(
-          `http://localhost:3001/api/groups/add-user`,
+          `${config.apiUrl}/api/groups/add-user`,
           {
             method: "POST",
             headers: {
@@ -236,7 +237,7 @@ const GroupPanel = ({ group }) => {
     if (!group) return; // Add this check
     try {
       const response = await fetch(
-        `http://localhost:3001/api/posts/group/${group.id}`,
+        `${config.apiUrl}/api/posts/group/${group.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -279,7 +280,7 @@ const GroupPanel = ({ group }) => {
         console.log(pair[0] + ": " + pair[1]);
       }
 
-      const response = await fetch("http://localhost:3001/api/posts", {
+      const response = await fetch(`${config.apiUrl}/api/posts`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -310,7 +311,7 @@ const GroupPanel = ({ group }) => {
       }
 
       const response = await fetch(
-        `http://localhost:3001/api/posts/${post.id}`,
+        `${config.apiUrl}/api/posts/${post.id}`,
         {
           method: "PUT",
           headers: {
@@ -335,7 +336,7 @@ const GroupPanel = ({ group }) => {
   const deletePost = async (postId) => {
     try {
       const response = await fetch(
-        `http://localhost:3001/api/posts/${postId}`,
+        `${config.apiUrl}/api/posts/${postId}`,
         {
           method: "DELETE",
           headers: {

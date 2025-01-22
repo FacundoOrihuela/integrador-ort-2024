@@ -1,6 +1,7 @@
 // utils/mailer.js
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import config from "./config.json";
 
 dotenv.config();
 
@@ -13,7 +14,7 @@ const transporter = nodemailer.createTransport({
 });
 
 export const sendVerificationEmail = async (email, token) => {
-    const verificationUrl = `http://localhost:${process.env.PORT}/api/clients/verify-email?token=${token}`;
+    const verificationUrl = `${config.apiUrl}/api/clients/verify-email?token=${token}`;
 
     await transporter.sendMail({
         from: process.env.EMAIL_USER,

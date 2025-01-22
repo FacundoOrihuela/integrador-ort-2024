@@ -1,5 +1,7 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, List, ListItem, ListItemAvatar, Avatar, ListItemText } from "@mui/material";
 import axios from "axios";
+import config from "../../../utils/config.json";
+
 
 const SendProduct = ({ client, products, selectedProducts, setSelectedProducts, handleSendProductSubmit, setIsModalOpen }) => {
   const handleProductSelect = (product) => {
@@ -15,7 +17,7 @@ const SendProduct = ({ client, products, selectedProducts, setSelectedProducts, 
   const handleSendProduct = async () => {
     const productIds = selectedProducts.map((product) => product.id);
     try {
-      const response = await axios.post("http://localhost:3001/api/orders/create-with-products", {
+      const response = await axios.post(`${config.apiUrl}/api/orders/create-with-products`, {
         userId: client.id,
         productIds,
       }, {

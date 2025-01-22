@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { UserContext } from './UserContext';
+import config from "../utils/config.json";
 
 export const FavoriteContext = createContext();
 
@@ -15,7 +16,7 @@ export const FavoriteProvider = ({ children }) => {
 
     const fetchFavorite = () => {
         if (user) {
-            fetch(`http://localhost:3001/api/favorites/${user.id}`, {
+            fetch(`${config.apiUrl}/api/favorites/${user.id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
@@ -28,7 +29,7 @@ export const FavoriteProvider = ({ children }) => {
 
     const addToFavorite = (product) => {
         if (user) {
-            fetch(`http://localhost:3001/api/favorites`, {
+            fetch(`${config.apiUrl}/api/favorites`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -46,7 +47,7 @@ export const FavoriteProvider = ({ children }) => {
 
     const removeFromFavorite = (productId) => {
         if (user) {
-            fetch(`http://localhost:3001/api/favorites`, {
+            fetch(`${config.apiUrl}/api/favorites`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

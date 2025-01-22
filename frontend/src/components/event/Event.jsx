@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import Header from "../Header";
 import Footer from "../Footer";
 import { Container, Grid, Card, CardContent, Typography, Button, CircularProgress, Box, Tabs, Tab } from "@mui/material";
+import config from "../../utils/config.json";
 
 const Event = () => {
   const { user } = useContext(UserContext);
@@ -16,7 +17,7 @@ const Event = () => {
 
   const fetchEvents = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/events");
+      const response = await fetch(`${config.apiUrl}/api/events`);
       if (!response.ok) {
         throw new Error("Error al obtener las actividades.");
       }
@@ -32,7 +33,7 @@ const Event = () => {
   const fetchRegistrations = useCallback(async () => {
     if (user) {
       try {
-        const response = await fetch(`http://localhost:3001/api/event-registrations/user/${user.id}`);
+        const response = await fetch(`${config.apiUrl}/api/event-registrations/user/${user.id}`);
         if (!response.ok) {
           throw new Error("Error al obtener los registros.");
         }
@@ -57,7 +58,7 @@ const Event = () => {
 
     setRegistering(true);
     try {
-      const response = await fetch("http://localhost:3001/api/event-registrations/register", {
+      const response = await fetch(`${config.apiUrl}/api/event-registrations/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

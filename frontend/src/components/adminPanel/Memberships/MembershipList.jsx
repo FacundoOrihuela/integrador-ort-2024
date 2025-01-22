@@ -7,6 +7,7 @@ import SortIcon from "@mui/icons-material/Sort";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CreateMemberships from "./CreateMemberships";
+import config from "../../../utils/config.json";
 
 const MembershipList = () => {
   const [memberships, setMemberships] = useState([]);
@@ -28,7 +29,7 @@ const MembershipList = () => {
 
   const fetchMemberships = () => {
     setLoading(true);
-    fetch("http://localhost:3001/api/memberships")
+    fetch(`${config.apiUrl}/api/memberships`)
       .then((respuesta) => {
         if (!respuesta.ok) {
           throw new Error("Error al obtener las membresías");
@@ -51,7 +52,7 @@ const MembershipList = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/memberships/${id}`, {
+      const response = await fetch(`${config.apiUrl}/api/memberships/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

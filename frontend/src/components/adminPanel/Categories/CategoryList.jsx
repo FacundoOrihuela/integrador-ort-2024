@@ -7,6 +7,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CreateCategory from "./CreateCategory";
 import axios from "axios";
+import config from "../../../utils/config.json";
 
 const CategoryList = () => {
   const [categories, setCategories] = useState([]);
@@ -26,7 +27,7 @@ const CategoryList = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/api/categories");
+      const response = await axios.get(`${config.apiUrl}/api/categories`);
       setCategories(response.data.data);
       setLoading(false);
     } catch (err) {
@@ -41,7 +42,7 @@ const CategoryList = () => {
 
   const handleDelete = async (id) => {
     try {
-      const productsResponse = await axios.get(`http://localhost:3001/api/products/category/${id}`);
+      const productsResponse = await axios.get(`${config.apiUrl}/api/products/category/${id}`);
       const productsData = productsResponse.data;
 
       if (productsData.data.length > 0) {
@@ -49,7 +50,7 @@ const CategoryList = () => {
         return;
       }
 
-      const response = await axios.delete(`http://localhost:3001/api/categories/${id}`);
+      const response = await axios.delete(`${config.apiUrl}/api/categories/${id}`);
 
       if (response.status === 200) {
         setCategories(categories.filter((category) => category.id !== id));
@@ -71,7 +72,7 @@ const CategoryList = () => {
 
   const openProductsModal = async (categoryId) => {
     try {
-      const response = await axios.get(`http://localhost:3001/api/products/category/${categoryId}`);
+      const response = await axios.get(`${config.apiUrl}/api/products/category/${categoryId}`);
       setSelectedCategoryProducts(response.data.data);
       setIsProductsModalOpen(true);
     } catch (error) {

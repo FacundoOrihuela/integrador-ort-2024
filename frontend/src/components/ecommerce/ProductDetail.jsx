@@ -6,6 +6,7 @@ import { Box, Typography, Button, Avatar, Rating, Container } from '@mui/materia
 import axios from 'axios';
 import Header from '../Header';
 import Footer from '../Footer';
+import config from "../../utils/config.json";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -15,10 +16,10 @@ const ProductDetail = () => {
   const [category, setCategory] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:3001/api/products/${id}`)
+    axios.get(`${config.apiUrl}/api/products/${id}`)
       .then(response => {
         setProduct(response.data.data);
-        return axios.get(`http://localhost:3001/api/categories/${response.data.data.categoryId}`);
+        return axios.get(`${config.apiUrl}/api/categories/${response.data.data.categoryId}`);
       })
       .then(response => setCategory(response.data.data))
       .catch(error => console.error('Error fetching product details:', error));

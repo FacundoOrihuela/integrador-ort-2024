@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import config from "../utils/config.json";
 
 export const UserContext = createContext();
 
@@ -12,7 +13,7 @@ export const UserProvider = ({ children }) => {
     const fetchUser = useCallback(async () => {
         if (token) {
             try {
-                const response = await fetch("http://localhost:3001/api/user/me", {
+                const response = await fetch(`${config.apiUrl}/api/user/me`, {
                     method: "GET",
                     headers: {
                         "Authorization": `Bearer ${token}`,

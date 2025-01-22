@@ -6,6 +6,7 @@ import { Edit as EditIcon, AccountCircle as AccountCircleIcon } from '@mui/icons
 import Header from './Header';
 import Footer from './Footer';
 import { UserContext } from '../context/UserContext';
+import config from "../utils/config.json";
 
 const UserProfile = () => {
     const { userId } = useParams();
@@ -24,7 +25,7 @@ const UserProfile = () => {
         const fetchProfile = async () => {
             const token = localStorage.getItem('token');
             try {
-                const { data: { user } } = await axios.get(`http://localhost:3001/api/user/${userId}`, {
+                const { data: { user } } = await axios.get(`${config.apiUrl}/api/user/${userId}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setProfile(user);
@@ -32,24 +33,24 @@ const UserProfile = () => {
                 setFormData({ name: user.name, email: user.email, photo: user.photo });
 
                 if (user.userType === 'client') {
-                    const { data: { data: clientData } } = await axios.get(`http://localhost:3001/api/clients/${user.email}`, {
+                    const { data: { data: clientData } } = await axios.get(`${config.apiUrl}/api/clients/${user.email}`, {
                         headers: { Authorization: `Bearer ${token}` },
                     });
                     setProfile({ ...user, ...clientData });
 
                     if (clientData.membershipId) {
-                        const { data: { data: membership } } = await axios.get(`http://localhost:3001/api/memberships/${clientData.membershipId}`, {
+                        const { data: { data: membership } } = await axios.get(`${config.apiUrl}/api/memberships/${clientData.membershipId}`, {
                             headers: { Authorization: `Bearer ${token}` },
                         });
                         setMembershipName(membership.name);
                     }
                 } else if (user.userType === 'teacher') {
-                    const { data: { data: teacherData } } = await axios.get(`http://localhost:3001/api/teachers/${user.email}`, {
+                    const { data: { data: teacherData } } = await axios.get(`${config.apiUrl}/api/teachers/${user.email}`, {
                         headers: { Authorization: `Bearer ${token}` },
                     });
                     setProfile({ ...user, ...teacherData });
                 } else if (user.userType === 'administrator') {
-                    const { data: { data: adminData } } = await axios.get(`http://localhost:3001/api/administrators/${user.email}`, {
+                    const { data: { data: adminData } } = await axios.get(`${config.apiUrl}/api/administrators/${user.email}`, {
                         headers: { Authorization: `Bearer ${token}` },
                     });
                     setProfile({ ...user, ...adminData });
@@ -87,7 +88,7 @@ const UserProfile = () => {
         imageFormData.append('image', file);
 
         try {
-            const { data: { data: { photo } } } = await axios.post(`http://localhost:3001/api/user/upload-profile-image/${userId}`, imageFormData, {
+            const { data: { data: { photo } } } = await axios.post(`${config.apiUrl}/api/user/upload-profile-image/${userId}`, imageFormData, {
                 headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
             });
             setProfile((prevProfile) => ({ ...prevProfile, photo }));
@@ -112,11 +113,11 @@ const UserProfile = () => {
 
         try {
             const endpoint = userType === 'client' ? 'clients' : userType === 'teacher' ? 'teachers' : 'administrators';
-            await axios.put(`http://localhost:3001/api/${endpoint}/${userId}`, dataToSend, {
+            await axios.put(`${config.apiUrl}/api/${endpoint}/${userId}`, dataToSend, {
                 headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
             });
 
-            const { data: { user: updatedUser } } = await axios.get(`http://localhost:3001/api/user/${userId}`, {
+            const { data: { user: updatedUser } } = await axios.get(`${config.apiUrl}/api/user/${userId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setProfile(updatedUser);

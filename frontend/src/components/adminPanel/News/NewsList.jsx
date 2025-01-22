@@ -7,6 +7,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SortIcon from "@mui/icons-material/Sort";
 import CreateNews from "./CreateNews";
+import config from "../../../utils/config.json";
 
 const AdminNewsList = () => {
   const [news, setNews] = useState([]);
@@ -27,7 +28,7 @@ const AdminNewsList = () => {
 
   const fetchNews = () => {
     setLoading(true);
-    fetch("http://localhost:3001/api/news")
+    fetch(`${config.apiUrl}/api/news`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Error al obtener las noticias");
@@ -50,7 +51,7 @@ const AdminNewsList = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/news/${id}`, {
+      const response = await fetch(`${config.apiUrl}/api/news/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

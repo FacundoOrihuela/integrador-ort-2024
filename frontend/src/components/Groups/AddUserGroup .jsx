@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AddIcon from "@mui/icons-material/Add"; // Icono para añadir
@@ -12,7 +12,7 @@ import {
   FormControl,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { UserContext } from "../../context/UserContext";
+import config from "../../utils/config.json";
 
 const AddUserGroup = ({ group, onClose }) => {
   const [participants, setParticipants] = useState([]);
@@ -20,7 +20,6 @@ const AddUserGroup = ({ group, onClose }) => {
   const [selectedUsers, setSelectedUsers] = useState([]); // Ahora guardamos los usuarios completos
   const [openModal, setOpenModal] = useState(true); // Modal abierto por defecto
   const token = localStorage.getItem("token");
-  const { user } = useContext(UserContext);
 
   const loadInfoAsync = async () => {
     await fetchParticipants();
@@ -35,7 +34,7 @@ const AddUserGroup = ({ group, onClose }) => {
     if (!token) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/api/user/all`, {
+      const response = await fetch(`${config.apiUrl}/api/user/all`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -62,7 +61,7 @@ const AddUserGroup = ({ group, onClose }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/api/groups/${group.id}/users`,
+        `${config.apiUrl}/api/groups/${group.id}/users`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -87,7 +86,7 @@ const AddUserGroup = ({ group, onClose }) => {
     try {
       for (const selectedUser of selectedUsers) {
         const response = await fetch(
-          `http://localhost:3001/api/groups/add-user`,
+          `${config.apiUrl}/api/groups/add-user`,
           {
             method: "POST",
             headers: {
