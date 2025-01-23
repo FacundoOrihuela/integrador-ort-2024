@@ -1,6 +1,7 @@
 import Event from '../models/Event.js';
 import SingleEvent from '../models/SingleEvent.js';
 import RecurringEvent from '../models/RecurringEvent.js';
+import EventRegistration from '../models/EventRegistration.js';
 
 const createEvent = async (req, res) => {
     const { name, description, eventType, startDateTime, endDateTime, recurrencePattern } = req.body;
@@ -112,6 +113,17 @@ const deleteEvent = async (req, res) => {
             return res.status(404).json({ message: 'Evento no encontrado' });
         }
 
+        // Eliminar los registros de EventRegistration asociados al evento
+        await EventRegistration.destroy({ where: { eventId: id } });
+
+        // Eliminar el evento de su tabla correspondiente
+        if (event.eventType === 'single') {
+            await SingleEvent.destroy({ where: { eventId: id } });
+        } else if (event.eventType === 'recurring') {
+            await RecurringEvent.destroy({ where: { eventId: id } });
+        }
+
+        // Eliminar el evento
         await event.destroy();
         res.json({ message: 'Evento eliminado con éxito' });
     } catch (error) {

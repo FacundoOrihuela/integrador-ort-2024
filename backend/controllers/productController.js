@@ -2,6 +2,7 @@ import Product from '../models/Product.js';
 import Category from '../models/Category.js';
 import cloudinary from '../config/cloudinaryConfig.js';
 import multer from 'multer';
+import CartItem from '../models/CartItem.js';
 
 // Configurar multer para almacenar imágenes y archivos en memoria
 const storage = multer.memoryStorage();
@@ -13,7 +14,7 @@ const upload = multer({ storage }).fields([
 // Obtener todos los productos
 const getProducts = async (req, res) => {
     try {
-        const products = await Product.findAll();
+        const products = await Product.findAll({ where: { eliminado: false } });
         res.json({ message: 'Lista de productos', data: products });
     } catch (error) {
         console.error('Error al obtener los productos:', error);
@@ -25,7 +26,7 @@ const getProducts = async (req, res) => {
 const getProductById = async (req, res) => {
     const { id } = req.params;
     try {
-        const product = await Product.findByPk(id);
+        const product = await Product.findOne({ where: { id, eliminado: false } });
         if (!product) {
             return res.status(404).json({ message: `Producto con id ${id} no encontrado` });
         }
@@ -163,12 +164,16 @@ const updateProduct = async (req, res) => {
     }
 };
 
-// Eliminar un producto
+// Eliminar un producto (borrado lógico)
 const deleteProduct = async (req, res) => {
     const { id } = req.params;
     try {
-        const deleted = await Product.destroy({ where: { id } });
-        if (deleted === 0) {
+        // Eliminar las entradas de CartItem asociadas al producto
+        await CartItem.destroy({ where: { productId: id } });
+
+        // Establecer el campo eliminado en true
+        const [updated] = await Product.update({ eliminado: true }, { where: { id } });
+        if (updated === 0) {
             return res.status(404).json({ message: `Producto con id ${id} no encontrado` });
         }
         res.json({ message: 'Producto eliminado con éxito' });

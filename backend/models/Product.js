@@ -42,6 +42,10 @@ const Product = sequelize.define('Product', {
         type: DataTypes.INTEGER,
         defaultValue: 0,
     },
+    eliminado: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+    },
 }, {
     tableName: 'product',
     timestamps: false,
