@@ -21,6 +21,7 @@ import { UserContext } from "../../context/UserContext";
 import EditGroup from "./EditGroup";
 import CommentSection from "./CommentSection";
 import config from "../../utils/config.json";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 
 const GroupPanel = ({ group }) => {
   const [participants, setParticipants] = useState([]);
@@ -44,6 +45,8 @@ const GroupPanel = ({ group }) => {
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [commentsCount, setCommentsCount] = useState({});
+  const [commentImage, setCommentImage] = useState(null); // Estado para la imagen del comentario
+  const [isLoading, setIsLoading] = useState(false); // Estado para manejar la carga
 
   const loadInfoAsync = async () => {
     await fetchParticipants();
@@ -279,24 +282,34 @@ const GroupPanel = ({ group }) => {
   // Agregar un nuevo comentario
   const addComment = async (content) => {
     try {
+      setIsLoading(true); // Iniciar la carga
+      const formData = new FormData();
+      formData.append("userId", user.id);
+      formData.append("postId", selectedPost.id);
+      formData.append("content", content);
+      if (commentImage) {
+        formData.append("image", commentImage);
+      }
+  
       const response = await axios.post(
         `${config.apiUrl}/api/comments`,
-        {
-          userId: user.id,
-          postId: selectedPost.id,
-          content: content,
-        },
+        formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
+      console.log(response.data);
+      fetchCommentsCounts();
+      setNewComment("");
+      setCommentImage(null);
     } catch (error) {
       console.error("Error adding comment:", error);
+    } finally {
+      setIsLoading(false);
     }
-    setNewComment("");
-    fetchCommentsCounts()
   };
 
   // Obtener todos los posts del grupo
@@ -323,10 +336,15 @@ const GroupPanel = ({ group }) => {
     }
   };
 
-  const handleFileChange = (e) => {
-    setNewPostImage(e.target.files[0]);
+  const handlePostFileChange = (e) => {
+    const file = e.target.files[0];
+    setNewPostImage(file);
   };
 
+  const handleCommentFileChange = (e) => {
+    const file = e.target.files[0];
+    setCommentImage(file);
+  };
   // Crear un nuevo post
   const createPost = async (content) => {
     try {
@@ -523,7 +541,9 @@ const GroupPanel = ({ group }) => {
                         const now = new Date();
                         const createdDate = new Date(post.createdAt);
                         const diffMs = now - createdDate;
-                        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                        const diffHours = Math.floor(
+                          diffMs / (1000 * 60 * 60)
+                        );
                         const diffMinutes = Math.floor(diffMs / (1000 * 60));
 
                         if (diffHours < 1) {
@@ -865,7 +885,7 @@ const GroupPanel = ({ group }) => {
             />
             <input
               type="file"
-              onChange={handleFileChange}
+              onChange={handlePostFileChange}
               className="w-full p-2 border rounded mb-4"
             />
             <div className="flex justify-end gap-2">
@@ -1039,14 +1059,44 @@ const GroupPanel = ({ group }) => {
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="Escribe un comentario"
-              className="w-full p-2 border border-gray-300 rounded-md text-sm focus:ring focus:ring-blue-400 focus:outline-none"
+              className="w-full p-2 border border-gray-300 rounded-md text-sm focus:ring focus:ring-blue-400 focus:outline-none resize-none"
+              rows="3"
             />
-            <button
-              type="submit"
-              className="mt-2 w-full py-1 bg-colors-1 text-white text-sm font-medium rounded-md hover:bg-colors-1 hover:brightness-90 transition"
-            >
-              Agregar
-            </button>
+            <div className="flex items-center justify-between bg-gray-100 p-2 mt-2 rounded-md">
+              <div className="flex items-center">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleCommentFileChange}
+                  style={{ display: "none" }}
+                  id="comment-image-upload"
+                />
+                <label htmlFor="comment-image-upload">
+                  <IconButton component="span">
+                    <AttachFileIcon />
+                  </IconButton>
+                </label>
+                {commentImage && (
+                  <span className="ml-2 text-sm text-gray-600">
+                    {commentImage.name}
+                  </span>
+                )}
+              </div>
+              <button
+                type="submit"
+                className="py-1 px-4 bg-colors-1 text-white text-sm font-medium rounded-md hover:bg-colors-1 hover:brightness-90 transition"
+                disabled={isLoading} // Deshabilitar el botón mientras se carga
+              >
+                {isLoading ? (
+                  <div className="flex justify-center items-center space-x-2">
+                    <div className="w-4 h-4 border-2 border-t-2 border-white rounded-full animate-spin"></div>
+                    <span>Cargando...</span>
+                  </div>
+                ) : (
+                  "Agregar"
+                )}
+              </button>
+            </div>
           </form>
         </div>
       </Modal>
