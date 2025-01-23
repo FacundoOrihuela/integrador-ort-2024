@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import axios from "axios";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
 import CloseIcon from "@mui/icons-material/Close";
-import CommentIcon from '@mui/icons-material/ModeComment';
+import CommentIcon from "@mui/icons-material/ModeComment";
 import {
   Avatar,
   Modal,
@@ -12,10 +13,13 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  IconButton,
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { UserContext } from "../../context/UserContext";
 import EditGroup from "./EditGroup";
+import CommentSection from "./CommentSection";
 import config from "../../utils/config.json";
 
 const GroupPanel = ({ group }) => {
@@ -25,6 +29,7 @@ const GroupPanel = ({ group }) => {
   const [openModal, setOpenModal] = useState(false);
   const [configModalOpen, setConfigModalOpen] = useState(false);
   const [editGroupModalOpen, setEditGroupModalOpen] = useState(false);
+  const [postModalOpen, setPostModalOpen] = useState(false);
   const token = localStorage.getItem("token");
   const [selectedParticipant, setSelectedParticipant] = useState(null);
   const [participantModalOpen, setParticipantModalOpen] = useState(false);
@@ -36,6 +41,9 @@ const GroupPanel = ({ group }) => {
   const [newPostImage, setNewPostImage] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageModalOpen, setImageModalOpen] = useState(false);
+  const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
+  const [newComment, setNewComment] = useState("");
+  const [commentsCount, setCommentsCount] = useState({});
 
   const loadInfoAsync = async () => {
     await fetchParticipants();
@@ -43,14 +51,38 @@ const GroupPanel = ({ group }) => {
   };
 
   useEffect(() => {
-    loadInfoAsync(); // eslint-disable-next-line
+    loadInfoAsync();
   }, [group, token]);
 
   useEffect(() => {
     if (group) {
       fetchPosts();
-    } // eslint-disable-next-line
+    }
   }, [group]);
+
+  useEffect(() => {
+    fetchCommentsCounts();
+  }, [posts, token]);
+
+  const fetchCommentsCounts = async () => {
+    try {
+      const counts = {};
+      for (const post of posts) {
+        const response = await axios.get(
+          `${config.apiUrl}/api/comments/post/${post.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        counts[post.id] = response.data.data.length;
+      }
+      setCommentsCount(counts);
+    } catch (error) {
+      console.error("Error fetching comments count:", error);
+    }
+  };
 
   const fetchAllUsers = async () => {
     if (!token) return;
@@ -126,8 +158,25 @@ const GroupPanel = ({ group }) => {
     setSelectedPost(null);
   };
 
-  const handleCommentClick = () => {
-    console.log("Icono de comentario clickeado");
+  const handleOpenPostModal = (post) => {
+    setSelectedPost(post);
+    setPostModalOpen(true);
+  };
+
+  const handleClosePostModal = () => {
+    setSelectedPost(null);
+    setPostModalOpen(false);
+    fetchCommentsCounts()
+  };
+
+  const handleCommentClick = (post) => {
+    setSelectedPost(post);
+    setIsCommentModalOpen(true);
+  };
+
+  const handleCommentModalClose = () => {
+    setIsCommentModalOpen(false);
+    setSelectedPost(null);
   };
 
   const handleCreateOrUpdatePost = async () => {
@@ -147,20 +196,17 @@ const GroupPanel = ({ group }) => {
     if (!selectedParticipant || !token) return;
 
     try {
-      const response = await fetch(
-        `${config.apiUrl}/api/groups/remove-user`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            groupId: group.id,
-            userId: selectedParticipant.id,
-          }),
-        }
-      );
+      const response = await fetch(`${config.apiUrl}/api/groups/remove-user`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          groupId: group.id,
+          userId: selectedParticipant.id,
+        }),
+      });
 
       if (response.ok) {
         setParticipants((prev) =>
@@ -182,20 +228,17 @@ const GroupPanel = ({ group }) => {
 
     try {
       for (const selectedUser of selectedUsers) {
-        const response = await fetch(
-          `${config.apiUrl}/api/groups/add-user`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              groupId: group.id,
-              userId: selectedUser.id,
-            }),
-          }
-        );
+        const response = await fetch(`${config.apiUrl}/api/groups/add-user`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            groupId: group.id,
+            userId: selectedUser.id,
+          }),
+        });
 
         if (response.ok) {
           console.log(`Usuario ${selectedUser.name} agregado al grupo.`);
@@ -232,9 +275,33 @@ const GroupPanel = ({ group }) => {
     setNewPostContent(post.content);
     setCreatePostModalOpen(true);
   };
+
+  // Agregar un nuevo comentario
+  const addComment = async (content) => {
+    try {
+      const response = await axios.post(
+        `${config.apiUrl}/api/comments`,
+        {
+          userId: user.id,
+          postId: selectedPost.id,
+          content: content,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
+    setNewComment("");
+    fetchCommentsCounts()
+  };
+
   // Obtener todos los posts del grupo
   const fetchPosts = async () => {
-    if (!group) return; // Add this check
+    if (!group) return;
     try {
       const response = await fetch(
         `${config.apiUrl}/api/posts/group/${group.id}`,
@@ -310,16 +377,13 @@ const GroupPanel = ({ group }) => {
         formData.append("photo", newPostImage);
       }
 
-      const response = await fetch(
-        `${config.apiUrl}/api/posts/${post.id}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        }
-      );
+      const response = await fetch(`${config.apiUrl}/api/posts/${post.id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
 
       if (response.ok) {
         await fetchPosts();
@@ -335,15 +399,12 @@ const GroupPanel = ({ group }) => {
   // Eliminar un post
   const deletePost = async (postId) => {
     try {
-      const response = await fetch(
-        `${config.apiUrl}/api/posts/${postId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`${config.apiUrl}/api/posts/${postId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (response.ok) {
         setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
       } else {
@@ -403,7 +464,7 @@ const GroupPanel = ({ group }) => {
             >
               {/* Encabezado del Post */}
               <div className="flex items-center px-4 py-3 border-b border-gray-200">
-                <motion.div
+                <div
                   className="relative rounded-full overflow-hidden shadow-lg mr-3"
                   whileHover={{ scale: 1.1 }}
                 >
@@ -416,7 +477,7 @@ const GroupPanel = ({ group }) => {
                   ) : (
                     <AccountCircleIcon className="w-10 h-10" />
                   )}
-                </motion.div>
+                </div>
                 <p className="text-sm font-bold text-gray-700">
                   <span>{post.User.name}</span>
                   <span className="mx-1">·</span>
@@ -490,40 +551,51 @@ const GroupPanel = ({ group }) => {
               </div>
 
               {/* Contenido del Post */}
-              <div className="p-4">
-                <p className="mb-2 mx-20 text-left">{post.content}</p>
-                {post.photo && (
-                  <div className="mt-3 mx-20">
+              <div
+                className="cursor-pointer hover:bg-gray-50"
+                onClick={() => handleOpenPostModal(post)}
+              >
+                <div className="p-4 mx-20">
+                  <p className="mb-2 text-left">{post.content}</p>
+                  {post.photo && (
                     <img
                       src={post.photo}
                       alt="Post"
-                      className="w-full max-h-64 object-contain rounded-md cursor-pointer"
-                      onClick={() => handleImageClick(post.photo)}
+                      className="w-auto max-h-64 object-contain rounded-md"
                     />
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
 
               {/* Controles del Post */}
               <div className="flex justify-between items-center px-4 py-3 border-t border-gray-200">
                 <div className="flex items-center space-x-2">
-                  <CommentIcon onClick={handleCommentClick} className="cursor-pointer text-gray-600" size="small" />
+                  <CommentIcon
+                    onClick={() => handleCommentClick(post)}
+                    className="cursor-pointer text-gray-600"
+                    size="small"
+                  />
+                  {commentsCount[post.id] > 0 && (
+                    <span className="text-gray-600 text-sm">
+                      {commentsCount[post.id]}
+                    </span>
+                  )}
                 </div>
                 {user &&
                   (post.userId === user.id || group.userId === user.id) && (
                     <div className="flex space-x-2">
-                      <Button
+                      <IconButton
                         onClick={() => handleEditPost(post)}
                         color="inherit"
                       >
-                        Editar
-                      </Button>
-                      <Button
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
                         onClick={() => deletePost(post.id)}
                         color="inherit"
                       >
-                        Eliminar
-                      </Button>
+                        <DeleteIcon />
+                      </IconButton>
                     </div>
                   )}
               </div>
@@ -813,6 +885,169 @@ const GroupPanel = ({ group }) => {
               </Button>
             </div>
           </div>
+        </div>
+      </Modal>
+
+      {/* Modal para posts con comentarios */}
+      <Modal open={postModalOpen} onClose={handleClosePostModal}>
+        <div className="flex justify-center items-center h-full bg-gray-500 bg-opacity-50">
+          <div
+            className="bg-white p-4 rounded-lg max-w-[650px] w-full h-[80%] overflow-y-auto relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <CloseIcon
+              onClick={handleClosePostModal}
+              className="absolute top-2 right-2 cursor-pointer text-black"
+              style={{ fontSize: 30 }}
+            />
+            {selectedPost && (
+              <>
+                {/* Encabezado del Post */}
+                <div className="flex items-center px-4 py-3 border-b border-gray-200">
+                  <div className="relative rounded-full overflow-hidden shadow-lg mr-3">
+                    {selectedPost.User.photo ? (
+                      <Avatar
+                        src={selectedPost.User.photo}
+                        alt="Profile Photo"
+                        sx={{ width: 20, height: 20 }}
+                      />
+                    ) : (
+                      <AccountCircleIcon className="w-10 h-10" />
+                    )}
+                  </div>
+                  <p className="text-sm font-bold text-gray-700">
+                    <span>{selectedPost.User.name}</span>
+                    <span className="mx-1">·</span>
+                  </p>
+                  <div className="flex flex-col">
+                    <span className="text-xs text-gray-700">
+                      {selectedPost.createdAt !== selectedPost.updatedAt ? (
+                        <>
+                          {(() => {
+                            const now = new Date();
+                            const updatedDate = new Date(
+                              selectedPost.updatedAt
+                            );
+                            const diffMs = now - updatedDate;
+                            const diffHours = Math.floor(
+                              diffMs / (1000 * 60 * 60)
+                            );
+                            const diffMinutes = Math.floor(
+                              diffMs / (1000 * 60)
+                            );
+
+                            if (diffHours < 1) {
+                              return `Hace ${diffMinutes} minuto${
+                                diffMinutes !== 1 ? "s" : ""
+                              }`;
+                            } else if (diffHours < 24) {
+                              return `Hace ${diffHours} hora${
+                                diffHours !== 1 ? "s" : ""
+                              }`;
+                            } else {
+                              return updatedDate.toLocaleString("es-ES", {
+                                year: "numeric",
+                                month: "2-digit",
+                                day: "2-digit",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: false,
+                              });
+                            }
+                          })()}
+                          <span className="ml-1 text-xs text-gray-400">
+                            (editado)
+                          </span>
+                        </>
+                      ) : (
+                        (() => {
+                          const now = new Date();
+                          const createdDate = new Date(selectedPost.createdAt);
+                          const diffMs = now - createdDate;
+                          const diffHours = Math.floor(
+                            diffMs / (1000 * 60 * 60)
+                          );
+                          const diffMinutes = Math.floor(diffMs / (1000 * 60));
+
+                          if (diffHours < 1) {
+                            return `Hace ${diffMinutes} minuto${
+                              diffMinutes !== 1 ? "s" : ""
+                            }`;
+                          } else if (diffHours < 24) {
+                            return `Hace ${diffHours} hora${
+                              diffHours !== 1 ? "s" : ""
+                            }`;
+                          } else {
+                            return createdDate.toLocaleString("es-ES", {
+                              year: "numeric",
+                              month: "2-digit",
+                              day: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: false,
+                            });
+                          }
+                        })()
+                      )}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Contenido del Post */}
+                <div className="p-4 mx-4">
+                  <p className="mb-2 text-left">{selectedPost.content}</p>
+                  {selectedPost.photo && (
+                    <img
+                      src={selectedPost.photo}
+                      alt="Post"
+                      className="w-auto max-h-64 object-contain rounded-md cursor-pointer"
+                      onClick={() => handleImageClick(selectedPost.photo)}
+                    />
+                  )}
+                </div>
+
+                <div className="mt-6">
+                  <CommentSection
+                    postId={selectedPost.id}
+                    token={token}
+                    group={group}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </Modal>
+
+      <Modal open={isCommentModalOpen} onClose={handleCommentModalClose}>
+        <div className="bg-white p-6 rounded-md shadow-md max-w-md mx-auto mt-20 relative">
+          <CloseIcon
+            onClick={handleCommentModalClose}
+            className="absolute top-2 right-2 cursor-pointer text-black"
+            style={{ fontSize: 30 }}
+          />
+          <h3 className="text-lg font-semibold mb-4">Agregar un comentario</h3>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              addComment(newComment);
+              handleCommentModalClose();
+            }}
+            className="mt-4"
+          >
+            <textarea
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="Escribe un comentario"
+              className="w-full p-2 border border-gray-300 rounded-md text-sm focus:ring focus:ring-blue-400 focus:outline-none"
+            />
+            <button
+              type="submit"
+              className="mt-2 w-full py-1 bg-colors-1 text-white text-sm font-medium rounded-md hover:bg-colors-1 hover:brightness-90 transition"
+            >
+              Agregar
+            </button>
+          </form>
         </div>
       </Modal>
     </div>

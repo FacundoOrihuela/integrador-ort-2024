@@ -1,3 +1,5 @@
 
 /backend/uploads
 /backend/uploads
+backend/config/config.json
+frontend/src/utils/config.json
