@@ -141,7 +141,7 @@ const UserProfile = () => {
     return (
         <Box display="flex" flexDirection="column" minHeight="100vh">
             <Header />
-            <Paper className="p-10 m-4" sx={{ flexGrow: 1, maxWidth: 600, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', margin: 'auto' }}>
+            <Paper className="p-10" sx={{ flexGrow: 1, maxWidth: 600, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', marginX: 'auto', marginY: 4 }}>
                 <Box display="flex" justifyContent="center" mb={4} position="relative">
                     <Box width={192} height={192} position="relative">
                         {isUploading ? (

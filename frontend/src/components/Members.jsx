@@ -243,7 +243,7 @@ const Members = () => {
     <div className="flex flex-col min-h-screen">
       <Header />
 
-      <div className="flex-grow mt-[3rem] mb-[3rem] px-4 flex flex-col items-center">
+      <div className="flex-grow my-[3rem] mb-[3rem] px-4 flex flex-col items-center">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-7xl">
           {integrantes.map((integrante, index) => (
             <div

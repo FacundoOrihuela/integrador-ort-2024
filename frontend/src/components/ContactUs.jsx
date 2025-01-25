@@ -54,7 +54,7 @@ const ContactUs = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <div className="flex-grow pt-20"> {/* Ajusta el contenido debajo del Header */}
+      <div className="flex-grow py-[2rem]">
         <h1 className="text-center text-5xl font-bold mb-8">¡Contáctanos!</h1>
         
         {formSubmitted ? (
@@ -129,7 +129,7 @@ const ContactUs = () => {
 
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition"
+              className="w-full bg-colors-1 text-white py-2 px-4 rounded-md hover: bg-colors-1 transition"
             >
               Enviar
             </button>

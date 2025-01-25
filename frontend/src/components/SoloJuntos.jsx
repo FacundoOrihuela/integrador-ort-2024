@@ -45,7 +45,7 @@ const MemberSlide = ({ member }) => (
 const SoloJuntos = () => (
   <div className="flex flex-col min-h-screen">
     <Header />
-    <div className="flex-grow mt-[3rem] px-4">
+    <div className="flex-grow my-[3rem] px-4">
       <h1 className="text-center text-3xl font-semibold mb-6 text-gray-800">
         Equipo Coordinador
       </h1>

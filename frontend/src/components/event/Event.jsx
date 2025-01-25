@@ -3,7 +3,18 @@ import { UserContext } from "../../context/UserContext";
 import { toast } from "react-toastify";
 import Header from "../Header";
 import Footer from "../Footer";
-import { Container, Grid, Card, CardContent, Typography, Button, CircularProgress, Box, Tabs, Tab } from "@mui/material";
+import {
+  Container,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  CircularProgress,
+  Box,
+  Tabs,
+  Tab,
+} from "@mui/material";
 import config from "../../utils/config.json";
 
 const Event = () => {
@@ -33,7 +44,9 @@ const Event = () => {
   const fetchRegistrations = useCallback(async () => {
     if (user) {
       try {
-        const response = await fetch(`${config.apiUrl}/api/event-registrations/user/${user.id}`);
+        const response = await fetch(
+          `${config.apiUrl}/api/event-registrations/user/${user.id}`
+        );
         if (!response.ok) {
           throw new Error("Error al obtener los registros.");
         }
@@ -58,16 +71,19 @@ const Event = () => {
 
     setRegistering(true);
     try {
-      const response = await fetch(`${config.apiUrl}/api/event-registrations/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: user.id,
-          eventId,
-        }),
-      });
+      const response = await fetch(
+        `${config.apiUrl}/api/event-registrations/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            eventId,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Error al registrarte en la actividad.");
@@ -104,13 +120,16 @@ const Event = () => {
           </Typography>
         </div>
       );
-    } else if (event.eventType === "recurring" && event.RecurringEvent.recurrencePattern) {
+    } else if (
+      event.eventType === "recurring" &&
+      event.RecurringEvent.recurrencePattern
+    ) {
       return (
         <div>
           <Typography variant="h6">Frecuencia:</Typography>
           <Typography>
-            {event.RecurringEvent.recurrencePattern.days.join(", ")}{" "}
-            de {event.RecurringEvent.recurrencePattern.startTime} a{" "}
+            {event.RecurringEvent.recurrencePattern.days.join(", ")} de{" "}
+            {event.RecurringEvent.recurrencePattern.startTime} a{" "}
             {event.RecurringEvent.recurrencePattern.endTime}
           </Typography>
         </div>
@@ -134,9 +153,15 @@ const Event = () => {
     if (tabIndex === 0) {
       return event.eventType === "recurring";
     } else {
-      const endDateTime = event.SingleEvent?.endDateTime ? new Date(event.SingleEvent.endDateTime) : null;
+      const endDateTime = event.SingleEvent?.endDateTime
+        ? new Date(event.SingleEvent.endDateTime)
+        : null;
       const currentDateTime = new Date();
-      return event.eventType === "single" && endDateTime && endDateTime >= currentDateTime;
+      return (
+        event.eventType === "single" &&
+        endDateTime &&
+        endDateTime >= currentDateTime
+      );
     }
   });
 
@@ -145,7 +170,9 @@ const Event = () => {
   }
 
   if (error) {
-    return <Typography className="text-center text-red-500">Error: {error}</Typography>;
+    return (
+      <Typography className="text-center text-red-500">Error: {error}</Typography>
+    );
   }
 
   return (
@@ -154,26 +181,28 @@ const Event = () => {
         display: "flex",
         flexDirection: "column",
         minHeight: "100vh",
-        backgroundColor: "secondary",
+        backgroundColor: "secondary.main",  // Cambié el fondo a un color más suave
       }}
     >
       <Header />
       <Box
         sx={{
-          backgroundColor: "white",
+          backgroundColor: "#f8f9fa",  // Fondo blanco suave
           flexGrow: 1,
           display: "flex",
           flexDirection: "column",
           padding: "2rem",
-          width: "auto",
-          maxWidth: "70%",
-          margin: "2rem auto 2rem auto", // Ajustar el margen superior e inferior
-          borderRadius: "8px", // Bordes redondeados
-          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Sombra leve
+          width: "100%",
+          maxWidth: "80%",  // Cambié el maxWidth a un 80% para mayor espacio
+          margin: "2rem auto",
+          borderRadius: "12px",  // Bordes más redondeados
+          boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.1)",  // Sombra más suave
         }}
       >
         <Container component="main" sx={{ maxWidth: "lg" }}>
-          <Typography variant="h4" className="text-center mb-4">Lista de Actividades</Typography>
+          <Typography variant="h4" className="text-center mb-4">
+            Lista de Actividades
+          </Typography>
           <Tabs value={tabIndex} onChange={handleTabChange} centered>
             <Tab label="Clases" />
             <Tab label="Eventos" />
@@ -182,11 +211,17 @@ const Event = () => {
             {filteredEvents.map((event) => {
               const registrationStatus = getRegistrationStatus(event.id);
               return (
-                <Grid item xs={12} sm={6} lg={4} key={event.id}>
+                <Grid item xs={12} sm={6} md={4} lg={4} key={event.id}>
                   <Card className="hover:shadow-xl" sx={{ height: "100%" }}>
-                    <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                      <Typography variant="h5" className="mb-2">{event.name}</Typography>
-                      <Typography className="mb-2"><strong>Descripción:</strong> {event.description}</Typography>
+                    <CardContent
+                      sx={{ display: "flex", flexDirection: "column", height: "100%" }}
+                    >
+                      <Typography variant="h5" className="mb-2">
+                        {event.name}
+                      </Typography>
+                      <Typography className="mb-2">
+                        <strong>Descripción:</strong> {event.description}
+                      </Typography>
                       {formatEventDate(event)}
                       <Box sx={{ flexGrow: 1 }} />
                       <Button
@@ -196,15 +231,17 @@ const Event = () => {
                         color="primary"
                         fullWidth
                       >
-                        {registering
-                          ? <CircularProgress size={24} />
-                          : registrationStatus === "aceptado"
-                          ? "Anotado"
-                          : registrationStatus === "pendiente"
-                          ? "Esperando aprobación"
-                          : registrationStatus === "rechazado"
-                          ? "Rechazado"
-                          : "ANOTARME"}
+                        {registering ? (
+                          <CircularProgress size={24} />
+                        ) : registrationStatus === "aceptado" ? (
+                          "Anotado"
+                        ) : registrationStatus === "pendiente" ? (
+                          "Esperando aprobación"
+                        ) : registrationStatus === "rechazado" ? (
+                          "Rechazado"
+                        ) : (
+                          "ANOTARME"
+                        )}
                       </Button>
                     </CardContent>
                   </Card>
