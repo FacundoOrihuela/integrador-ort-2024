@@ -11,6 +11,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 
 const CommentSection = ({ postId, token, group }) => {
+
+console.log("hola")
+
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [commentImage, setCommentImage] = useState(null); // Estado para la imagen del comentario
