@@ -15,6 +15,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import config from "../../utils/config.json";
 
 const AddUserGroup = ({ group, onClose }) => {
+
+  console.log("group:", group);
   const [participants, setParticipants] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]); // Ahora guardamos los usuarios completos
