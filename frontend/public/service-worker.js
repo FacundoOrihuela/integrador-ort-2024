@@ -5,10 +5,11 @@ const urlsToCache = [
   '/index.html',
   '/manifest.json',
   '/generic-variables.css',
-  '/static/js/bundle.js', // Asegúrate de incluir las rutas correctas a los archivos JavaScript
-  '/static/js/0.chunk.js',
-  '/static/js/main.chunk.js', 
-  '/static/css/main.chunk.css',
+  // Asegúrate de incluir las rutas correctas a los archivos JavaScript
+  // '/static/js/bundle.js',
+  // '/static/js/0.chunk.js',
+  // '/static/js/main.chunk.js',
+  // '/static/css/main.chunk.css',
 ];
 
 self.addEventListener('install', (event) => {
@@ -37,9 +38,11 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
-        cacheNames.map((cacheName) => 
-          cacheWhitelist.indexOf(cacheName) === -1 && caches.delete(cacheName)
-        )
+        cacheNames.map((cacheName) => {
+          if (!cacheWhitelist.includes(cacheName)) {
+            return caches.delete(cacheName);
+          }
+        })
       );
     })
   );
