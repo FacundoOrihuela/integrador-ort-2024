@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import "./estilos.css";
 import Login from "./components/login/Login";
 import Register from "./components/Register";
@@ -36,6 +37,15 @@ import Groups from "./components/groups/Groups";
 import New from "./components/News/New";
 
 function App() {
+  useEffect(() => {
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault();
+      // Stash the event so it can be triggered later.
+      window.deferredPrompt = e;
+    });
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

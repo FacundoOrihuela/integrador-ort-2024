@@ -5,6 +5,10 @@ const urlsToCache = [
   '/index.html',
   '/manifest.json',
   '/generic-variables.css',
+  // '/static/js/bundle.js', // Asegúrate de incluir las rutas correctas a los archivos JavaScript
+  // '/static/js/0.chunk.js',
+  // '/static/js/main.chunk.js',
+  // '/static/css/main.chunk.css',
 ];
 
 self.addEventListener('install', (event) => {
