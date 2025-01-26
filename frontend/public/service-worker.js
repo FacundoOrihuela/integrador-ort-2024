@@ -5,11 +5,6 @@ const urlsToCache = [
   '/index.html',
   '/manifest.json',
   '/generic-variables.css',
-  // Asegúrate de incluir las rutas correctas a los archivos JavaScript
-  // '/static/js/bundle.js',
-  // '/static/js/0.chunk.js',
-  // '/static/js/main.chunk.js',
-  // '/static/css/main.chunk.css',
 ];
 
 self.addEventListener('install', (event) => {
@@ -42,6 +37,7 @@ self.addEventListener('activate', (event) => {
           if (!cacheWhitelist.includes(cacheName)) {
             return caches.delete(cacheName);
           }
+          return Promise.resolve();
         })
       );
     })
