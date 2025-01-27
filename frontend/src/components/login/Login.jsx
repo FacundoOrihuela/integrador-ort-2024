@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import LoginInputs from './LoginInputs';
 import { useEffect } from 'react';
-import fondoImg from "../img/fondo.jpg"; // Importar la imagen
+import fondoImg from "../img/fondo.jpg";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -14,7 +14,7 @@ const Login = () => {
 
     return (
         <section
-            className="flex justify-center items-center h-screen w-screen bg-cover bg-colors-1"
+            className="flex justify-center items-center h-screen w-screen bg-cover bg-colors-1 p-4 md:p-0"
             style={{
                 backgroundImage: `url(${fondoImg})`,
                 backgroundPosition: 'right', 

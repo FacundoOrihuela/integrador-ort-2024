@@ -48,10 +48,7 @@ const CreateGroups = ({ editData, isUpdate, handleUpdateOrCreate }) => {
       setError("La descripción del grupo es obligatoria.");
       return false;
     }
-    if (!formData.leader) {
-      setError("Debe seleccionar un líder para el grupo.");
-      return false;
-    }
+    
     setError("");
     return true;
   };
@@ -71,7 +68,9 @@ const CreateGroups = ({ editData, isUpdate, handleUpdateOrCreate }) => {
     if (!validateForm()) return;
 
     setIsLoading(true);
-
+    if(!formData.leader){
+      formData.leader=1
+    }
     const formDataToSend = new FormData();
     formDataToSend.append("name", formData.name);
     formDataToSend.append("description", formData.description);

@@ -98,6 +98,7 @@ const Kabala = () => {
               padding: 3,
               borderRadius: 2,
               gap: 2,
+              flexDirection: { xs: "column", sm: "row" },
             }}
           >
             <Box
@@ -108,7 +109,8 @@ const Kabala = () => {
                 width: 150,
                 height: 150,
                 borderRadius: "50%",
-                marginRight: 4,
+                marginRight: { xs: 0, md: 2 },
+                marginBottom: { xs: 2, sm: 0 },
               }}
             />
             <Box>
@@ -140,6 +142,7 @@ const Kabala = () => {
                     borderRadius: 3,
                     gap: 3,
                     height: "100%",
+                    flexDirection: { xs: "column", sm: "row" }, // Apilar en móviles
                   }}
                 >
                   <Box
@@ -151,6 +154,7 @@ const Kabala = () => {
                       height: 150,
                       borderRadius: "50%",
                       flexShrink: 0,
+                      marginBottom: { xs: 2, sm: 0 }, // Separar imagen en móviles
                     }}
                   />
                   <Box>

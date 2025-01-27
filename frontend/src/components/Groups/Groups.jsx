@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Header from "../Header";
-import MyGroups from "../MyGroups";
+import MyGroups from "./MyGroups";
 import Footer from "../Footer";
 import GroupPanel from "./GroupPanel";
 

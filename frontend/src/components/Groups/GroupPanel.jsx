@@ -22,6 +22,8 @@ import EditGroup from "./EditGroup";
 import CommentSection from "./CommentSection";
 import config from "../../utils/config.json";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
 const GroupPanel = ({ group }) => {
   const [participants, setParticipants] = useState([]);
@@ -47,11 +49,29 @@ const GroupPanel = ({ group }) => {
   const [commentsCount, setCommentsCount] = useState({});
   const [commentImage, setCommentImage] = useState(null); // Estado para la imagen del comentario
   const [isLoading, setIsLoading] = useState(false); // Estado para manejar la carga
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const loadInfoAsync = async () => {
     await fetchParticipants();
     await fetchAllUsers();
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      const isSmallScreen = window.innerWidth < 768;
+      setIsMobile(isSmallScreen);
+      setIsSidebarOpen(!isSmallScreen);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     loadInfoAsync();
@@ -169,7 +189,7 @@ const GroupPanel = ({ group }) => {
   const handleClosePostModal = () => {
     setSelectedPost(null);
     setPostModalOpen(false);
-    fetchCommentsCounts()
+    fetchCommentsCounts();
   };
 
   const handleCommentClick = (post) => {
@@ -290,7 +310,7 @@ const GroupPanel = ({ group }) => {
       if (commentImage) {
         formData.append("image", commentImage);
       }
-  
+
       const response = await axios.post(
         `${config.apiUrl}/api/comments`,
         formData,
@@ -446,7 +466,7 @@ const GroupPanel = ({ group }) => {
   if (!group) {
     return (
       <div className="p-2 flex flex-col items-center">
-        <h2 className="text-2xl font-bold">
+        <h2 className="text-2xl font-bold mx-5">
           Selecciona un grupo para ver su información.
         </h2>
       </div>
@@ -454,7 +474,7 @@ const GroupPanel = ({ group }) => {
   }
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-full">
       <div className="mt-1 flex-grow flex flex-col h-full">
         <div className="bg-gray-100 p-2 flex flex-col items-center">
           <h2 className="text-2xl font-bold">{group.name}</h2>
@@ -541,9 +561,7 @@ const GroupPanel = ({ group }) => {
                         const now = new Date();
                         const createdDate = new Date(post.createdAt);
                         const diffMs = now - createdDate;
-                        const diffHours = Math.floor(
-                          diffMs / (1000 * 60 * 60)
-                        );
+                        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
                         const diffMinutes = Math.floor(diffMs / (1000 * 60));
 
                         if (diffHours < 1) {
@@ -648,43 +666,111 @@ const GroupPanel = ({ group }) => {
         </div>
       </div>
 
-      <div className="bg-gray-100 shadow p-4 rounded-r flex flex-col items-center">
-        {group && user && group.userId === user.id && (
-          <button
-            onClick={() => setConfigModalOpen(true)}
-            className="flex items-center space-x-2 border border-black rounded-md py-2 px-4 mb-4 w-full justify-center"
-          >
-            <SettingsIcon />
-            <p className="text-sm font-semibold">Configurar grupo</p>
-          </button>
+      <div className="relative" style={{ minHeight: "calc(100vh - 60px)" }}>
+        {isMobile && (
+          <div className="relative">
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className={`absolute top-[20px] ${
+                isSidebarOpen ? "right-[200px]" : "right-0"
+              } bg-black text-white py-2 rounded-l-md z-10 flex items-center justify-center transition-all duration-300`}
+            >
+              {isSidebarOpen ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            </button>
+
+            <div
+              className={`overflow-y-auto top-[50px] pb-[76px] p-4 bg-gray-100 fixed right-0 h-full z-20 transition-transform duration-300 ${
+                isSidebarOpen
+                  ? "transform translate-x-0"
+                  : "transform translate-x-full"
+              }`}
+            >
+              {group && user && group.userId === user.id && (
+                <button
+                  onClick={() => setConfigModalOpen(true)}
+                  className="flex items-center space-x-2 border border-black rounded-md py-2 px-4 mb-4 w-full justify-center"
+                >
+                  <SettingsIcon />
+                  <p className="text-sm font-semibold">Configurar grupo</p>
+                </button>
+              )}
+
+              <h3 className="text-sm font-semibold mb-4">Participantes</h3>
+              <div className="flex flex-col gap-4 overflow-y-auto max-h-[calc(100vh-60px-80px)]">
+                {participants?.map((participant) => (
+                  <div
+                    key={participant.id}
+                    className="flex flex-col items-center"
+                  >
+                    <motion.div
+                      className="relative rounded-full overflow-hidden shadow-lg cursor-pointer"
+                      whileHover={{ scale: 1.1 }}
+                      onClick={() => handleOpenParticipantModal(participant)}
+                    >
+                      {participant.photo ? (
+                        <Avatar
+                          src={participant.photo}
+                          alt="Profile Photo"
+                          className="h-full w-full"
+                          sx={{ width: 20, height: 20 }}
+                        />
+                      ) : (
+                        <AccountCircleIcon className="w-full h-full" />
+                      )}
+                    </motion.div>
+                    <p className="text-xs font-bold text-gray-700">
+                      {participant.name}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         )}
 
-        <h3 className="text-sm font-semibold mb-4">Participantes</h3>
-        <div className="flex flex-col gap-4">
-          {participants?.map((participant) => (
-            <div key={participant.id} className="flex flex-col items-center">
-              <motion.div
-                className="relative rounded-full overflow-hidden shadow-lg cursor-pointer"
-                whileHover={{ scale: 1.1 }}
-                onClick={() => handleOpenParticipantModal(participant)}
+        {!isMobile && (
+          <div className="bg-gray-100 shadow p-4 rounded-r flex flex-col items-center h-full">
+            {group && user && group.userId === user.id && (
+              <button
+                onClick={() => setConfigModalOpen(true)}
+                className="flex items-center space-x-2 border border-black rounded-md py-2 px-4 mb-4 w-full justify-center"
               >
-                {participant.photo ? (
-                  <Avatar
-                    src={participant.photo}
-                    alt="Profile Photo"
-                    className="h-full w-full"
-                    sx={{ width: 20, height: 20 }}
-                  />
-                ) : (
-                  <AccountCircleIcon className="w-full h-full" />
-                )}
-              </motion.div>
-              <p className="text-xs font-bold text-gray-700">
-                {participant.name}
-              </p>
+                <SettingsIcon />
+                <p className="text-sm font-semibold">Configurar grupo</p>
+              </button>
+            )}
+
+            <h3 className="text-sm font-semibold mb-4">Participantes</h3>
+            <div className="flex flex-col gap-4">
+              {participants?.map((participant) => (
+                <div
+                  key={participant.id}
+                  className="flex flex-col items-center"
+                >
+                  <motion.div
+                    className="relative rounded-full overflow-hidden shadow-lg cursor-pointer"
+                    whileHover={{ scale: 1.1 }}
+                    onClick={() => handleOpenParticipantModal(participant)}
+                  >
+                    {participant.photo ? (
+                      <Avatar
+                        src={participant.photo}
+                        alt="Profile Photo"
+                        className="h-full w-full"
+                        sx={{ width: 20, height: 20 }}
+                      />
+                    ) : (
+                      <AccountCircleIcon className="w-full h-full" />
+                    )}
+                  </motion.div>
+                  <p className="text-xs font-bold text-gray-700">
+                    {participant.name}
+                  </p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Modal de Configuración del Grupo */}

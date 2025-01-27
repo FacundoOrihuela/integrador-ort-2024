@@ -10,6 +10,10 @@ import {
   Menu,
   MenuItem,
   ListItemIcon,
+  Drawer,
+  List,
+  ListItem,
+  Divider,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -31,6 +35,7 @@ const Header = ({ store }) => {
   const [showCart, setShowCart] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const profileButtonRef = useRef(null);
@@ -38,10 +43,8 @@ const Header = ({ store }) => {
 
   const handleRestrictedClick = (path) => {
     if (!user) {
-      console.log("Usuario no logueado. Mostrando alerta.");
       setShowAlert(true);
     } else {
-      console.log(`Usuario logueado. Redirigiendo a: ${path}`);
       navigate(path);
     }
   };
@@ -58,16 +61,26 @@ const Header = ({ store }) => {
 
   return (
     <>
-      <AppBar position="sticky" className="bg-colors-1 shadow-md h-[5rem]">
-        <Container maxWidth="lg" className="h-full">
-          <Toolbar disableGutters className="flex justify-between items-center h-full">
+      <AppBar position="sticky" className="bg-colors-1 shadow-md">
+        <Container maxWidth="lg" className="px-4 md:px-8">
+          <Toolbar disableGutters className="flex justify-between items-center">
             <div className="flex items-center">
               <Link to="/" className="flex items-center">
-                <img src={logoImg} alt="Logo" className="h-14 w-14 rounded-full" />
+                <img
+                  src={logoImg}
+                  alt="Logo"
+                  className="h-10 w-10 sm:h-14 sm:w-14 rounded-full"
+                />
               </Link>
             </div>
 
-            <nav className="flex-1 flex justify-center space-x-6">
+            <div className="flex items-center gap-4 md:hidden">
+              <IconButton color="inherit" onClick={() => setDrawerOpen(true)}>
+                <span className="material-icons">Menu</span>
+              </IconButton>
+            </div>
+
+            <nav className="hidden md:flex flex-1 justify-center space-x-6">
               <Link
                 to="/"
                 className={`text-secondary text-lg font-bold border-b-2 ${
@@ -76,11 +89,13 @@ const Header = ({ store }) => {
               >
                 Home
               </Link>
-
               <div>
                 <button
                   className={`text-secondary text-lg font-bold relative border-b-2 ${
-                    isActive("/aboutTiferet") || isActive("/members") || isActive("/together") || isActive("/history")
+                    isActive("/aboutTiferet") ||
+                    isActive("/members") ||
+                    isActive("/together") ||
+                    isActive("/history")
                       ? "border-white"
                       : "border-transparent"
                   } hover:border-white`}
@@ -103,7 +118,9 @@ const Header = ({ store }) => {
                     <Link
                       to="/aboutTiferet"
                       className={`text-black text-lg block border-b-2 ${
-                        isActive("/aboutTiferet") ? "border-white" : "border-transparent"
+                        isActive("/aboutTiferet")
+                          ? "border-white"
+                          : "border-transparent"
                       } hover:border-white`}
                     >
                       ¿Qué es Tiferet?
@@ -116,7 +133,9 @@ const Header = ({ store }) => {
                     <Link
                       to="/members"
                       className={`text-black text-lg block border-b-2 ${
-                        isActive("/members") ? "border-white" : "border-transparent"
+                        isActive("/members")
+                          ? "border-white"
+                          : "border-transparent"
                       } hover:border-white`}
                     >
                       Integrantes
@@ -129,7 +148,9 @@ const Header = ({ store }) => {
                     <Link
                       to="/together"
                       className={`text-black text-lg block border-b-2 ${
-                        isActive("/together") ? "border-white" : "border-transparent"
+                        isActive("/together")
+                          ? "border-white"
+                          : "border-transparent"
                       } hover:border-white`}
                     >
                       Solo Juntos
@@ -142,7 +163,9 @@ const Header = ({ store }) => {
                     <Link
                       to="/history"
                       className={`text-black text-lg block border-b-2 ${
-                        isActive("/history") ? "border-white" : "border-transparent"
+                        isActive("/history")
+                          ? "border-white"
+                          : "border-transparent"
                       } hover:border-white`}
                     >
                       Nuestra Historia
@@ -150,11 +173,12 @@ const Header = ({ store }) => {
                   </MenuItem>
                 </Menu>
               </div>
-
               <span
                 onClick={() => handleRestrictedClick("/actividades")}
                 className={`text-secondary text-lg font-bold cursor-pointer border-b-2 ${
-                  isActive("/actividades") ? "border-white" : "border-transparent"
+                  isActive("/actividades")
+                    ? "border-white"
+                    : "border-transparent"
                 } hover:border-white`}
               >
                 Actividades
@@ -189,35 +213,56 @@ const Header = ({ store }) => {
             <div className="flex items-center gap-4">
               {store && (
                 <div>
-                  <IconButton color="inherit" onClick={() => setShowFav(!showFav)}>
-                    <Favorite className="text-white text-3xl" />
+                  <IconButton
+                    color="inherit"
+                    onClick={() => setShowFav(!showFav)}
+                  >
+                    <Favorite className="text-white text-2xl" />
                   </IconButton>
-                  <IconButton color="inherit" onClick={() => setShowCart(!showCart)}>
-                    <ShoppingCartIcon className="text-white text-3xl" />
+                  <IconButton
+                    color="inherit"
+                    onClick={() => setShowCart(!showCart)}
+                  >
+                    <ShoppingCartIcon className="text-white text-2xl" />
                   </IconButton>
                 </div>
               )}
 
               {user ? (
                 <>
-                  <IconButton color="inherit" onClick={() => setShowProfile(!showProfile)} ref={profileButtonRef}>
+                  <IconButton
+                    color="inherit"
+                    onClick={() => setShowProfile(!showProfile)}
+                    ref={profileButtonRef}
+                  >
                     {user.photo ? (
-                      <Avatar src={user.photo} alt="Profile Photo" className="h-10 w-10" />
+                      <Avatar
+                        src={user.photo}
+                        alt="Profile Photo"
+                        className="h-8 w-8 sm:h-10 sm:w-10"
+                      />
                     ) : (
-                      <AccountCircleIcon className="text-white text-3xl" />
+                      <AccountCircleIcon className="text-white text-2xl sm:text-3xl" />
                     )}
                   </IconButton>
-
-                  <Typography variant="body1" className="text-white">
-                    ¡Bienvenido, {user.name}!
+                  <Typography
+                    variant="body1"
+                    className="text-white hidden sm:block"
+                  >
+                    ¡Hola, {user.name}!
                   </Typography>
-                  {showProfile && <ProfileModal profileButtonRef={profileButtonRef} onClose={() => setShowProfile(false)} />}
+                  {showProfile && (
+                    <ProfileModal
+                      profileButtonRef={profileButtonRef}
+                      onClose={() => setShowProfile(false)}
+                    />
+                  )}
                 </>
               ) : (
                 <div className="flex gap-4">
                   <Link
                     to="/login"
-                    className={`text-secondary text-lg font-bold border-b-2 ${
+                    className={`text-secondary text-lg font-bold ${
                       isActive("/login") ? "border-white" : "border-transparent"
                     } hover:border-white`}
                   >
@@ -225,8 +270,10 @@ const Header = ({ store }) => {
                   </Link>
                   <Link
                     to="/register"
-                    className={`text-secondary text-lg font-bold border-b-2 ${
-                      isActive("/register") ? "border-white" : "border-transparent"
+                    className={`text-secondary text-lg font-bold ${
+                      isActive("/register")
+                        ? "border-white"
+                        : "border-transparent"
                     } hover:border-white`}
                   >
                     Registrarse
@@ -240,7 +287,34 @@ const Header = ({ store }) => {
         </Container>
       </AppBar>
 
-      {showAlert && <RegisterAlert open={showAlert} onClose={() => setShowAlert(false)} />}
+      <Drawer
+        anchor="left"
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      >
+        <List>
+          <ListItem button onClick={() => navigate("/")}>
+            Home
+          </ListItem>
+          <ListItem button onClick={() => navigate("/actividades")}>
+            Actividades
+          </ListItem>
+          <ListItem button onClick={() => navigate("/store")}>
+            Tienda
+          </ListItem>
+          <ListItem button onClick={() => navigate("/news")}>
+            Noticias
+          </ListItem>
+          <ListItem button onClick={() => navigate("/contact")}>
+            Contacto
+          </ListItem>
+          <Divider />
+        </List>
+      </Drawer>
+
+      {showAlert && (
+        <RegisterAlert open={showAlert} onClose={() => setShowAlert(false)} />
+      )}
     </>
   );
 };
