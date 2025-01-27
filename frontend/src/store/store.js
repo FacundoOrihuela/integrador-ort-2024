@@ -1,3 +1,4 @@
+import React from 'react';
 import { configureStore } from '@reduxjs/toolkit';
 import loginReducer from '../features/loginSlice';
 import dashboardReducer from '../features/dashboardSlice';
