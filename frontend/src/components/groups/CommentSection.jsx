@@ -195,7 +195,9 @@ const CommentSection = ({ postId, token, group }) => {
                           });
                         }
                       })()}
-                      <span className="ml-1 text-xs text-gray-400">(editado)</span>
+                      <span className="ml-1 text-xs text-gray-400">
+                        (editado)
+                      </span>
                     </>
                   ) : (
                     (() => {
@@ -279,7 +281,9 @@ const CommentSection = ({ postId, token, group }) => {
                         style={{ display: "none" }}
                         id={`edit-comment-image-upload-${comment.id}`}
                       />
-                      <label htmlFor={`edit-comment-image-upload-${comment.id}`}>
+                      <label
+                        htmlFor={`edit-comment-image-upload-${comment.id}`}
+                      >
                         <IconButton component="span">
                           <AttachFileIcon />
                         </IconButton>
@@ -306,53 +310,60 @@ const CommentSection = ({ postId, token, group }) => {
             </div>
 
             <div className="flex justify-between items-center px-3 pb-3">
-              {user && (comment.userId === user.id || group.userId === user.id) && (
-                <div>
-                  {comment.isEditing ? (
-                    <>
-                      <IconButton
-                        onClick={() => updateComment(comment.id, comment.editedContent)}
-                        aria-label="Guardar"
-                      >
-                        <CheckIcon />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => {
-                          setComments(
-                            comments.map((c) =>
-                              c.id === comment.id ? { ...c, isEditing: false } : c
+              {user &&
+                (comment.userId === user.id || group.userId === user.id) && (
+                  <div>
+                    {comment.isEditing ? (
+                      <>
+                        <IconButton
+                          onClick={() =>
+                            updateComment(comment.id, comment.editedContent)
+                          }
+                          aria-label="Guardar"
+                        >
+                          <CheckIcon />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => {
+                            setComments(
+                              comments.map((c) =>
+                                c.id === comment.id
+                                  ? { ...c, isEditing: false }
+                                  : c
+                              )
+                            );
+                          }}
+                          aria-label="Cancelar"
+                        >
+                          <CloseIcon />
+                        </IconButton>
+                      </>
+                    ) : (
+                      <>
+                        <IconButton
+                          onClick={() =>
+                            setComments(
+                              comments.map((c) =>
+                                c.id === comment.id
+                                  ? { ...c, isEditing: true }
+                                  : c
+                              )
                             )
-                          );
-                        }}
-                        aria-label="Cancelar"
-                      >
-                        <CloseIcon />
-                      </IconButton>
-                    </>
-                  ) : (
-                    <>
-                      <IconButton
-                        onClick={() =>
-                          setComments(
-                            comments.map((c) =>
-                              c.id === comment.id ? { ...c, isEditing: true } : c
-                            )
-                          )
-                        }
-                        aria-label="Editar"
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => deleteComment(comment.id)}
-                        aria-label="Eliminar"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </>
-                  )}
-                </div>
-              )}
+                          }
+                          aria-label="Editar"
+                        >
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => deleteComment(comment.id)}
+                          aria-label="Eliminar"
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </>
+                    )}
+                  </div>
+                )}
             </div>
           </div>
         ))}
@@ -367,18 +378,25 @@ const CommentSection = ({ postId, token, group }) => {
           placeholder="Escribe un comentario..."
         />
         <div className="flex justify-end items-center mt-2">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            style={{ display: "none" }}
-            id="comment-image-upload"
-          />
-          <label htmlFor="comment-image-upload">
-            <IconButton component="span">
-              <AttachFileIcon />
-            </IconButton>
-          </label>
+          <div className="flex items-center">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+              id="comment-image-upload"
+            />
+            <label htmlFor="comment-image-upload">
+              <IconButton component="span">
+                <AttachFileIcon />
+              </IconButton>
+            </label>
+            {commentImage && (
+              <span className="ml-2 text-sm text-gray-600">
+                {commentImage.name}
+              </span>
+            )}
+          </div>
           <button
             onClick={() => addComment(newComment)}
             disabled={isLoading}

@@ -4,7 +4,13 @@ import { saveSessionToken } from "../../features/loginSlice";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material";
 import config from "../../utils/config.json";
 
 const LoginInputs = () => {
@@ -23,7 +29,6 @@ const LoginInputs = () => {
   const [blockReason, setBlockReason] = useState("");
 
   useEffect(() => {
-    // Set default values
     emailField.current.value = "admin@gmail.com";
     passField.current.value = "Admin123";
     checkFields();
@@ -39,7 +44,7 @@ const LoginInputs = () => {
     const pass = passField.current.value.trim();
     if (!email) return toast.error("El email es un campo obligatorio.");
     if (!pass) return toast.error("La contraseña es un campo obligatorio.");
-    
+
     executeLogin({ email: email, password: pass });
   };
 
@@ -93,37 +98,37 @@ const LoginInputs = () => {
   return (
     <>
       <form
-        className="flex flex-col items-center p-6 gap-4"
+        className="flex flex-col items-center p-3 gap-2 max-w-full w-full mx-auto"
         onKeyDown={handleKeyDown}
       >
-        <figure className="w-1/2 p-4 mb-6">
+        <figure className="w-2/3 md:w-1/2 p-3 mb-4">
           <img src="/svg/Logo.png" alt="logo-Tiféret" className="w-full" />
         </figure>
-        <div className="w-full max-w-sm mb-4">
+        <div className="w-full max-w-sm mb-3">
           <label
             htmlFor={email}
-            className="block text-gray-700 text-sm font-medium mb-1"
+            className="block text-gray-700 text-[0.7em] font-medium mb-1"
           >
             Ingrese su correo electrónico
           </label>
           <input
             type="text"
-            className="w-full border border-gray-300 rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-colors-1"
+            className="w-full border border-gray-300 rounded-md p-[1vh] text-[0.8em] focus:outline-none focus:ring-2 focus:ring-colors-1"
             ref={emailField}
             id={email}
             onChange={checkFields}
           />
         </div>
-        <div className="relative w-full max-w-sm mb-4">
+        <div className="relative w-full max-w-sm mb-3">
           <label
             htmlFor={pass}
-            className="block text-gray-700 text-sm font-medium mb-1"
+            className="block text-gray-700 text-[0.7em] font-medium mb-1"
           >
             Contraseña
           </label>
           <input
             type={showPassword ? "text" : "password"}
-            className="w-full border border-gray-300 rounded-md p-2 text-sm pr-10 focus:outline-none focus:ring-2 focus:ring-colors-1"
+            className="w-full border border-gray-300 rounded-md p-[1vh] text-[0.8em] pr-8 focus:outline-none focus:ring-2 focus:ring-colors-1"
             ref={passField}
             id={pass}
             onChange={checkFields}
@@ -131,29 +136,31 @@ const LoginInputs = () => {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 translate-y-0.5"
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 mt-[3%]"
           >
             <img
               src={showPassword ? "/svg/eyeClosed.svg" : "/svg/eyeOpen.svg"}
               alt={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
-              className="w-6 h-6"
+              className="w-[18px] h-[18px]"
             />
           </button>
         </div>
 
         <button
           type="button"
-          className={`px-4 py-2 font-semibold rounded-md w-full text-sm transition-all duration-200 ease-in-out focus:outline-none ${
+          className={`px-3 py-1.5 font-semibold rounded-md w-full text-[0.8em] transition-all duration-200 ease-in-out focus:outline-none ${
             isLoading
               ? "bg-gray-400 text-white cursor-not-allowed"
               : "bg-colors-1 text-white focus:ring-2 focus:ring-colors-1"
           }`}
           onClick={loginHandler}
-          disabled={isLoading || emailFieldLength === 0 || passFieldLength === 0}
+          disabled={
+            isLoading || emailFieldLength === 0 || passFieldLength === 0
+          }
         >
           {isLoading ? (
             <div className="flex justify-center items-center space-x-2">
-              <div className="w-4 h-4 border-2 border-t-2 border-white rounded-full animate-spin"></div>
+              <div className="w-3 h-3 border-2 border-t-2 border-white rounded-full animate-spin"></div>
               <span>Cargando...</span>
             </div>
           ) : (
@@ -163,7 +170,7 @@ const LoginInputs = () => {
 
         <button
           type="button"
-          className="px-4 py-2 font-semibold rounded-md w-full text-sm transition-all duration-200 ease-in-out focus:outline-none bg-colors-1 text-white focus:ring-2 focus:ring-colors-1"
+          className="px-3 py-1.5 font-semibold rounded-md w-full text-[0.8em] transition-all duration-200 ease-in-out focus:outline-none bg-colors-1 text-white focus:ring-2 focus:ring-colors-1"
           onClick={() => navigate("/")}
         >
           Entrar sin Registrarme
@@ -171,13 +178,13 @@ const LoginInputs = () => {
 
         <Link
           to="/register"
-          className="mt-2 text-colors-1 hover:text-colors-1 text-xs font-medium"
+          className="mt-1 text-colors-1 hover:text-colors-1 text-[0.7em] font-medium"
         >
           Registrarse
         </Link>
         <Link
           to="/forgotPassword"
-          className="mt-1 text-colors-1 hover:text-orange-900 text-xs font-small"
+          className="mt-1 text-colors-1 hover:text-orange-900 text-[0.7em] font-small"
         >
           ¿Olvidaste tu contraseña?
         </Link>

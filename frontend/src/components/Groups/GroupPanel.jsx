@@ -202,6 +202,11 @@ const GroupPanel = ({ group }) => {
     setSelectedPost(null);
   };
 
+  const handleCloseEditGroupModal = () => {
+    setEditGroupModalOpen(false);
+    fetchParticipants();
+  };
+
   const handleCreateOrUpdatePost = async () => {
     if (newPostContent.trim()) {
       if (selectedPost) {
@@ -806,12 +811,18 @@ const GroupPanel = ({ group }) => {
       {/* Modal para editar el grupo */}
       <Modal
         open={editGroupModalOpen}
-        onClose={() => setEditGroupModalOpen(false)}
+        onClose={() => {
+          setEditGroupModalOpen(false);
+          window.location.reload(); // Recarga la página al cerrar el modal
+        }}
       >
         <div className="flex justify-center items-center h-full bg-gray-500 bg-opacity-50">
           <div className="bg-white p-6 rounded-lg w-96 relative">
             <CloseIcon
-              onClick={() => setEditGroupModalOpen(false)}
+              onClick={() => {
+                setEditGroupModalOpen(false);
+                window.location.reload(); // Recarga la página al hacer clic en el icono de cerrar
+              }}
               className="absolute top-2 right-2 cursor-pointer text-black"
               style={{ fontSize: 30 }}
             />
@@ -819,7 +830,7 @@ const GroupPanel = ({ group }) => {
               editData={group}
               isUpdate={true}
               handleUpdateOrCreate={() => {
-                fetchParticipants();
+                window.location.reload(); // Recarga la página después de la actualización
                 setEditGroupModalOpen(false);
               }}
             />
