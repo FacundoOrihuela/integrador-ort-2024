@@ -33,7 +33,7 @@ import AboutTiferet from "./components/AboutTiferet";
 import Members from "./components/Members";
 import History from "./components/History";
 import SoloJuntos from "./components/SoloJuntos";
-import Groups from "./components/groups/Groups";
+import Groups from "./components/groupss/Groups";
 import New from "./components/News/New";
 
 function App() {
