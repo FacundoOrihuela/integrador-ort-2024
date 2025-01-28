@@ -1,5 +1,4 @@
-import React from 'react';
-import { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
 import { UserContext } from './UserContext';
 import config from "../utils/config.json";
 
@@ -9,13 +8,7 @@ export const FavoriteProvider = ({ children }) => {
     const { user } = useContext(UserContext);
     const [favorite, setFavorite] = useState([]);
 
-    useEffect(() => {
-        if (user) {
-            fetchFavorite();
-        }
-    }, [user]);
-
-    const fetchFavorite = () => {
+    const fetchFavorite = useCallback(() => {
         if (user) {
             fetch(`${config.apiUrl}/api/favorites/${user.id}`, {
                 headers: {
@@ -26,7 +19,13 @@ export const FavoriteProvider = ({ children }) => {
                 .then((data) => setFavorite(data))
                 .catch((error) => console.error('Error fetching favorite:', error));
         }
-    };
+    }, [user]); 
+
+    useEffect(() => {
+        if (user) {
+            fetchFavorite();
+        }
+    }, [user, fetchFavorite]);
 
     const addToFavorite = (product) => {
         if (user) {

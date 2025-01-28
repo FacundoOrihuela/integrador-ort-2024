@@ -1,4 +1,3 @@
-import React from 'react';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import config from "../utils/config.json";
 

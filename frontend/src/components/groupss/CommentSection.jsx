@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { UserContext } from "../../context/UserContext";
 import { Avatar, Modal, IconButton } from "@mui/material";
@@ -21,11 +21,7 @@ const CommentSection = ({ postId, token, group }) => {
   const [imageModalOpen, setImageModalOpen] = useState(false);
 
   // Obtener todos los comentarios
-  useEffect(() => {
-    fetchComments();
-  }, [postId, token]);
-
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       const response = await axios.get(
         `${config.apiUrl}/api/comments/post/${postId}`,
@@ -45,7 +41,11 @@ const CommentSection = ({ postId, token, group }) => {
     } catch (error) {
       console.error("Error fetching comments:", error);
     }
-  };
+  }, [postId, token]);
+
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments]);
 
   // Agregar un nuevo comentario
   const addComment = async (content) => {
@@ -59,7 +59,7 @@ const CommentSection = ({ postId, token, group }) => {
         formData.append("image", commentImage);
       }
 
-      const response = await axios.post(
+      await axios.post(
         `${config.apiUrl}/api/comments`,
         formData,
         {
@@ -69,7 +69,6 @@ const CommentSection = ({ postId, token, group }) => {
           },
         }
       );
-      console.log(response.data);
       fetchComments();
       setNewComment("");
       setCommentImage(null);
@@ -91,7 +90,7 @@ const CommentSection = ({ postId, token, group }) => {
         formData.append("image", editedCommentImage);
       }
   
-      const response = await axios.put(
+      await axios.put(
         `${config.apiUrl}/api/comments/${commentId}`,
         formData,
         {
@@ -265,169 +264,130 @@ const CommentSection = ({ postId, token, group }) => {
               {comment.isEditing ? (
                 <>
                   <textarea
+                    className="w-full px-4 py-2 border rounded-md"
                     value={comment.editedContent}
                     onChange={(e) =>
                       setComments(
-                        comments.map((c) =>
-                          c.id === comment.id
-                            ? { ...c, editedContent: e.target.value }
-                            : c
+                        comments.map((item) =>
+                          item.id === comment.id
+                            ? { ...item, editedContent: e.target.value }
+                            : item
                         )
                       )
                     }
-                    className="w-full p-2 border border-gray-300 rounded-md"
                   />
-                  <div className="flex items-center justify-between bg-gray-100 p-2 mt-2 rounded-md">
-                    <div className="flex items-center">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleEditFileChange}
-                        style={{ display: "none" }}
-                        id={`edit-comment-image-upload-${comment.id}`}
-                      />
-                      <label htmlFor={`edit-comment-image-upload-${comment.id}`}>
-                        <IconButton component="span">
-                          <AttachFileIcon />
-                        </IconButton>
-                      </label>
-                      {editedCommentImage && (
-                        <span className="ml-2 text-sm text-gray-600">
-                          {editedCommentImage.name}
-                        </span>
-                      )}
-                    </div>
+                  <div className="flex justify-end gap-2 mt-2">
+                    <label htmlFor={`edit-file-input-${comment.id}`}>
+                      <IconButton component="span" size="small">
+                        <AttachFileIcon fontSize="inherit" />
+                      </IconButton>
+                    </label>
+                    <input
+                      id={`edit-file-input-${comment.id}`}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleEditFileChange}
+                    />
+                    <IconButton
+                      onClick={() => updateComment(comment.id, comment.editedContent)}
+                    >
+                      <CheckIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => {
+                        setComments(
+                          comments.map((item) =>
+                            item.id === comment.id
+                              ? { ...item, isEditing: false }
+                              : item
+                          )
+                        );
+                      }}
+                    >
+                      <CloseIcon />
+                    </IconButton>
                   </div>
                 </>
               ) : (
-                <p className="text-left">{comment.content}</p>
-              )}
-              {comment.photo && (
-                <img
-                  src={comment.photo}
-                  alt="Comment"
-                  className="w-auto max-h-64 object-contain rounded-md cursor-pointer"
-                  onClick={() => handleImageClick(comment.photo)}
-                />
-              )}
-            </div>
-
-            {/* Controles del Comentario */}
-            <div className="flex justify-between items-center px-3 pb-3">
-              <div className="flex items-center space-x-2"></div>
-              {user &&
-                (comment.userId === user.id || group.userId === user.id) && (
-                  <div>
-                    {comment.isEditing ? (
+                <>
+                  <p className="text-gray-700">{comment.content}</p>
+                  {comment.image && (
+                    <div>
+                      <img
+                        src={`${config.apiUrl}/uploads/comments/${comment.image}`}
+                        alt="Comentario"
+                        className="mt-2 cursor-pointer max-w-[150px]"
+                        onClick={() =>
+                          handleImageClick(
+                            `${config.apiUrl}/uploads/comments/${comment.image}`
+                          )
+                        }
+                      />
+                    </div>
+                  )}
+                  <div className="flex gap-2 justify-end mt-2">
+                    {(user.id === comment.User.id ||
+                      group === "admin") && (
                       <>
                         <IconButton
-                          onClick={() => updateComment(comment.id, comment.editedContent)}
-                          color="inherit"
-                          disabled={isLoading}
-                        >
-                          {isLoading ? (
-                            <div className="flex justify-center items-center space-x-2">
-                              <div className="w-4 h-4 border-2 border-t-2 border-black rounded-full animate-spin"></div>
-                            </div>
-                          ) : (
-                            <CheckIcon />
-                          )}
-                        </IconButton>
-                        <IconButton
-                          onClick={() =>
+                          onClick={() => {
                             setComments(
-                              comments.map((c) =>
-                                c.id === comment.id
-                                  ? { ...c, isEditing: false }
-                                  : c
+                              comments.map((item) =>
+                                item.id === comment.id
+                                  ? { ...item, isEditing: true }
+                                  : item
                               )
-                            )
-                          }
-                          color="inherit"
-                        >
-                          <CloseIcon />
-                        </IconButton>
-                      </>
-                    ) : (
-                      <>
-                        <IconButton
-                          onClick={() =>
-                            setComments(
-                              comments.map((c) =>
-                                c.id === comment.id
-                                  ? { ...c, isEditing: true }
-                                  : c
-                              )
-                            )
-                          }
-                          color="inherit"
+                            );
+                          }}
                         >
                           <EditIcon />
                         </IconButton>
                         <IconButton
                           onClick={() => deleteComment(comment.id)}
-                          color="inherit"
                         >
                           <DeleteIcon />
                         </IconButton>
                       </>
                     )}
                   </div>
-                )}
+                </>
+              )}
             </div>
           </div>
         ))}
       </ul>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          addComment(newComment);
-        }}
-        className="mt-4"
-      >
+
+      {/* Nuevo comentario */}
+      <div className="mt-6">
         <textarea
+          className="w-full px-4 py-2 border rounded-md"
+          placeholder="Escribe un comentario..."
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
-          placeholder="Escribe un comentario"
-          className="w-full p-2 border border-gray-300 rounded-md text-sm focus:ring focus:ring-blue-400 focus:outline-none resize-none"
-          rows="3"
         />
-        <div className="flex items-center justify-between bg-gray-100 p-2 mt-2 rounded-md">
-          <div className="flex items-center">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              style={{ display: "none" }}
-              id="comment-image-upload"
-            />
-            <label htmlFor="comment-image-upload">
-              <IconButton component="span">
-                <AttachFileIcon />
-              </IconButton>
-            </label>
-            {commentImage && (
-              <span className="ml-2 text-sm text-gray-600">
-                {commentImage.name}
-              </span>
-            )}
-          </div>
+        <div className="flex justify-end gap-2 mt-2">
+          <label htmlFor="file-input">
+            <IconButton component="span" size="small">
+              <AttachFileIcon fontSize="inherit" />
+            </IconButton>
+          </label>
+          <input
+            id="file-input"
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleFileChange}
+          />
           <button
-            type="submit"
-            className="py-1 px-4 bg-colors-1 text-white text-sm font-medium rounded-md hover:bg-colors-1 hover:brightness-90 transition"
-            disabled={isLoading} // Deshabilitar el botón mientras se carga
+            className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:bg-gray-300"
+            onClick={() => addComment(newComment)}
+            disabled={isLoading}
           >
-            {isLoading ? (
-              <div className="flex justify-center items-center space-x-2">
-                <div className="w-4 h-4 border-2 border-t-2 border-white rounded-full animate-spin"></div>
-                <span>Cargando...</span>
-              </div>
-            ) : (
-              "Agregar"
-            )}
+            {isLoading ? "Cargando..." : "Comentar"}
           </button>
         </div>
-      </form>
+      </div>
     </div>
   );
 };
