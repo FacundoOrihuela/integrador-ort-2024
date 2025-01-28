@@ -10,7 +10,7 @@ import Yoga from './menuComponents/Yoga';
 import Integraciones from './menuComponents/Integraciones';
 import Psicoterapias from './menuComponents/Psicoterapias';
 import { isMobile } from 'react-device-detect';
-import { toast, ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DownloadBanner from './DownloadBanner';
 

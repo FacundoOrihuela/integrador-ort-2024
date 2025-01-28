@@ -1,4 +1,3 @@
-import React from 'react';
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -12,7 +11,5 @@ export const dashboardSlice = createSlice({
         
     }
 })
-
-export const { } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

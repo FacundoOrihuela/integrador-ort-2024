@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -48,10 +48,10 @@ const GroupPanel = ({ group }) => {
   const [commentImage, setCommentImage] = useState(null); // Estado para la imagen del comentario
   const [isLoading, setIsLoading] = useState(false); // Estado para manejar la carga
 
-  const loadInfoAsync = async () => {
+  const loadInfoAsync = useCallback(async () => {
     await fetchParticipants();
     await fetchAllUsers();
-  };
+  }, [group, token]);
 
   useEffect(() => {
     loadInfoAsync();
