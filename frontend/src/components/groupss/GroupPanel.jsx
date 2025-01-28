@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -45,49 +45,37 @@ const GroupPanel = ({ group }) => {
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [commentsCount, setCommentsCount] = useState({});
-  const [commentImage, setCommentImage] = useState(null); // Estado para la imagen del comentario
-  const [isLoading, setIsLoading] = useState(false); // Estado para manejar la carga
+  const [commentImage, setCommentImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const loadInfoAsync = async () => {
-    await fetchParticipants();
-    await fetchAllUsers();
-  };
+  const fetchParticipants = useCallback(async () => {
+    if (!group || !token) return;
 
-  useEffect(() => {
-    loadInfoAsync();
+    try {
+      const response = await fetch(
+        `${config.apiUrl}/api/groups/${group.id}/users`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setParticipants(data.data);
+      } else {
+        console.error(
+          "Error al obtener los participantes:",
+          response.statusText
+        );
+      }
+    } catch (error) {
+      console.error("Error al conectar con el servidor:", error);
+    }
   }, [group, token]);
 
-  useEffect(() => {
-    if (group) {
-      fetchPosts();
-    }
-  }, [group]);
-
-  useEffect(() => {
-    fetchCommentsCounts();
-  }, [posts, token]);
-
-  const fetchCommentsCounts = async () => {
-    try {
-      const counts = {};
-      for (const post of posts) {
-        const response = await axios.get(
-          `${config.apiUrl}/api/comments/post/${post.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        counts[post.id] = response.data.data.length;
-      }
-      setCommentsCount(counts);
-    } catch (error) {
-      console.error("Error fetching comments count:", error);
-    }
-  };
-
-  const fetchAllUsers = async () => {
+  const fetchAllUsers = useCallback(async () => {
     if (!token) return;
 
     try {
@@ -113,34 +101,70 @@ const GroupPanel = ({ group }) => {
     } catch (error) {
       console.error("Error al conectar con el servidor:", error);
     }
-  };
+  }, [token]);
 
-  const fetchParticipants = async () => {
-    if (!group || !token) return;
+  const loadInfoAsync = useCallback(async () => {
+    await fetchParticipants();
+    await fetchAllUsers();
+  }, [fetchParticipants, fetchAllUsers]);
 
+  useEffect(() => {
+    loadInfoAsync();
+  }, [group, token, loadInfoAsync]);
+
+  const fetchPosts = useCallback(async () => {
+    if (!group) return;
     try {
       const response = await fetch(
-        `${config.apiUrl}/api/groups/${group.id}/users`,
+        `${config.apiUrl}/api/posts/group/${group.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-
       if (response.ok) {
         const data = await response.json();
-        setParticipants(data.data);
+        console.log(data);
+        setPosts(data.data.reverse());
       } else {
-        console.error(
-          "Error al obtener los participantes:",
-          response.statusText
-        );
+        console.error("Error al obtener los posts:", response.statusText);
       }
     } catch (error) {
       console.error("Error al conectar con el servidor:", error);
     }
-  };
+  }, [group, token]);
+
+  useEffect(() => {
+    if (group) {
+      fetchPosts();
+    }
+  }, [group, fetchPosts]);
+
+  const fetchCommentsCounts = useCallback(async () => {
+    try {
+      const counts = {};
+      for (const post of posts) {
+        const response = await axios.get(
+          `${config.apiUrl}/api/comments/post/${post.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        counts[post.id] = response.data.data.length;
+      }
+      setCommentsCount(counts);
+    } catch (error) {
+      console.error("Error fetching comments count:", error);
+    }
+  }, [posts, token]);
+
+  useEffect(() => {
+    fetchCommentsCounts();
+  }, [posts, token, fetchCommentsCounts]);
+
   const handleOpenParticipantModal = (participant) => {
     setSelectedParticipant(participant);
     setParticipantModalOpen(true);
@@ -309,30 +333,6 @@ const GroupPanel = ({ group }) => {
       console.error("Error adding comment:", error);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  // Obtener todos los posts del grupo
-  const fetchPosts = async () => {
-    if (!group) return;
-    try {
-      const response = await fetch(
-        `${config.apiUrl}/api/posts/group/${group.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data);
-        setPosts(data.data.reverse());
-      } else {
-        console.error("Error al obtener los posts:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error al conectar con el servidor:", error);
     }
   };
 
