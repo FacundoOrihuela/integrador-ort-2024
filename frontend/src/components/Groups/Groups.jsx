@@ -6,6 +6,7 @@ import GroupPanel from "./GroupPanel";
 
 const Groups = () => {
   const [selectedGroup, setSelectedGroup] = useState(null);
+console.log("selectedGroup:", selectedGroup);
 
   return (
     <div className="flex flex-col min-h-screen">
