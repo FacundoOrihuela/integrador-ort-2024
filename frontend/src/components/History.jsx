@@ -11,7 +11,7 @@ const History = () => {
       <div className="flex-grow my-[2rem] flex justify-center">
         <div className="max-w-4xl w-full px-4">
           <div className="flex flex-col md:flex-row justify-center gap-8">
-            <div className="max-w-[50%] text-left space-y-4">
+            <div className="md:max-w-[50%] text-left space-y-4">
               <h1 className="text-3xl font-bold mb-4 text-center md:text-left">
                 Entrevista a Dafna Curiel
               </h1>

@@ -41,7 +41,7 @@ const ProductList = ({ products, className }) => {
 
   return (
     <Box className={`w-full p-4 ${className}`}>
-      <Box className="flex items-center justify-end mb-4">
+      <Box className="flex items-center justify-center md:justify-end mb-4">
         <Typography className="mr-4 text-sm font-medium text-gray-700">Ordenar por:</Typography>
         <Select
           value={sortOption}
@@ -56,7 +56,7 @@ const ProductList = ({ products, className }) => {
             lineHeight: '1.2',
           }}
           MenuProps={{
-            PaperProps: { style: { maxHeight: '200px' } }, // Altura máxima del desplegable
+            PaperProps: { style: { maxHeight: '200px' } },
           }}
         >
           <MenuItem value="price-asc">Precio menor a mayor</MenuItem>
@@ -67,23 +67,19 @@ const ProductList = ({ products, className }) => {
       </Box>
       <Grid container spacing={2}>
         {sortedProducts.map((product) => {
-          // Extraer la ruta relativa de la URL de Cloudinary
           const cloudinaryUrl = new URL(product.image);
           const relativePath = cloudinaryUrl.pathname;
-
-          // Construir la URL de Imgix basada en la ruta relativa
           const imgixUrl = `https://tiferet-689097844.imgix.net${relativePath}`;
 
           return (
-            <Grid item xs={6} sm={4} md={3} lg={2} key={product.id}>
-              <Card className="bg-white p-4 rounded shadow-md">
-                <Box className="w-full h-48 mb-4" position="relative">
+            <Grid item xs={6} sm={4} md={3} lg={3} key={product.id}>
+              <Card className="bg-white p-3 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                <Box className="w-full h-40 mb-4" position="relative">
                   <CardMedia
                     component="img"
-                    image={`${imgixUrl}?w=400&h=300&fit=crop`}
+                    image={`${imgixUrl}`}
                     alt={product.name}
-                    className="w-full h-full object-cover cursor-pointer"
-                    sx={{ borderRadius: '4px' }} // Añadir borde redondeado
+                    className="w-full h-full object-cover cursor-pointer rounded-lg"
                     onClick={() => handleProductClick(product.id)}
                   />
                   <IconButton
@@ -92,8 +88,8 @@ const ProductList = ({ products, className }) => {
                       position: 'absolute', 
                       top: 4, 
                       right: 4, 
-                      width: '40px', 
-                      height: '40px', 
+                      width: '32px', 
+                      height: '32px', 
                       backgroundColor: isFavorite(product.id) ? 'transparent' : 'white',
                       '&:hover': {
                         backgroundColor: isFavorite(product.id) ? 'rgba(255, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.8)',
@@ -103,16 +99,16 @@ const ProductList = ({ products, className }) => {
                     {isFavorite(product.id) ? <FavoriteIcon color="error" /> : <FavoriteBorderIcon />}
                   </IconButton>
                 </Box>
-                <CardContent className="flex items-center flex-col items-start">
+                <CardContent className="flex items-center flex-col text-center">
                   <Typography
                     variant="h6"
-                    className="font-bold cursor-pointer"
+                    className="font-semibold cursor-pointer text-gray-800 hover:text-colors-1"
                     onClick={() => handleProductClick(product.id)}
                   >
                     {product.name}
                   </Typography>
-                  <Typography variant="h5" className="text-colors-1 font-bold">${product.price}</Typography>
-                  <Box className="flex items-center">
+                  <Typography variant="h6" className="text-colors-1 font-bold">${product.price}</Typography>
+                  <Box className="flex items-center justify-center mb-2">
                     <Rating
                       name={`rating-${product.id}`}
                       value={product.averageRating || 5}
@@ -134,7 +130,7 @@ const ProductList = ({ products, className }) => {
                   </Box>
                   <Button
                     onClick={() => addToCart(product)}
-                    className="bg-colors-1 text-white px-4 py-2 rounded mt-2"
+                    className="bg-colors-1 text-white px-4 py-2 rounded-full mt-2"
                   >
                     Agregar al carrito
                   </Button>

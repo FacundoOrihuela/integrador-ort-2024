@@ -1,83 +1,222 @@
-import React from 'react';
-import { Box, Typography, Slider, List, ListItem, ListItemText, Avatar, Button, Grid } from '@mui/material';
+import React, { useState } from "react";
+import {
+  Box,
+  Typography,
+  Slider,
+  List,
+  ListItem,
+  ListItemText,
+  Avatar,
+  Button,
+  Grid,
+  IconButton,
+} from "@mui/material";
+import { ChevronRight, ChevronLeft } from "@mui/icons-material";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
-const Sidebar = ({ categories, featuredProducts, onCategoryClick, priceRange, onPriceChange, applyPriceFilter, className, fixedMinPrice, maxPrice }) => {
+const Sidebar = ({
+  categories,
+  featuredProducts,
+  onCategoryClick,
+  priceRange,
+  onPriceChange,
+  applyPriceFilter,
+  className,
+  fixedMinPrice,
+  maxPrice,
+}) => {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Box className={`bg-gray-100 p-4 shadow-md fixed top-[5rem] left-0 h-[calc(100vh-5rem)] w-1/4 ${className}`}>
-      {/* Categorías */}
-      <Box>
-        <Typography variant="h6" className="font-bold mb-4">CATEGORÍAS DE PRODUCTOS</Typography>
-        <List className="flex flex-col gap-4">
-          <ListItem button onClick={() => onCategoryClick(null)}>
-            <ListItemText primary="Todas las categorías" className="text-gray-800 text-lg font-medium hover:text-colors-1" />
-          </ListItem>
-          {categories.map((category) => (
-            <ListItem button key={category.id} onClick={() => onCategoryClick(category.id)}>
-              <ListItemText primary={category.name} className="text-gray-800 text-lg font-medium hover:text-colors-1" />
-            </ListItem>
-          ))}
-        </List>
+    <>
+      <Box
+        className={`bg-white p-6 shadow-lg fixed top-[56px] left-0 w-1/4 overflow-y-auto hidden md:block ${className}`}
+        sx={{
+          height: "calc(100vh - 56px)",
+          overflowY: "auto",
+          scrollbarWidth: "thin",
+          "&::-webkit-scrollbar": { width: "6px" },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "#ccc",
+            borderRadius: "4px",
+          },
+          "&::-webkit-scrollbar-track": { backgroundColor: "#f0f0f0" },
+        }}
+      >
+        <SidebarContent
+          categories={categories}
+          featuredProducts={featuredProducts}
+          onCategoryClick={onCategoryClick}
+          priceRange={priceRange}
+          onPriceChange={onPriceChange}
+          applyPriceFilter={applyPriceFilter}
+          fixedMinPrice={fixedMinPrice}
+          maxPrice={maxPrice}
+        />
       </Box>
-      {/* Filtro de precio */}
-      <Box className="mt-8">
-        <Typography variant="h6" className="font-bold mb-4">FILTRAR POR PRECIO</Typography>
-        <Box className="flex items-center space-x-8">
-          <Typography>${fixedMinPrice}</Typography>
-          <Slider
-            value={priceRange}
-            min={fixedMinPrice}
-            max={maxPrice}
-            step={5}
-            onChange={onPriceChange}
-            valueLabelDisplay="auto"
-            className="w-full"
-          />
-          <Typography>${maxPrice}</Typography>
-        </Box>
-        <Box className="flex items-center justify-between mt-4">
-          <Typography className="mb-2">Rango actual: ${priceRange[0]} - ${priceRange[1]}</Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={applyPriceFilter}
-          >
-            Aplicar Filtro
-          </Button>
-        </Box>
+      <Box
+        className={`fixed top-[56px] left-0 w-64 bg-white shadow-lg p-6 transform transition-transform duration-300 z-50 ${
+          open ? "translate-x-0" : "-translate-x-full"
+        } md:hidden`}
+        sx={{
+          maxHeight: "calc(100vh - 56px)",
+          overflowY: "auto",
+          scrollbarWidth: "thin",
+          "&::-webkit-scrollbar": { width: "6px" },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "#ccc",
+            borderRadius: "4px",
+          },
+          "&::-webkit-scrollbar-track": { backgroundColor: "#f0f0f0" },
+        }}
+      >
+        <SidebarContent
+          categories={categories}
+          featuredProducts={featuredProducts}
+          onCategoryClick={onCategoryClick}
+          priceRange={priceRange}
+          onPriceChange={onPriceChange}
+          applyPriceFilter={applyPriceFilter}
+          fixedMinPrice={fixedMinPrice}
+          maxPrice={maxPrice}
+        />
       </Box>
-      {/* Productos destacados */}
-      <Box className="mt-8">
-        <Typography variant="h6" className="font-bold" sx={{ mb: 2 }}>PRODUCTOS DESTACADOS</Typography>
-        <Grid container spacing={2}>
-          {featuredProducts.map((product) => {
-            // Extraer la ruta relativa de la URL de Cloudinary
-            const cloudinaryUrl = new URL(product.image);
-            const relativePath = cloudinaryUrl.pathname;
 
-            // Construir la URL de Imgix basada en la ruta relativa
-            const imgixUrl = `https://tiferet-689097844.imgix.net${relativePath}`;
-
-            return (
-              <Grid item xs={6} key={product.id}>
-                <Box display="flex" alignItems="center" p={1} border={1} borderColor="grey.300" borderRadius={2}>
-                  <Avatar
-                    src={`${imgixUrl}?w=64&h=64&fit=crop`}
-                    alt={product.name}
-                    sx={{ width: 64, height: 64 }}
-                  />
-                  <Box flexGrow={1} ml={2}>
-                    <Typography variant="body2" fontWeight="bold">{product.name}</Typography>
-                    <Typography variant="body2" color="textSecondary">{product.timesSold} vendidos</Typography>
-                  </Box>
-                  <Typography variant="h6" fontWeight="bold">${product.price}</Typography>
-                </Box>
-              </Grid>
-            );
-          })}
-        </Grid>
-      </Box>
-    </Box>
+      <button
+        onClick={() => setOpen(!open)}
+        className={`md:hidden absolute top-[100px] ${
+          open ? "left-[256px]" : "left-0"
+        } bg-black text-white py-2 rounded-r-md z-10 flex items-center justify-center transition-all duration-300`}
+      >
+        {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+      </button>
+    </>
   );
 };
+
+const SidebarContent = ({
+  categories,
+  featuredProducts,
+  onCategoryClick,
+  priceRange,
+  onPriceChange,
+  applyPriceFilter,
+  fixedMinPrice,
+  maxPrice,
+}) => (
+  <>
+    <Box>
+      <Typography variant="h6" className="font-bold text-gray-700 mb-4">
+        Categorías
+      </Typography>
+      <List className="flex flex-col gap-3">
+        <ListItem
+          button
+          onClick={() => onCategoryClick(null)}
+          className="hover:bg-gray-200 rounded-lg transition"
+        >
+          <ListItemText
+            primary="Todas las categorías"
+            className="text-gray-800 text-lg font-medium"
+          />
+        </ListItem>
+        {categories.map((category) => (
+          <ListItem
+            button
+            key={category.id}
+            onClick={() => onCategoryClick(category.id)}
+            className="hover:bg-gray-200 rounded-lg transition"
+          >
+            <ListItemText
+              primary={category.name}
+              className="text-gray-800 text-lg font-medium"
+            />
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+
+    <Box className="mt-8">
+      <Typography variant="h6" className="font-bold text-gray-700 mb-4">
+        Filtrar por Precio
+      </Typography>
+      <Box className="flex items-center gap-4">
+        <Typography className="text-gray-600 font-semibold">
+          ${fixedMinPrice}
+        </Typography>
+        <Slider
+          value={priceRange}
+          min={fixedMinPrice}
+          max={maxPrice}
+          step={5}
+          onChange={onPriceChange}
+          valueLabelDisplay="auto"
+          className="w-full"
+        />
+        <Typography className="text-gray-600 font-semibold">
+          ${maxPrice}
+        </Typography>
+      </Box>
+      <Typography className="text-gray-600 text-sm mt-2">
+        Rango: ${priceRange[0]} - ${priceRange[1]}
+      </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={applyPriceFilter}
+        fullWidth
+        className="mt-4 rounded-lg"
+      >
+        Aplicar Filtro
+      </Button>
+    </Box>
+
+    {/* Productos destacados */}
+    <Box className="mt-8">
+      <Typography variant="h6" className="font-bold text-gray-700 mb-4">
+        Productos Destacados
+      </Typography>
+      <Grid container spacing={2}>
+        {featuredProducts.map((product) => {
+          const cloudinaryUrl = new URL(product.image);
+          const relativePath = cloudinaryUrl.pathname;
+          const imgixUrl = `https://tiferet-689097844.imgix.net${relativePath}`;
+
+          return (
+            <Grid item xs={12} key={product.id}>
+              <Box className="flex items-center p-3 border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
+                <Avatar
+                  src={`${imgixUrl}?w=64&h=64&fit=crop`}
+                  alt={product.name}
+                  sx={{ width: 64, height: 64 }}
+                />
+                <Box className="ml-4 flex-grow">
+                  <Typography
+                    variant="body2"
+                    fontWeight="bold"
+                    className="text-gray-800"
+                  >
+                    {product.name}
+                  </Typography>
+                  <Typography variant="body2" className="text-gray-500">
+                    {product.timesSold} vendidos
+                  </Typography>
+                </Box>
+                <Typography
+                  variant="h6"
+                  fontWeight="bold"
+                  className="text-primary"
+                >
+                  ${product.price}
+                </Typography>
+              </Box>
+            </Grid>
+          );
+        })}
+      </Grid>
+    </Box>
+  </>
+);
 
 export default Sidebar;

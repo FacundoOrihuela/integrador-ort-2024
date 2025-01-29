@@ -76,7 +76,7 @@ const Header = ({ store }) => {
 
             <div className="flex items-center gap-4 md:hidden">
               <IconButton color="inherit" onClick={() => setDrawerOpen(true)}>
-                <span className="material-icons">Menu</span>
+                <span className="material-icons">Menú</span>
               </IconButton>
             </div>
 
@@ -292,24 +292,72 @@ const Header = ({ store }) => {
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       >
-        <List>
-          <ListItem button onClick={() => navigate("/")}>
-            Home
-          </ListItem>
-          <ListItem button onClick={() => navigate("/actividades")}>
-            Actividades
-          </ListItem>
-          <ListItem button onClick={() => navigate("/store")}>
-            Tienda
-          </ListItem>
-          <ListItem button onClick={() => navigate("/news")}>
-            Noticias
-          </ListItem>
-          <ListItem button onClick={() => navigate("/contact")}>
-            Contacto
-          </ListItem>
-          <Divider />
-        </List>
+        <div className="w-64 bg-white text-black p-4 h-full">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-semibold">Menú</h2>
+          </div>
+          <div className="space-y-4">
+            <button
+              onClick={() => navigate("/")}
+              className="w-full text-left py-2 px-4 rounded-md hover:bg-gray-200 transition-colors"
+            >
+              Home
+            </button>
+            <button
+              onClick={() => navigate("/actividades")}
+              className="w-full text-left py-2 px-4 rounded-md hover:bg-gray-200 transition-colors"
+            >
+              Actividades
+            </button>
+            <button
+              onClick={() => navigate("/store")}
+              className="w-full text-left py-2 px-4 rounded-md hover:bg-gray-200 transition-colors"
+            >
+              Tienda
+            </button>
+            <button
+              onClick={() => navigate("/news")}
+              className="w-full text-left py-2 px-4 rounded-md hover:bg-gray-200 transition-colors"
+            >
+              Noticias
+            </button>
+            <button
+              onClick={() => navigate("/contact")}
+              className="w-full text-left py-2 px-4 rounded-md hover:bg-gray-200 transition-colors"
+            >
+              Contacto
+            </button>
+
+            {/* Aquí agregamos el menú "Somos" con todas sus opciones */}
+            <div className="border-t border-gray-300 mt-6"></div>
+            <div>
+              <button
+                className="w-full text-left py-2 px-4 rounded-md hover:bg-gray-200 transition-colors"
+                onClick={() => navigate("/aboutTiferet")}
+              >
+                ¿Qué es Tiferet?
+              </button>
+              <button
+                className="w-full text-left py-2 px-4 rounded-md hover:bg-gray-200 transition-colors"
+                onClick={() => navigate("/members")}
+              >
+                Integrantes
+              </button>
+              <button
+                className="w-full text-left py-2 px-4 rounded-md hover:bg-gray-200 transition-colors"
+                onClick={() => navigate("/together")}
+              >
+                Solo Juntos
+              </button>
+              <button
+                className="w-full text-left py-2 px-4 rounded-md hover:bg-gray-200 transition-colors"
+                onClick={() => navigate("/history")}
+              >
+                Nuestra Historia
+              </button>
+            </div>
+          </div>
+        </div>
       </Drawer>
 
       {showAlert && (

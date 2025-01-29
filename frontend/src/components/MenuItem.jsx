@@ -13,8 +13,8 @@ const MenuItem = ({ to, imgSrc, altText, text }) => {
     >
       <Box
         sx={{
-          width: { xs: "16vw", sm: "8vw", md: "6vw" },
-          height: { xs: "16vw", sm: "8vw", md: "6vw" },
+          width: { xs: "16vw", sm: "8vw", md: "5vw" },
+          height: { xs: "16vw", sm: "8vw", md: "5vw" },
           display: "flex",
           justifyContent: "center",
           alignItems: "center",

@@ -85,7 +85,7 @@ const Footer = () => {
             anchorEl={locationAnchorRef.current}
             transition
             placement="top-start"
-            sx={{ zIndex: 10 }}
+            sx={{ zIndex: 1500 }}
           >
             {({ TransitionProps }) => (
               <Fade {...TransitionProps} timeout={350}>
@@ -137,7 +137,7 @@ const Footer = () => {
             anchorEl={socialAnchorRef.current}
             transition
             placement="top-end"
-            sx={{ zIndex: 10 }}
+            sx={{ zIndex: 1500 }}
           >
             {({ TransitionProps }) => (
               <Fade {...TransitionProps} timeout={350}>

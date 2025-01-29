@@ -17,7 +17,6 @@ import axios from "axios";
 import OrderDetailsModal from "./OrderDetailsModal";
 import config from "../../../utils/config.json";
 
-
 const ShoppingList = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -116,14 +115,17 @@ const ShoppingList = () => {
 
   return (
     <Paper className="p-4 m-4">
-      <Box className="flex justify-between mb-4">
+      <Box
+        className="flex flex-wrap gap-2 justify-between mb-4"
+        sx={{ width: "100%" }}
+      >
         <TextField
           label="Buscar por nombre de usuario"
           variant="outlined"
           fullWidth
           value={search}
           onChange={handleSearchChange}
-          sx={{ marginRight: 2 }}
+          sx={{ flex: "1 1 100%" }}
         />
         <TextField
           label="Fecha de inicio"
@@ -131,7 +133,7 @@ const ShoppingList = () => {
           InputLabelProps={{ shrink: true }}
           value={startDate}
           onChange={handleStartDateChange}
-          sx={{ marginRight: 2 }}
+          sx={{ flex: "1 1 100%" }}
         />
         <TextField
           label="Fecha de fin"
@@ -139,9 +141,10 @@ const ShoppingList = () => {
           InputLabelProps={{ shrink: true }}
           value={endDate}
           onChange={handleEndDateChange}
-          sx={{ marginRight: 2 }}
+          sx={{ flex: "1 1 100%" }}
         />
       </Box>
+
       <List>
         {paginatedOrders.map((order) => (
           <ListItem
@@ -185,7 +188,7 @@ const ShoppingList = () => {
       <Box display="flex" justifyContent="center" mt={2}>
         <Pagination
           count={Math.ceil(filteredOrders.length / ordersPerPage)}
-          page={page} 
+          page={page}
           onChange={handlePageChange}
           color="primary"
         />

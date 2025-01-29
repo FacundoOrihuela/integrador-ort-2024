@@ -1,5 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper, CircularProgress, Box, Button, TextField, Pagination, IconButton } from "@mui/material";
+import {
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+  Paper,
+  CircularProgress,
+  Box,
+  Button,
+  TextField,
+  Pagination,
+  IconButton,
+} from "@mui/material";
 import ArticleIcon from "@mui/icons-material/Article";
 import ErrorIcon from "@mui/icons-material/Error";
 import AddIcon from "@mui/icons-material/Add";
@@ -98,12 +111,17 @@ const AdminNewsList = () => {
   });
 
   const sortedNews = filteredNews.sort((a, b) => {
-    if (sort === "dateAsc") return new Date(a.createdAt) - new Date(b.createdAt);
-    if (sort === "dateDesc") return new Date(b.createdAt) - new Date(a.createdAt);
+    if (sort === "dateAsc")
+      return new Date(a.createdAt) - new Date(b.createdAt);
+    if (sort === "dateDesc")
+      return new Date(b.createdAt) - new Date(a.createdAt);
     return 0;
   });
 
-  const paginatedNews = sortedNews.slice((page - 1) * newsPerPage, page * newsPerPage);
+  const paginatedNews = sortedNews.slice(
+    (page - 1) * newsPerPage,
+    page * newsPerPage
+  );
 
   const handlePageChange = (event, value) => {
     setPage(value);
@@ -139,13 +157,18 @@ const AdminNewsList = () => {
           fullWidth
           value={search}
           onChange={handleSearchChange}
-          sx={{ marginRight: 2 }}
         />
-        <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={toggleCreateModal}>
-          Crear Noticia
-        </Button>
       </Box>
-      <Box className="flex gap-2 mb-4">
+      <Button
+        variant="contained"
+        color="primary"
+        startIcon={<AddIcon />}
+        onClick={toggleCreateModal}
+        className="w-[100%]"
+      >
+        Crear Noticia
+      </Button>
+      <Box className="grid grid-cols-1 md:grid-cols-2 lg:flex justify-center gap-2 my-4">
         <Button
           variant="outlined"
           startIcon={<SortIcon />}
@@ -153,7 +176,8 @@ const AdminNewsList = () => {
           sx={{
             backgroundColor: sort === "dateAsc" ? "primary.main" : "inherit",
             color: sort === "dateAsc" ? "white" : "primary.main",
-            "&:hover": sort === "dateAsc" ? { backgroundColor: "primary.main" } : {},
+            "&:hover":
+              sort === "dateAsc" ? { backgroundColor: "primary.main" } : {},
           }}
         >
           Fecha Asc
@@ -165,7 +189,8 @@ const AdminNewsList = () => {
           sx={{
             backgroundColor: sort === "dateDesc" ? "primary.main" : "inherit",
             color: sort === "dateDesc" ? "white" : "primary.main",
-            "&:hover": sort === "dateDesc" ? { backgroundColor: "primary.main" } : {},
+            "&:hover":
+              sort === "dateDesc" ? { backgroundColor: "primary.main" } : {},
           }}
         >
           Fecha Desc
@@ -173,7 +198,10 @@ const AdminNewsList = () => {
       </Box>
       <List>
         {paginatedNews.map((item) => (
-          <ListItem key={item.id} className="mb-2 bg-gray-100 rounded-lg shadow-md">
+          <ListItem
+            key={item.id}
+            className="mb-2 bg-gray-100 rounded-lg shadow-md"
+          >
             <ListItemAvatar>
               <Avatar>
                 <ArticleIcon />
@@ -225,7 +253,10 @@ const AdminNewsList = () => {
             >
               ✕
             </button>
-            <CreateNews handleUpdateOrCreate={handleUpdateOrCreate} setIsModalOpen={setIsCreateModalOpen} />
+            <CreateNews
+              handleUpdateOrCreate={handleUpdateOrCreate}
+              setIsModalOpen={setIsCreateModalOpen}
+            />
           </div>
         </div>
       )}

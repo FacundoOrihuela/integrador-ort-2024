@@ -105,7 +105,7 @@ const ProductPage = () => {
                 <Box className="flex flex-col">
                     {!showMemberships && (
                         <Box
-                            className="bg-colors-1 text-white text-center py-8 cursor-pointer flex items-center justify-center w-3/4 ml-[25%]"
+                            className="bg-colors-1 text-white text-center py-8 cursor-pointer flex items-center justify-center md:w-3/4 md:ml-[25%]"
                             onClick={handleShowMemberships}
                         >
                             <h2 className="text-4xl font-bold">¡Hacete miembro y disfruta de beneficios, clickea aquí para ver mas detalles!</h2>
@@ -125,7 +125,7 @@ const ProductPage = () => {
                                 maxPrice={maxPrice}
                             />
                         )}
-                        <Box className={`flex flex-col ${showMemberships ? 'w-full' : 'w-3/4 ml-[25%]'}`}>
+                        <Box className={`flex flex-col ${showMemberships ? 'w-full' : 'md:w-3/4 md:ml-[25%]'}`}>
                             {showMemberships ? (
                                 <Container className="px-4 py-8">
                                     <Memberships />

@@ -142,13 +142,20 @@ const MembershipList = () => {
           fullWidth
           value={search}
           onChange={handleSearchChange}
-          sx={{ marginRight: 2 }}
         />
-        <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={toggleCreateModal}>
+      </Box>
+      <Box className="flex justify-center mb-4 gap-2">
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={toggleCreateModal}
+          className="w-[100%]"
+        >
           Crear Membresía
         </Button>
       </Box>
-      <Box className="flex gap-2 mb-4">
+      <Box className="grid grid-cols-1 md:grid-cols-2 lg:flex justify-center gap-2 mb-4">
         <Button
           variant="outlined"
           startIcon={<SortIcon />}

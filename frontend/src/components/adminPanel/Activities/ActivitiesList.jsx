@@ -6,6 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CreateActivity from "./CreateActivity";
 import ActivityDetails from "./ActivityDetails";
+import AddIcon from "@mui/icons-material/Add";
 import config from "../../../utils/config.json";
 
 const ActivitiesList = () => {
@@ -160,7 +161,7 @@ const ActivitiesList = () => {
           onChange={handleSearchChange}
           sx={{ marginRight: 2 }}
         />
-        <FormControl variant="outlined" sx={{ minWidth: 200, marginRight: 2 }}>
+        <FormControl variant="outlined" sx={{ minWidth: 200}}>
           <InputLabel id="filter-type-label">Tipo de Actividad</InputLabel>
           <Select
             labelId="filter-type-label"
@@ -173,7 +174,16 @@ const ActivitiesList = () => {
             <MenuItem value="recurring">Recurrente</MenuItem>
           </Select>
         </FormControl>
-        <Button variant="contained" color="primary" onClick={toggleCreateModal}>
+        
+      </Box>
+      <Box className="flex justify-center mb-4 gap-2">
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={toggleCreateModal}
+          className="w-[100%]"
+        >
           Crear Actividad
         </Button>
       </Box>

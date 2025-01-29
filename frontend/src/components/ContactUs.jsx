@@ -62,7 +62,7 @@ const ContactUs = () => {
             <p>¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.</p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
+          <form onSubmit={handleSubmit} className="max-w-[90%] lg:max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
             <div className="mb-4">
               <label className="block text-gray-700 font-semibold" htmlFor="firstName">Nombre</label>
               <input

@@ -136,9 +136,16 @@ const CategoryList = () => {
           fullWidth
           value={search}
           onChange={handleSearchChange}
-          sx={{ marginRight: 2 }}
         />
-        <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={toggleCreateModal}>
+      </Box>
+      <Box className="flex justify-center mb-4 gap-2">
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={toggleCreateModal}
+          className="w-[100%]"
+        >
           Crear Categoría
         </Button>
       </Box>
