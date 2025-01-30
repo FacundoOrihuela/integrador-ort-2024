@@ -56,7 +56,7 @@ const Sidebar = ({ onSelect, selectedComponent }) => {
       {isMobile && (
         <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`absolute top-[100px] ${isOpen ? "left-[240px]" : "left-0"} bg-black text-white py-2 rounded-r-md z-10 flex items-center justify-center transition-all duration-300`}
+        className={`absolute top-[100px] ${isOpen ? "left-[240px]" : "left-0"} bg-gray-300 text-black border border-black py-2 rounded-r-md z-10 flex items-center justify-center transition-all duration-300`}
       >
         {isOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
       </button>

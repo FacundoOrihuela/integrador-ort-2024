@@ -4,7 +4,8 @@ import { useDispatch } from 'react-redux';
 import { saveSessionToken } from '../features/loginSlice';
 import { UserContext } from '../context/UserContext';
 import { Box, List, ListItemText, ListItemAvatar, ClickAwayListener, ListItemButton } from '@mui/material';
-import { AccountCircle as AccountCircleIcon, Group as GroupIcon, ShoppingCart as ShoppingCartIcon, AdminPanelSettings as AdminPanelSettingsIcon, ExitToApp as ExitToAppIcon } from '@mui/icons-material';
+import { AccountCircle as AccountCircleIcon, Event as EventIcon, Group as GroupIcon, ShoppingCart as ShoppingCartIcon, AdminPanelSettings as AdminPanelSettingsIcon, ExitToApp as ExitToAppIcon } from '@mui/icons-material';
+
 
 const ProfileModal = ({ onClose }) => {
     const dispatch = useDispatch();
@@ -33,6 +34,13 @@ const ProfileModal = ({ onClose }) => {
                             <GroupIcon className="text-colors-1 bg-transparent" />
                         </ListItemAvatar>
                         <ListItemText primary="Mis grupos" />
+                    </ListItemButton>
+
+                    <ListItemButton onClick={() => navigate('/myActivities')}>
+                        <ListItemAvatar>
+                            <EventIcon className="text-colors-1 bg-transparent" />
+                        </ListItemAvatar>
+                        <ListItemText primary="Mis actividades" />
                     </ListItemButton>
 
                     <ListItemButton onClick={() => navigate('/purchase-history')}>

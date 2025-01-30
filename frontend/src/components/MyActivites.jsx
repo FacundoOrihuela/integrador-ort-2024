@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext, useCallback } from "react";
-import { UserContext } from "../../context/UserContext";
+import { UserContext } from "../context/UserContext";
 import { toast } from "react-toastify";
-import Header from "../Header";
-import Footer from "../Footer";
+import Header from "./Header";
+import Footer from "./Footer";
 import {
   Container,
   Grid,
@@ -15,9 +15,9 @@ import {
   Tabs,
   Tab,
 } from "@mui/material";
-import config from "../../utils/config.json";
+import config from "../utils/config.json";
 
-const Event = () => {
+const MyActivities = () => {
   const { user } = useContext(UserContext);
   const [events, setEvents] = useState([]);
   const [registrations, setRegistrations] = useState([]);
@@ -27,19 +27,32 @@ const Event = () => {
   const [tabIndex, setTabIndex] = useState(0);
 
   const fetchEvents = useCallback(async () => {
-    try {
-      const response = await fetch(`${config.apiUrl}/api/events`);
-      if (!response.ok) {
-        throw new Error("Error al obtener las actividades.");
+    if (user) {
+      try {
+        const registrationsResponse = await fetch(
+          `${config.apiUrl}/api/event-registrations/user/${user.id}`
+        );
+        if (!registrationsResponse.ok) {
+          throw new Error("Error al obtener los registros de eventos.");
+        }
+        const registrationsData = await registrationsResponse.json();
+        const eventIds = registrationsData.map((reg) => reg.eventId);
+  
+        const eventsResponse = await fetch(`${config.apiUrl}/api/events`);
+        if (!eventsResponse.ok) {
+          throw new Error("Error al obtener las actividades.");
+        }
+        const allEvents = await eventsResponse.json();
+  
+        const filteredEvents = allEvents.filter((event) => eventIds.includes(event.id));
+        setEvents(filteredEvents);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
-      const data = await response.json();
-      setEvents(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
     }
-  }, []);
+  }, [user]);
 
   const fetchRegistrations = useCallback(async () => {
     if (user) {
@@ -90,7 +103,7 @@ const Event = () => {
       }
 
       toast.success("Te has registrado exitosamente en la actividad.");
-      fetchRegistrations(); // Actualizar la lista de registros después de registrarse
+      fetchRegistrations();
     } catch (err) {
       toast.error("Hubo un problema al intentar registrarte. Intenta de nuevo.");
     } finally {
@@ -195,54 +208,63 @@ const Event = () => {
           width: "100%",
           maxWidth: "80%",
           margin: "2rem auto",
-          borderRadius: "12px",
+          borderRadius: "12px", 
           boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.1)",
         }}
       >
         <Container component="main" sx={{ maxWidth: "lg" }}>
-          <Typography variant="h4" className="text-center mb-4">
-            Lista de Actividades
-          </Typography>
           <Tabs value={tabIndex} onChange={handleTabChange} centered>
             <Tab label="Clases" />
             <Tab label="Eventos" />
           </Tabs>
           <Grid container spacing={3} sx={{ marginTop: 2 }}>
-            {filteredEvents.map((event) => {
+          {filteredEvents.map((event) => {
               const registrationStatus = getRegistrationStatus(event.id);
               return (
                 <Grid item xs={12} sm={6} md={4} lg={4} key={event.id}>
-                  <Card className="hover:shadow-xl" sx={{ height: "100%" }}>
+                  <Card
+                    sx={{
+                      height: "100%",
+                      borderRadius: "12px",
+                      boxShadow: "0px 6px 12px rgba(0, 0, 0, 0.1)",
+                      transition: "0.3s",
+                      '&:hover': {
+                        transform: "scale(1.03)",
+                      },
+                    }}
+                  >
                     <CardContent
-                      sx={{ display: "flex", flexDirection: "column", height: "100%" }}
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        height: "100%",
+                        padding: "1.5rem",
+                      }}
                     >
-                      <Typography variant="h5" className="mb-2">
+                      <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: "0.5rem" }}>
                         {event.name}
                       </Typography>
-                      <Typography className="mb-2">
+                      <Typography sx={{ color: "#555", marginBottom: "1rem" }}>
                         <strong>Descripción:</strong> {event.description}
                       </Typography>
                       {formatEventDate(event)}
                       <Box sx={{ flexGrow: 1 }} />
-                      <Button
-                        onClick={() => handleRegister(event.id)}
-                        disabled={registering || registrationStatus !== null}
-                        variant="contained"
-                        color="primary"
-                        fullWidth
+                      <Typography
+                        sx={{
+                          textAlign: "center",
+                          fontWeight: "bold",
+                          padding: "0.5rem",
+                          borderRadius: "8px",
+                          backgroundColor: registrationStatus === "aceptado" ? "#4caf50" :
+                            registrationStatus === "pendiente" ? "#ff9800" :
+                            registrationStatus === "rechazado" ? "#f44336" : "#2196f3",
+                          color: "white",
+                        }}
                       >
-                        {registering ? (
-                          <CircularProgress size={24} />
-                        ) : registrationStatus === "aceptado" ? (
-                          "Anotado"
-                        ) : registrationStatus === "pendiente" ? (
-                          "Esperando aprobación"
-                        ) : registrationStatus === "rechazado" ? (
-                          "Rechazado"
-                        ) : (
-                          "ANOTARME"
-                        )}
-                      </Button>
+                        {registrationStatus === "aceptado" ? "Anotado" :
+                          registrationStatus === "pendiente" ? "Esperando aprobación" :
+                          registrationStatus === "rechazado" ? "Rechazado" : "No registrado"}
+                      </Typography>
                     </CardContent>
                   </Card>
                 </Grid>
@@ -256,4 +278,4 @@ const Event = () => {
   );
 };
 
-export default Event;
+export default MyActivities;

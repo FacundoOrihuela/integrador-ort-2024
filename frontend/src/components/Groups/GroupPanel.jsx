@@ -678,7 +678,7 @@ const GroupPanel = ({ group }) => {
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className={`absolute top-[20px] ${
                 isSidebarOpen ? "right-[200px]" : "right-0"
-              } bg-black text-white py-2 rounded-l-md z-10 flex items-center justify-center transition-all duration-300`}
+              } bg-gray-300 text-black border border-black py-2 rounded-l-md z-10 flex items-center justify-center transition-all duration-300`}
             >
               {isSidebarOpen ? <ChevronRightIcon /> : <ChevronLeftIcon />}
             </button>

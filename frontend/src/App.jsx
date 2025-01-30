@@ -34,6 +34,7 @@ import History from "./components/History";
 import SoloJuntos from "./components/SoloJuntos";
 import Groups from "./components/groups/Groups";
 import New from "./components/News/New";
+import MyActivities from "./components/MyActivites";
 
 function App() {
   return (
@@ -57,6 +58,7 @@ function App() {
                   <Route path="/store" element={<ProtectedRoute><ProductPage /></ProtectedRoute>} />
                   <Route path="/actividades" element={<ProtectedRoute><Event /></ProtectedRoute>} />
                   <Route path="/groups" element={<ProtectedRoute><Groups /></ProtectedRoute>} />
+                  <Route path="/myActivities" element={<ProtectedRoute><MyActivities /></ProtectedRoute>} />
                   {/* ----- */}
                   
                   <Route path="/admin-panel" element={<AdminPanel />} />

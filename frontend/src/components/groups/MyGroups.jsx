@@ -59,7 +59,7 @@ const MyGroups = ({ onGroupSelect }) => {
         <div className="relative">
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className={`absolute top-[20px] ${isSidebarOpen ? groups.length < 1 ? "left-[248px]" : "left-[96px]" : "left-0"} bg-black text-white py-2 rounded-r-md z-10 flex items-center justify-center transition-all duration-300`}
+            className={`absolute top-[20px] ${isSidebarOpen ? groups.length < 1 ? "left-[248px]" : "left-[96px]" : "left-0"} bg-gray-300 text-black border border-black py-2 rounded-r-md z-10 flex items-center justify-center transition-all duration-300`}
           >
             {isSidebarOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </button>

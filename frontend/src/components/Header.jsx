@@ -64,7 +64,7 @@ const Header = ({ store }) => {
       <AppBar position="sticky" className="bg-colors-1 shadow-md">
         <Container maxWidth="lg" className="px-4 md:px-8">
           <Toolbar disableGutters className="flex justify-between items-center">
-            <div className="flex items-center">
+            <IconButton className="flex items-center">
               <Link to="/" className="flex items-center">
                 <img
                   src={logoImg}
@@ -72,11 +72,21 @@ const Header = ({ store }) => {
                   className="h-10 w-10 sm:h-14 sm:w-14 rounded-full"
                 />
               </Link>
-            </div>
+            </IconButton>
 
             <div className="flex items-center gap-4 md:hidden">
-              <IconButton color="inherit" onClick={() => setDrawerOpen(true)}>
-                <span className="material-icons">Menú</span>
+              <IconButton
+                color="inherit"
+                onClick={() => setDrawerOpen(true)}
+                className="bg-gray-300 px-4 py-2 rounded-lg border border-gray-400 shadow-sm hover:bg-gray-400 hover:shadow-md transition"
+                sx={{
+                  bgcolor: "rgba(260, 98, 30, 0.7)",
+                  border: "0.2px solid rgba(0, 0, 0, 0.8)",
+                }}
+              >
+                <span className="font-semibold text-lg text-gray-100">
+                  Menú
+                </span>
               </IconButton>
             </div>
 

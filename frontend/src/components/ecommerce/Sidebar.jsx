@@ -87,7 +87,7 @@ const Sidebar = ({
         onClick={() => setOpen(!open)}
         className={`md:hidden absolute top-[100px] ${
           open ? "left-[256px]" : "left-0"
-        } bg-black text-white py-2 rounded-r-md z-10 flex items-center justify-center transition-all duration-300`}
+        } bg-gray-300 text-black border border-black py-2 rounded-r-md z-10 flex items-center justify-center transition-all duration-300`}
       >
         {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
       </button>
