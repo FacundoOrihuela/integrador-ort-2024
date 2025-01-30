@@ -14,11 +14,10 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",  
-    "host": "127.0.0.1",
+    "username": "${DB_USERNAME}",
+    "password": "${DB_PASSWORD}",
+    "database": "${DB_NAME}",
+    "host": "${DB_HOST}",
     "dialect": "mysql"
-  },    
-  "apiUrl": "http://20.161.136.50:3001"
+  }
 }
