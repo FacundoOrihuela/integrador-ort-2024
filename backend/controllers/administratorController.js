@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import Administrator from '../models/Administrator.js';
 import User from '../models/User.js';
+import Cart from '../models/Cart.js';
 
 // Obtener todos los administradores
 const getAdministrators = async (req, res) => {
@@ -59,6 +60,9 @@ const createAdministrator = async (req, res) => {
         await Administrator.create({
             userId: user.id,
         });
+
+        // Crear el carrito 
+        await Cart.create({ userId: user.id });
 
         res.json({ 
             message: `Administrador ${name} creado con éxito`, 

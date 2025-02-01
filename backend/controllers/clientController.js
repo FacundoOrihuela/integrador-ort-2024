@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { sendVerificationEmail } from '../utils/mailer.js';
 import Client from '../models/Client.js';
 import User from '../models/User.js';
+import Cart from '../models/Cart.js';
 
 // Obtener todos los clientes
 const getClients = async (req, res) => {
@@ -77,6 +78,9 @@ const createClient = async (req, res) => {
         await Client.create({
             userId: user.id,
         });
+
+        // Crear el carrito
+        await Cart.create({ userId: user.id });
 
         // Enviar el correo de verificación
         await sendVerificationEmail(email, verificationToken);

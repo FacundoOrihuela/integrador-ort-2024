@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import Teacher from '../models/Teacher.js';
 import User from '../models/User.js';
+import Cart from '../models/Cart.js';
 
 // Obtener todos los profesores
 const getTeachers = async (req, res) => {
@@ -61,6 +62,9 @@ const createTeacher = async (req, res) => {
             specialty,
             description,
         });
+
+        // Crear el carrito
+        await Cart.create({ userId: user.id });
 
         res.json({ 
             message: `Profesor ${name} creado con éxito`, 
