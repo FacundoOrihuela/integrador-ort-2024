@@ -16,6 +16,7 @@ import {
   Tab,
 } from "@mui/material";
 import config from "../../utils/config.json";
+import RegisterAlert from "../RegisterAlert";
 
 const Event = () => {
   const { user } = useContext(UserContext);
@@ -25,6 +26,7 @@ const Event = () => {
   const [error, setError] = useState("");
   const [registering, setRegistering] = useState(false);
   const [tabIndex, setTabIndex] = useState(0);
+  const [showAlert, setShowAlert] = useState(false);
 
   const fetchEvents = useCallback(async () => {
     try {
@@ -95,6 +97,14 @@ const Event = () => {
       toast.error("Hubo un problema al intentar registrarte. Intenta de nuevo.");
     } finally {
       setRegistering(false);
+    }
+  };
+
+  const handleRestrictedClick = (event) => {
+    if (!user) {
+      setShowAlert(true);
+    } else {
+      handleRegister(event.id);
     }
   };
 
@@ -225,7 +235,7 @@ const Event = () => {
                       {formatEventDate(event)}
                       <Box sx={{ flexGrow: 1 }} />
                       <Button
-                        onClick={() => handleRegister(event.id)}
+                        onClick={() => handleRestrictedClick(event)}
                         disabled={registering || registrationStatus !== null}
                         variant="contained"
                         color="primary"
@@ -251,6 +261,9 @@ const Event = () => {
           </Grid>
         </Container>
       </Box>
+      {showAlert && (
+        <RegisterAlert open={showAlert} onClose={() => setShowAlert(false)} />
+      )}
       <Footer />
     </Box>
   );

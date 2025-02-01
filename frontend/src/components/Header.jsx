@@ -184,7 +184,7 @@ const Header = ({ store }) => {
                 </Menu>
               </div>
               <span
-                onClick={() => handleRestrictedClick("/actividades")}
+                onClick={() => navigate("/actividades")}
                 className={`text-secondary text-lg font-bold cursor-pointer border-b-2 ${
                   isActive("/actividades")
                     ? "border-white"
@@ -194,7 +194,7 @@ const Header = ({ store }) => {
                 Actividades
               </span>
               <span
-                onClick={() => handleRestrictedClick("/store")}
+                onClick={() => navigate("/store")}
                 className={`text-secondary text-lg font-bold cursor-pointer border-b-2 ${
                   isActive("/store") ? "border-white" : "border-transparent"
                 } hover:border-white`}
@@ -221,7 +221,7 @@ const Header = ({ store }) => {
             </nav>
 
             <div className="flex items-center gap-4">
-              {store && (
+              {store && user && (
                 <div>
                   <IconButton
                     color="inherit"
