@@ -55,12 +55,12 @@ function App() {
                   <Route path="/login" element={<Login />} />
                   
                   {/* Rutas protegidas */}
-                  <Route path="/store" element={<ProtectedRoute><ProductPage /></ProtectedRoute>} />
-                  <Route path="/actividades" element={<ProtectedRoute><Event /></ProtectedRoute>} />
                   <Route path="/groups" element={<ProtectedRoute><Groups /></ProtectedRoute>} />
                   <Route path="/myActivities" element={<ProtectedRoute><MyActivities /></ProtectedRoute>} />
                   {/* ----- */}
                   
+                  <Route path="/store" element={<ProductPage />} />
+                  <Route path="/actividades" element={<Event />} />
                   <Route path="/admin-panel" element={<AdminPanel />} />
                   <Route path="/create-product" element={<ProductFormPage />} />
                   <Route path="/purchase-history" element={<PurchaseHistory />} />

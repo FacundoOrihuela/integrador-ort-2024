@@ -14,7 +14,7 @@ const RegisterAlert = ({ open, onClose }) => {
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>¡Necesitas registrarte!</DialogTitle>
       <DialogContent>
-        Para acceder a esta sección, por favor regístrate o inicia sesión.
+        Para acceder a esta funcionalidad, por favor regístrate o inicia sesión.
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">
