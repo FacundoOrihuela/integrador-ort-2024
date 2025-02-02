@@ -1,0 +1,93 @@
+# Obtener todos los productos
+GET http://localhost:3001/api/products
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNDM5NDI4OSwiZXhwIjoxNzM0Mzk3ODg5fQ.Tfn4sNxXAMnfWEjipbZ5NkVYlqesvAPUJTd7GDmMd8E
+
+###
+
+# Obtener un producto por su ID
+GET http://localhost:3001/api/products/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNDM5NDI4OSwiZXhwIjoxNzM0Mzk3ODg5fQ.Tfn4sNxXAMnfWEjipbZ5NkVYlqesvAPUJTd7GDmMd8E
+
+###
+
+# Crear un nuevo producto con imagen y archivo
+POST http://localhost:3001/api/products
+Content-Type: multipart/form-data; boundary=boundary
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNTg2MzIyNCwiZXhwIjoxNzM1ODY2ODI0fQ.zl5vZxNdplQ73odRQsW2VEqRS0b9YKdO8bXuv_DzRYI
+
+--boundary
+Content-Disposition: form-data; name="name"
+
+Musica
+--boundary
+Content-Disposition: form-data; name="description"
+
+Descripción del nuevo producto
+--boundary
+Content-Disposition: form-data; name="price"
+
+100
+--boundary
+Content-Disposition: form-data; name="stock"
+
+50
+--boundary
+Content-Disposition: form-data; name="categoryId"
+
+1
+--boundary
+Content-Disposition: form-data; name="image"; filename="image.jpg"
+Content-Type: image/jpeg
+
+< D:/Descargas/tiferet-images/2.jpg
+--boundary
+Content-Disposition: form-data; name="file"; filename="audio.mp3"
+Content-Type: audio/mpeg
+
+< D:/Descargas/tiferet-images/cancion.mp3
+--boundary--
+
+###
+
+# Actualizar un producto existente con imagen y archivo
+PUT http://localhost:3001/api/products/1
+Content-Type: multipart/form-data; boundary=boundary
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNDM5NDI4OSwiZXhwIjoxNzM0Mzk3ODg5fQ.Tfn4sNxXAMnfWEjipbZ5NkVYlqesvAPUJTd7GDmMd8E
+
+--boundary
+Content-Disposition: form-data; name="name"
+
+Producto Actualizado
+--boundary
+Content-Disposition: form-data; name="description"
+
+Descripción actualizada del producto
+--boundary
+Content-Disposition: form-data; name="price"
+
+150
+--boundary
+Content-Disposition: form-data; name="stock"
+
+30
+--boundary
+Content-Disposition: form-data; name="categoryId"
+
+1
+--boundary
+Content-Disposition: form-data; name="image"; filename="image.jpg"
+Content-Type: image/jpeg
+
+< D:/Descargas/tiferet-images/2.jpg
+--boundary
+Content-Disposition: form-data; name="file"; filename="file.pdf"
+Content-Type: application/pdf
+
+< D:/Descargas/tiferet-images/2.jpg
+--boundary--
+
+###
+
+# Eliminar un producto
+DELETE http://localhost:3001/api/products/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNDM5NDI4OSwiZXhwIjoxNzM0Mzk3ODg5fQ.Tfn4sNxXAMnfWEjipbZ5NkVYlqesvAPUJTd7GDmMd8E

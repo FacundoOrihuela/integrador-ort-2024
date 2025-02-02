@@ -1,0 +1,64 @@
+# MEMBERSHIP OPERATIONS
+
+# Obtener todas las membresías
+GET http://localhost:3001/api/memberships
+Content-Type: application/json
+
+###
+
+# Obtener una membresía por ID
+GET http://localhost:3001/api/memberships/1
+Content-Type: application/json
+
+###
+
+# Crear una nueva membresía
+POST http://localhost:3001/api/memberships
+Content-Type: application/json
+
+{
+    "name": "Gold Membership",
+    "description": "Access to all premium features",
+    "price": 99.99,
+    "duration": 365
+}
+
+###
+
+# Actualizar una membresía
+PUT http://localhost:3001/api/memberships/1
+Content-Type: application/json
+
+{
+    "name": "Platinum Membership",
+    "description": "Access to all premium features and more",
+    "price": 199.99,
+    "duration": 365
+}
+
+###
+
+# Eliminar una membresía
+DELETE http://localhost:3001/api/memberships/1
+Content-Type: application/json
+
+###
+
+# Asignar una membresía a un cliente
+POST http://localhost:3001/api/memberships/assign
+Content-Type: application/json
+
+{
+    "userId": 5,
+    "membershipId": 2
+}
+
+###
+
+# Revocar una membresía de un cliente
+POST http://localhost:3001/api/memberships/revoke
+Content-Type: application/json
+
+{
+    "userId": 5
+}

@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Gafata&family=Helvetica:wght@400;700&display=swap');
+
+
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+:root {
+  --primary-color: orange;
+}
+
+body,
+html {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Gafata', sans-serif;
+}
+
+/* Evento */
+.event-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  margin-top: 80px; /* Para que no se solape con el Header */
+}
+
+.event-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.event-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  width: 80%;
+  max-width: 500px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  padding: 20px;
+}
+
+.event-image {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto; 
+}
+
+.event-info {
+  text-align: center;
+  padding-top: 10px;
+}
+
+.event-link {
+  text-decoration: none;
+  color: white;
+  background-color: var(--primary-color);
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.empty {
+  display: none;
+}

@@ -1,0 +1,38 @@
+# Crear una nueva orden
+POST http://localhost:3001/api/orders/create
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczMzk2Nzk4NywiZXhwIjoxNzMzOTcxNTg3fQ.Yx7d1bOv0RP-FyBW0rtG0_p0DZgJ5MGmpI2HxozrW4w
+
+{
+    "userId": 1
+}
+
+###
+
+# Crear una nueva orden con productos específicos
+POST http://localhost:3001/api/orders/create-with-products
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNjU0MzIwOCwiZXhwIjoxNzM2NTQ2ODA4fQ.wpnCOB1srRRKtf6KscfJDS-v0LK37CZJDYSlkTaYH28
+
+{
+    "userId": 1,
+    "productIds": [1, 2, 3]
+}
+
+###
+
+# Obtener una orden específica
+GET http://localhost:3001/api/orders/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNTQ5MTUwMCwiZXhwIjoxNzM1NDk1MTAwfQ.UxyLwkrz3O23aJsmIgKom0qyBJloVsKsCaBZsr_J8K0
+
+###
+
+# Obtener todas las órdenes del usuario
+GET http://localhost:3001/api/orders
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJvcmlodWVsYWZhY3VuZG9AZ21haWwuY29tIiwicm9sZSI6ImNsaWVudCIsImlhdCI6MTczNTQ5NDYyNiwiZXhwIjoxNzM1NDk4MjI2fQ.fFjRtDrkzp19eiwdpfrnuQiosv7RBFyUEKtkWx5z5Fc
+
+###
+
+# Obtener todas las órdenes (administrador)
+GET http://localhost:3001/api/orders/all
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNTQ5NTIyNCwiZXhwIjoxNzM1NDk4ODI0fQ.tmICh3EQDQQDNXaw0Jj89DMrezMdgywk6lMNbr3vBxE

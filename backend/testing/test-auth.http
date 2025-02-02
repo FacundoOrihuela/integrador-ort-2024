@@ -1,0 +1,62 @@
+# AUTHENTICATION OPERATIONS
+
+# Iniciar sesión como cliente
+POST http://localhost:3001/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "tayet.nunez@gmail.com",
+    "password": "Contraseña123"
+}
+
+###
+
+# Cerrar sesión como cliente
+POST http://localhost:3001/api/auth/logout
+Content-Type: application/json
+
+{
+    "email": "tayet.nunez@gmail.com"
+}
+
+###
+
+# Iniciar sesión como administrador
+POST http://localhost:3001/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "admin@gmail.com",
+    "password": "Admin123"
+}
+
+###
+
+# Cerrar sesión como administrador
+POST http://localhost:3001/api/auth/logout
+Content-Type: application/json
+
+{
+    "email": "admin.user@gmail.com"
+}
+
+###
+
+# Iniciar sesión como profesor
+POST http://localhost:3001/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "teacher.user@gmail.com",
+    "password": "Teacher_password1"
+}
+
+###
+
+# Cerrar sesión como profesor
+POST http://localhost:3001/api/auth/logout
+Content-Type: application/json
+
+{
+    "email": "teacher.user@gmail.com"
+}

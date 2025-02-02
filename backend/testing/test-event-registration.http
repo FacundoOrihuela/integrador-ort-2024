@@ -1,0 +1,22 @@
+# EVENT REGISTRATION OPERATIONS
+
+# Registrar un usuario a un evento
+POST http://localhost:3001/api/event-registrations/register
+Content-Type: application/json
+
+{
+    "userId": 1,
+    "eventId": 1
+}
+
+###
+
+# Obtener todas las reservas de un usuario
+GET http://localhost:3001/api/event-registrations/user/1
+Content-Type: application/json
+
+###
+
+# Obtener todas las reservas de un evento
+GET http://localhost:3001/api/event-registrations/event/1
+Content-Type: application/json

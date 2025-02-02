@@ -1,0 +1,42 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "init-db": "node ./config/initDatabase.js",
+    "populate-db": "node ./config/populateDatabase.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.13.0",
+    "eslint": "^8.57.1",
+    "globals": "^15.11.0",
+    "nodemon": "^3.1.7",
+    "sequelize-cli": "^6.6.2"
+  },
+  "dependencies": {
+    "@medusajs/medusa": "^2.0.4",
+    "axios": "^1.7.9",
+    "bcryptjs": "^2.4.3",
+    "cloudinary": "^2.5.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.1",
+    "framer-motion": "^11.16.1",
+    "jsonwebtoken": "^9.0.2",
+    "mercadopago": "^2.2.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.11.4",
+    "nodemailer": "^6.9.16",
+    "sequelize": "^6.37.5"
+  },
+  "eslintConfig": {
+    "extends": "standard"
+  },
+  "type": "module"
+}

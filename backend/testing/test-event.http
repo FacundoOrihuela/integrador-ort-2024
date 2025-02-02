@@ -1,0 +1,63 @@
+# EVENT OPERATIONS
+
+# Crear un evento único
+POST http://localhost:3001/api/events/create
+Content-Type: application/json
+
+{
+    "name": "Evento Único",
+    "description": "Este es un evento único",
+    "eventType": "single",
+    "startDateTime": "2023-12-01T10:00:00Z",
+    "endDateTime": "2023-12-01T12:00:00Z"
+}
+
+###
+
+# Crear un evento recurrente
+POST http://localhost:3001/api/events/create
+Content-Type: application/json
+
+{
+    "name": "Evento Recurrente",
+    "description": "Este es un evento recurrente",
+    "eventType": "recurring",
+    "recurrencePattern": {
+        "type": "weekly",
+        "days": ["Monday", "Wednesday", "Friday"],
+        "startTime": "09:00",
+        "endTime": "10:00"
+    }
+}
+
+###
+
+# Obtener todos los eventos
+GET http://localhost:3001/api/events
+Content-Type: application/json
+
+###
+
+# Obtener un evento por ID
+GET http://localhost:3001/api/events/1
+Content-Type: application/json
+
+###
+
+# Actualizar un evento
+PUT http://localhost:3001/api/events/1
+Content-Type: application/json
+
+{
+    "name": "Evento Único Actualizado",
+    "description": "Este es un evento único actualizado",
+    "eventType": "single",
+    "startDateTime": "2023-12-01T11:00:00Z",
+    "endDateTime": "2023-12-01T13:00:00Z"
+}
+
+###
+
+# Eliminar un evento
+DELETE http://localhost:3001/api/events/1
+Content-Type: application/json

@@ -1,0 +1,144 @@
+import React, { useState } from 'react';
+import Header from './Header';
+import Footer from './Footer';
+import config from "../utils/config.json";
+
+const ContactUs = () => {
+  // Estado para los campos del formulario
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
+  // Función para manejar los cambios en los campos del formulario
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+  // Función para manejar el envío del formulario
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFormSubmitted(true);
+
+    // Enviar datos al backend
+    try {
+      const response = await fetch(`${config.apiUrl}/api/contact`, {  // Asegúrate de que el backend esté corriendo en ese puerto
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        setFormSubmitted(true);
+      } else {
+        setFormSubmitted(false);
+      }
+    } catch (error) {
+      console.error('Error al enviar el formulario:', error);
+      setFormSubmitted(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Header />
+      <div className="flex-grow py-[2rem]">
+        <h1 className="text-center text-5xl font-bold mb-8">¡Contáctanos!</h1>
+        
+        {formSubmitted ? (
+          <div className="text-center text-green-500">
+            <p>¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.</p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="max-w-[90%] lg:max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
+            <div className="mb-4">
+              <label className="block text-gray-700 font-semibold" htmlFor="firstName">Nombre</label>
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-md"
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700 font-semibold" htmlFor="lastName">Apellido</label>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-md"
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700 font-semibold" htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-md"
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700 font-semibold" htmlFor="phone">Teléfono</label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-md"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700 font-semibold" htmlFor="message">Escribe tu mensaje aquí</label>
+              <textarea
+                id="message"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-md"
+                rows="4"
+                required
+              ></textarea>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-colors-1 text-white py-2 px-4 rounded-md hover: bg-colors-1 transition"
+            >
+              Enviar
+            </button>
+          </form>
+        )}
+      </div>
+      <Footer />
+    </div>
+  );
+}
+
+export default ContactUs;

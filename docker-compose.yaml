@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  # Uncomment the following lines to run the frontend container
+  # Comment to develop the frontend locally
+  
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - tiferet_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=tiferet2
+      - DB_USER=tiferetuser
+      - DB_PASSWORD=integrador2024
+      - JWT_SECRET=1jjTit87zKpjsqfmrtG2fMQvnuC59Yv6QDTqN29bdjg6
+      - EMAIL_USER=tiferet.mail@gmail.com
+      - EMAIL_APP_PASSWORD=szgy hjgq iuhu oyee
+      - PORT_FRONT=3000
+    depends_on:
+      - db
+    networks:
+      - tiferet_network
+
+  db:
+    image: mysql:5.7
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: integrador2024
+      MYSQL_DATABASE: tiferet2
+      MYSQL_USER: tiferetuser
+      MYSQL_PASSWORD: integrador2024
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - tiferet_network
+
+networks:
+  tiferet_network:
+    driver: bridge
+
+volumes:
+  db_data:

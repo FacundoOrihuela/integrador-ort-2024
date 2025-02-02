@@ -1,0 +1,35 @@
+# Obtener todos los comentarios de un post determinado
+GET http://localhost:3001/api/comments/post/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNTAwNzA0MywiZXhwIjoxNzM1MDEwNjQzfQ.-FaFZ17NG_jERM0LhYW2nJAZ5EwP_Mbwlj6R6Uappvw
+
+###
+
+# Crear un nuevo comentario
+POST http://localhost:3001/api/comments
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNTAwNzA0MywiZXhwIjoxNzM1MDEwNjQzfQ.-FaFZ17NG_jERM0LhYW2nJAZ5EwP_Mbwlj6R6Uappvw
+
+{
+    "userId": 1,
+    "postId": 1,
+    "content": "Contenido del nuevo comentario"
+}
+
+###
+
+# Actualizar un comentario existente
+PUT http://localhost:3001/api/comments/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNTAwNzA0MywiZXhwIjoxNzM1MDEwNjQzfQ.-FaFZ17NG_jERM0LhYW2nJAZ5EwP_Mbwlj6R6Uappvw
+
+{
+    "userId": 1,
+    "postId": 1,
+    "content": "Contenido actualizado del comentario"
+}
+
+###
+
+# Eliminar un comentario
+DELETE http://localhost:3001/api/comments/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlhdCI6MTczNTAwNzA0MywiZXhwIjoxNzM1MDEwNjQzfQ.-FaFZ17NG_jERM0LhYW2nJAZ5EwP_Mbwlj6R6Uappvw

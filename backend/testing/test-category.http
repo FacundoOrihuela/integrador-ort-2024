@@ -1,0 +1,33 @@
+# CATEGORY OPERATIONS
+
+# Obtener todas las categorías
+GET http://localhost:3001/api/categories
+Content-Type: application/json
+
+###
+
+# Crear una nueva categoría
+POST http://localhost:3001/api/categories
+Content-Type: application/json
+
+{
+    "name": "Podcast",
+    "description": "Podcasts de tiferet"
+}
+
+###
+
+# Actualizar una categoría
+PUT http://localhost:3001/api/categories/1
+Content-Type: application/json
+
+{
+    "name": "Updated Electronics",
+    "description": "Updated description for electronics"
+}
+
+###
+
+# Eliminar una categoría
+DELETE http://localhost:3001/api/categories/1
+Content-Type: application/json

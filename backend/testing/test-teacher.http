@@ -1,0 +1,44 @@
+# TEACHER OPERATIONS
+
+# Obtener todos los profesores
+GET http://localhost:3001/api/teachers
+Content-Type: application/json
+
+###
+
+# Obtener un profesor por email
+GET http://localhost:3001/api/teachers/teacher.user@gmail.com
+Content-Type: application/json
+
+###
+
+# Crear un nuevo profesor
+POST http://localhost:3001/api/teachers
+Content-Type: application/json
+
+{
+    "name": "Teacher User",
+    "email": "teacher.user@gmail.com",
+    "password": "Teacher_password1",
+    "specialty": "Mathematics",
+    "description": "Experienced math teacher"
+}
+
+###
+
+# Actualizar un profesor
+PUT http://localhost:3001/api/teachers/1
+Content-Type: application/json
+
+{
+    "name": "Teacher User Updated",
+    "email": "teacher.user.updated@gmail.com",
+    "specialty": "Physics",
+    "description": "Experienced physics teacher"
+}
+
+###
+
+# Eliminar un profesor
+DELETE http://localhost:3001/api/teachers/1
+Content-Type: application/json
