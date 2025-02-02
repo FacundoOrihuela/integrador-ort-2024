@@ -1,9 +1,6 @@
 version: '3.8'
 
 services:
-  # Uncomment the following lines to run the frontend container
-  # Comment to develop the frontend locally
-  
   frontend:
     build:
       context: ./frontend
@@ -28,7 +25,7 @@ services:
       - DB_PASSWORD=integrador2024
       - JWT_SECRET=1jjTit87zKpjsqfmrtG2fMQvnuC59Yv6QDTqN29bdjg6
       - EMAIL_USER=tiferet.mail@gmail.com
-      - EMAIL_APP_PASSWORD=szgy hjgq iuhu oyee
+      - EMAIL_APP_PASSWORD=rxhz zqdy xowp ncao
       - PORT_FRONT=3000
     depends_on:
       - db

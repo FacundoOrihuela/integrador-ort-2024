@@ -75,8 +75,8 @@ const ResetPass = () => {
     };
 
     useEffect(() => {
-        if (window.localStorage.getItem("idUsuarioLogueado") !== null) navigate("/principal")
-    }, [])
+        if (window.localStorage.getItem("idUsuarioLogueado") !== null) navigate("/principal");
+    }, [navigate]) // Añadimos 'navigate' como dependencia
 
     return (
         <div className='flex justify-center mt-12'>

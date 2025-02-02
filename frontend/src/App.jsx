@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import "./estilos.css";
 import Login from "./components/login/Login";
 import Register from "./components/Register";
@@ -32,11 +33,20 @@ import AboutTiferet from "./components/AboutTiferet";
 import Members from "./components/Members";
 import History from "./components/History";
 import SoloJuntos from "./components/SoloJuntos";
-import Groups from "./components/groups/Groups";
+import Groups from "./components/groupss/Groups";
 import New from "./components/News/New";
 import MyActivities from "./components/MyActivites";
 
 function App() {
+  useEffect(() => {
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault();
+      // Stash the event so it can be triggered later.
+      window.deferredPrompt = e;
+    });
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

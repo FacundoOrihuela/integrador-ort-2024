@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import '../index.css';
@@ -14,13 +14,7 @@ const VerifyEmail = () => {
     setToken(token);
   }, []);
 
-  useEffect(() => {
-    if (token) {
-      verify();
-    }
-  }, [token])
-
-  const verify = () => {
+  const verify = useCallback(() => {
     fetch(`${config.apiUrl}/api/clients/verify-email?token=${token}`, {
         method: 'GET',
         headers: {
@@ -40,8 +34,14 @@ const VerifyEmail = () => {
         console.error("Error al registrar:", error);
         toast.error("Ocurrió un error. Inténtalo nuevamente.");
     });
-  };
-      
+  }, [token, navigate]); // Agregamos token y navigate como dependencias de useCallback
+
+  useEffect(() => {
+    if (token) {
+      verify(); // Ahora no hay warning, porque verify está memorizada con useCallback
+    }
+  }, [token, verify]); // Usamos verify en las dependencias de useEffect
+
   return (
     <div>
         <h1>Error en la verificación</h1>
@@ -50,4 +50,4 @@ const VerifyEmail = () => {
   )
 }
 
-export default VerifyEmail
+export default VerifyEmail;
