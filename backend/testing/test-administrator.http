@@ -17,8 +17,8 @@ POST http://localhost:3001/api/administrators
 Content-Type: application/json
 
 {
-    "name": "Admin",
-    "email": "admin@gmail.com",
+    "name": "Admin2",
+    "email": "admin2@gmail.com",
     "password": "Admin123"
 }
 

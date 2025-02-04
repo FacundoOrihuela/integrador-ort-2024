@@ -34,7 +34,7 @@ const MemberSlide = ({ member }) => (
     <img
       src={member.img}
       alt={member.nombre}
-      className="w-36 h-36 object-cover rounded-full mb-6 p-2 bg-white shadow-lg transform transition-transform duration-300 hover:scale-105"
+      className="w-36 h-36 object-cover rounded-full m-6 p-2 bg-white shadow-lg transform transition-transform duration-300 hover:scale-105"
     />
     <p className="absolute bottom-0 bg-black bg-opacity-60 text-white text-sm py-1 px-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
       {member.nombre}
@@ -45,11 +45,11 @@ const MemberSlide = ({ member }) => (
 const SoloJuntos = () => (
   <div className="flex flex-col min-h-screen">
     <Header />
-    <div className="flex-grow mt-[3rem] px-4">
+    <div className="flex-grow my-[3rem] px-4">
       <h1 className="text-center text-3xl font-semibold mb-6 text-gray-800">
         Equipo Coordinador
       </h1>
-      <div className="w-full max-w-4xl mx-auto"> {/* Hacemos el Swiper más pequeño */}
+      <div className="w-full max-w-4xl mx-auto">
         <Swiper
           modules={[Pagination, Navigation]}
           pagination={{ clickable: true }}
@@ -58,7 +58,7 @@ const SoloJuntos = () => (
           spaceBetween={30}
           slidesPerView={3}
           breakpoints={{
-            640: { slidesPerView: 2 },
+            320: { slidesPerView: 2 },
             1024: { slidesPerView: 3 },
           }}
           className="shadow-xl bg-white rounded-lg p-6"
@@ -75,7 +75,7 @@ const SoloJuntos = () => (
         Equipo de Comunicación
       </h1>
 
-      <div className="w-full max-w-5xl mx-auto"> {/* Hacemos el Swiper más grande */}
+      <div className="w-full max-w-5xl mx-auto">
         <Swiper
           modules={[Pagination, Navigation]}
           pagination={{ clickable: true }}
@@ -84,10 +84,10 @@ const SoloJuntos = () => (
           spaceBetween={30}
           slidesPerView={4}
           breakpoints={{
-            640: { slidesPerView: 2 },
+            320: { slidesPerView: 2 },
             1024: { slidesPerView: 4 },
           }}
-          className="shadow-xl bg-white rounded-lg p-6"
+          className="shadow-xl bg-white rounded-lg"
         >
           {CommunicationTeam.map((member, index) => (
             <SwiperSlide key={index}>

@@ -3,6 +3,8 @@ import User from '../models/User.js';
 import GroupUser from '../models/GroupUser.js';
 import cloudinary from '../config/cloudinaryConfig.js';
 import multer from 'multer';
+import Post from '../models/Post.js';
+import Comment from '../models/Comment.js';
 
 // Configurar multer para almacenar imágenes en memoria
 const storage = multer.memoryStorage();
@@ -145,17 +147,32 @@ const updateGroup = async (req, res) => {
 
 // Eliminar un grupo
 const deleteGroup = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const deleted = await Group.destroy({ where: { id } });
-        if (deleted === 0) {
-            return res.status(404).json({ message: `Grupo con id ${id} no encontrado` });
-        }
-        res.json({ message: 'Grupo eliminado con éxito' });
-    } catch (error) {
-        console.error('Error al eliminar el grupo:', error);
-        res.status(500).json({ message: 'Error al eliminar el grupo', error: error.message });
+  const { id } = req.params;
+  try {
+    // Obtener todos los posts del grupo
+    const posts = await Post.findAll({ where: { groupId: id } });
+
+    // Eliminar los comentarios asociados a cada post del grupo
+    for (const post of posts) {
+      await Comment.destroy({ where: { postId: post.id } });
     }
+
+    // Eliminar los posts del grupo
+    await Post.destroy({ where: { groupId: id } });
+
+    // Eliminar las asociaciones de grupo-usuario
+    await GroupUser.destroy({ where: { groupId: id } });
+
+    // Eliminar el grupo
+    const deleted = await Group.destroy({ where: { id } });
+    if (deleted === 0) {
+      return res.status(404).json({ message: `Grupo con id ${id} no encontrado` });
+    }
+    res.json({ message: 'Grupo eliminado con éxito' });
+  } catch (error) {
+    console.error('Error al eliminar el grupo:', error);
+    res.status(500).json({ message: 'Error al eliminar el grupo', error: error.message });
+  }
 };
 
 // Setear el líder del grupo

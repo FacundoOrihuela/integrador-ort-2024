@@ -71,7 +71,7 @@ const AdminPanel = () => {
         />
         <Box
           component="main"
-          sx={{ flexGrow: 1, marginLeft: `${drawerWidth}px`, padding: 2 }}
+          className={`flex-grow lg:ml-[240px] lg:p-2`}
         >
           {renderComponent()}
         </Box>

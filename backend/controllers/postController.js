@@ -3,6 +3,7 @@ import User from '../models/User.js';
 import Group from '../models/Group.js';
 import cloudinary from '../config/cloudinaryConfig.js';
 import multer from 'multer';
+import Comment from '../models/Comment.js';
 
 // Configurar multer para almacenar imágenes en memoria
 const storage = multer.memoryStorage();
@@ -179,17 +180,21 @@ const updatePost = async (req, res) => {
 
 // Eliminar un post
 const deletePost = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const deleted = await Post.destroy({ where: { id } });
-        if (deleted === 0) {
-            return res.status(404).json({ message: `Post con id ${id} no encontrado` });
-        }
-        res.json({ message: 'Post eliminado con éxito' });
-    } catch (error) {
-        console.error('Error al eliminar el post:', error);
-        res.status(500).json({ message: 'Error al eliminar el post', error: error.message });
+  const { id } = req.params;
+  try {
+    // Eliminar los comentarios asociados al post
+    await Comment.destroy({ where: { postId: id } });
+
+    // Eliminar el post
+    const deleted = await Post.destroy({ where: { id } });
+    if (deleted === 0) {
+      return res.status(404).json({ message: `Post con id ${id} no encontrado` });
     }
+    res.json({ message: 'Post eliminado con éxito' });
+  } catch (error) {
+    console.error('Error al eliminar el post:', error);
+    res.status(500).json({ message: 'Error al eliminar el post', error: error.message });
+  }
 };
 
 // Agregar una imagen a un post existente

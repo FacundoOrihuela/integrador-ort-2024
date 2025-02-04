@@ -4,7 +4,6 @@ import Footer from './Footer';
 import config from "../utils/config.json";
 
 const ContactUs = () => {
-  // Estado para los campos del formulario
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -15,7 +14,6 @@ const ContactUs = () => {
 
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  // Función para manejar los cambios en los campos del formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -24,14 +22,12 @@ const ContactUs = () => {
     });
   };
 
-  // Función para manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormSubmitted(true);
 
-    // Enviar datos al backend
     try {
-      const response = await fetch(`${config.apiUrl}/api/contact`, {  // Asegúrate de que el backend esté corriendo en ese puerto
+      const response = await fetch(`${config.apiUrl}/api/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -54,7 +50,7 @@ const ContactUs = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <div className="flex-grow pt-20"> {/* Ajusta el contenido debajo del Header */}
+      <div className="flex-grow py-[2rem]">
         <h1 className="text-center text-5xl font-bold mb-8">¡Contáctanos!</h1>
         
         {formSubmitted ? (
@@ -62,7 +58,7 @@ const ContactUs = () => {
             <p>¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.</p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
+          <form onSubmit={handleSubmit} className="max-w-[90%] lg:max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
             <div className="mb-4">
               <label className="block text-gray-700 font-semibold" htmlFor="firstName">Nombre</label>
               <input
@@ -129,7 +125,7 @@ const ContactUs = () => {
 
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition"
+              className="w-full bg-colors-1 text-white py-2 px-4 rounded-md hover: bg-colors-1 transition"
             >
               Enviar
             </button>

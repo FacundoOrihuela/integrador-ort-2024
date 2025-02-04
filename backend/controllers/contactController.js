@@ -8,10 +8,8 @@ const contactController = async (req, res) => {
   }
 
   try {
-    // Llamada a la función de mailer para enviar el mensaje al correo
     await contact(email, `Nombre: ${firstName} ${lastName}\nTeléfono: ${phone}\nMensaje: ${message}`);
 
-    // Enviar respuesta de éxito
     res.status(200).json({ success: true, message: 'Mensaje enviado con éxito.' });
   } catch (error) {
     console.error('Error al enviar mensaje:', error);

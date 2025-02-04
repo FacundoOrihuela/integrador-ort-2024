@@ -167,126 +167,181 @@ const PurchaseHistory = () => {
 
     return (
         <div>
-            <Header />
-            <Box display="flex" justifyContent="center" alignItems="center" minHeight="70vh">
-                <Paper className="p-4 m-4" sx={{ width: '60vw', minWidth: '800px' }}>
-                    <Box className="flex justify-between mb-4" sx={{ gap: 2 }}>
-                        <TextField
-                            label="Buscar por nombre de producto"
-                            variant="outlined"
-                            value={search}
-                            onChange={handleSearchChange}
-                            sx={{ flex: 2 }}
-                        />
-                        <Typography variant="h6" sx={{ flex: 1, textAlign: 'center', alignSelf: 'center' }}>
-                            Órdenes realizadas: {orders.length}
-                        </Typography>
-                        <FormControl variant="outlined" sx={{ minWidth: 200, flex: 1 }}>
-                            <InputLabel>Ordenar por</InputLabel>
-                            <Select
-                                value={orderDirection}
-                                onChange={handleOrderDirectionChange}
-                                label="Ordenar por"
-                            >
-                                <MenuItem value="desc">Más recientes</MenuItem>
-                                <MenuItem value="asc">Más antiguos</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Box>
-                    <List>
-                        {paginatedOrders.map((order) => (
-                            <Paper
-                                key={order.id}
-                                className="mb-4 p-4"
-                                sx={{
-                                    borderLeft: `5px solid ${getOrderStatusColor(order.status)}`,
-                                    backgroundColor: '#f9f9f9',
-                                }}
-                            >
-                                <ListItem>
-                                    <ListItemText
-                                        primary={`Fecha: ${new Date(order.createdAt).toLocaleString()}`}
-                                        secondary={`Total: $${order.totalAmount.toFixed(2)} - Estado: ${order.status}`}
-                                        className="text-black"
-                                    />
-                                </ListItem>
-                                <List component="div" disablePadding>
-                                    {order.OrderItems.map(item => {
-                                        const cloudinaryUrl = new URL(item.Product.image);
-                                        const relativePath = cloudinaryUrl.pathname;
+    <Header />
+    <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="70vh"
+        sx={{ padding: { xs: 2, sm: 4 } }}
+    >
+        <Paper
+            className="p-4 m-4"
+            sx={{
+                width: { xs: '90vw', sm: '80vw', md: '60vw' },
+                minWidth: { xs: 'unset', md: '800px' },
+            }}
+        >
+            <Box
+                className="flex justify-between mb-4"
+                sx={{
+                    gap: 2,
+                    flexDirection: { xs: 'column', md: 'row' },
+                }}
+            >
+                <TextField
+                    label="Buscar por nombre de producto"
+                    variant="outlined"
+                    value={search}
+                    onChange={handleSearchChange}
+                    sx={{ flex: 2, width: { xs: '100%', md: 'auto' } }}
+                />
+                <Typography
+                    variant="h6"
+                    sx={{
+                        flex: 1,
+                        textAlign: { xs: 'left', md: 'center' },
+                        alignSelf: { xs: 'flex-start', md: 'center' },
+                    }}
+                >
+                    Órdenes realizadas: {orders.length}
+                </Typography>
+                <FormControl
+                    variant="outlined"
+                    sx={{
+                        minWidth: 200,
+                        flex: 1,
+                        width: { xs: '100%', md: 'auto' },
+                    }}
+                >
+                    <InputLabel>Ordenar por</InputLabel>
+                    <Select
+                        value={orderDirection}
+                        onChange={handleOrderDirectionChange}
+                        label="Ordenar por"
+                    >
+                        <MenuItem value="desc">Más recientes</MenuItem>
+                        <MenuItem value="asc">Más antiguos</MenuItem>
+                    </Select>
+                </FormControl>
+            </Box>
+            <List>
+                {paginatedOrders.map((order) => (
+                    <Paper
+                        key={order.id}
+                        className="mb-4 p-4"
+                        sx={{
+                            borderLeft: `5px solid ${getOrderStatusColor(order.status)}`,
+                            backgroundColor: '#f9f9f9',
+                        }}
+                    >
+                        <ListItem>
+                            <ListItemText
+                                primary={`Fecha: ${new Date(order.createdAt).toLocaleString()}`}
+                                secondary={`Total: $${order.totalAmount.toFixed(2)} - Estado: ${order.status}`}
+                                className="text-black"
+                            />
+                        </ListItem>
+                        <List component="div" disablePadding>
+                            {order.OrderItems.map(item => {
+                                const cloudinaryUrl = new URL(item.Product.image);
+                                const relativePath = cloudinaryUrl.pathname;
 
-                                        const imgixUrl = `https://tiferet-689097844.imgix.net${relativePath}`;
+                                const imgixUrl = `https://tiferet-689097844.imgix.net${relativePath}`;
 
-                                        return (
-                                            <ListItem key={item.id} className="pl-8 flex items-center">
-                                                <Avatar
-                                                    src={`${imgixUrl}?w=64&h=64&fit=crop`}
-                                                    alt={item.Product.name}
-                                                    sx={{ width: 64, height: 64, marginRight: 2 }}
-                                                />
-                                                <ListItemText
-                                                    primary={`${item.Product.name} - $${item.priceAtPurchase.toFixed(2)}`}
-                                                    secondary={`Cantidad: ${item.quantity}`}
-                                                    className="text-black"
-                                                />
+                                return (
+                                    <ListItem
+                                        key={item.id}
+                                        className="pl-8 flex items-center"
+                                        sx={{ flexDirection: { xs: 'column', sm: 'row' } }}
+                                    >
+                                        <Avatar
+                                            src={`${imgixUrl}?w=64&h=64&fit=crop`}
+                                            alt={item.Product.name}
+                                            sx={{
+                                                width: 64,
+                                                height: 64,
+                                                marginRight: { sm: 2 },
+                                                marginBottom: { xs: 1, sm: 0 },
+                                            }}
+                                        />
+                                        <ListItemText
+                                            primary={`${item.Product.name} - $${item.priceAtPurchase.toFixed(2)}`}
+                                            secondary={`Cantidad: ${item.quantity}`}
+                                            className="text-black"
+                                            sx={{ textAlign: { xs: 'center', sm: 'left' } }}
+                                        />
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: { xs: 'column', sm: 'row' },
+                                                marginTop: { xs: 1, sm: 0 },
+                                                gap: 1,
+                                            }}
+                                        >
+                                            <Button
+                                                variant="contained"
+                                                color="secondary"
+                                                onClick={() => handleOpenRatingDialog(item.Product)}
+                                                sx={{ width: { xs: '100%', sm: 120 } }}
+                                                disabled={hasRatedProduct(item.Product.id)}
+                                                startIcon={<StarIcon />}
+                                            >
+                                                {hasRatedProduct(item.Product.id) ? 'Calificado' : 'Calificar'}
+                                            </Button>
+                                            {item.Product.file && (
                                                 <Button
                                                     variant="contained"
-                                                    color="secondary"
-                                                    onClick={() => handleOpenRatingDialog(item.Product)}
-                                                    sx={{ marginLeft: 2, width: 120 }}
-                                                    disabled={hasRatedProduct(item.Product.id)}
-                                                    startIcon={<StarIcon />}
+                                                    color="primary"
+                                                    onClick={() => handleDownload(item.Product.file)}
+                                                    sx={{
+                                                        color: 'white',
+                                                        width: { xs: '100%', sm: 'auto' },
+                                                    }}
+                                                    startIcon={<DownloadIcon />}
                                                 >
-                                                    {hasRatedProduct(item.Product.id) ? 'Calificado' : 'Calificar'}
+                                                    Descargar
                                                 </Button>
-                                                {item.Product.file && (
-                                                    <Button
-                                                        variant="contained"
-                                                        color="primary"
-                                                        onClick={() => handleDownload(item.Product.file)}
-                                                        sx={{ marginLeft: 2, color: 'white' }}
-                                                        startIcon={<DownloadIcon />}
-                                                    >
-                                                        Descargar
-                                                    </Button>
-                                                )}
-                                            </ListItem>
-                                        );
-                                    })}
-                                </List>
-                            </Paper>
-                        ))}
-                    </List>
-                    <Box display="flex" justifyContent="center" mt={2}>
-                        <Pagination
-                            count={Math.ceil(filteredOrders.length / ordersPerPage)}
-                            page={page}
-                            onChange={handlePageChange}
-                            color="primary"
-                        />
-                    </Box>
-                </Paper>
+                                            )}
+                                        </Box>
+                                    </ListItem>
+                                );
+                            })}
+                        </List>
+                    </Paper>
+                ))}
+            </List>
+            <Box display="flex" justifyContent="center" mt={2}>
+                <Pagination
+                    count={Math.ceil(filteredOrders.length / ordersPerPage)}
+                    page={page}
+                    onChange={handlePageChange}
+                    color="primary"
+                />
             </Box>
-            <Dialog open={openRatingDialog} onClose={handleCloseRatingDialog} maxWidth="sm" fullWidth>
-                <DialogTitle>Calificar Producto</DialogTitle>
-                <DialogContent>
-                    <Rating
-                        name="product-rating"
-                        value={rating}
-                        onChange={(event, newValue) => setRating(newValue)}
-                        precision={1}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseRatingDialog} color="primary">
-                        Cancelar
-                    </Button>
-                    <Button onClick={handleRatingSubmit} color="primary">
-                        Enviar
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </div>
+        </Paper>
+    </Box>
+    <Dialog open={openRatingDialog} onClose={handleCloseRatingDialog} maxWidth="sm" fullWidth>
+        <DialogTitle>Calificar Producto</DialogTitle>
+        <DialogContent>
+            <Rating
+                name="product-rating"
+                value={rating}
+                onChange={(event, newValue) => setRating(newValue)}
+                precision={1}
+            />
+        </DialogContent>
+        <DialogActions>
+            <Button onClick={handleCloseRatingDialog} color="primary">
+                Cancelar
+            </Button>
+            <Button onClick={handleRatingSubmit} color="primary">
+                Enviar
+            </Button>
+        </DialogActions>
+    </Dialog>
+</div>
+
     );
 };
 

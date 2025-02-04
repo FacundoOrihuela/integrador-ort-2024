@@ -51,8 +51,8 @@ const MainContent = () => {
             </SwiperSlide>
           ))}
         </Swiper>
-        <Footer />
       </div>
+      <Footer />
     </motion.div>
   );
 };

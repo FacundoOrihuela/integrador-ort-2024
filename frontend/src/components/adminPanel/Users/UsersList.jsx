@@ -40,7 +40,6 @@ import SendProduct from "./SendProduct";
 import { UserContext } from "../../../context/UserContext";
 import config from "../../../utils/config.json";
 
-
 const UserList = () => {
   const { user: loggedInUser } = useContext(UserContext);
   const [users, setUsers] = useState([]);
@@ -277,45 +276,48 @@ const UserList = () => {
 
   return (
     <Paper className="p-4 m-4">
-      <Box className="flex justify-between mb-4">
-        <Box className="flex gap-2 w-3/4">
-          <TextField
-            label="Buscar por nombre"
-            variant="outlined"
-            fullWidth
-            value={search}
-            onChange={handleSearchChange}
-          />
-          <FormControl variant="outlined" className="w-1/4">
-            <InputLabel>Filtrar por tipo</InputLabel>
-            <Select
-              value={filter}
-              onChange={handleFilterChange}
-              label="Filtrar por tipo"
-            >
-              <MenuItem value="">
-                <em>Todos</em>
-              </MenuItem>
-              <MenuItem value="client">Cliente</MenuItem>
-              <MenuItem value="teacher">Profesor</MenuItem>
-              <MenuItem value="administrator">Administrador</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
+      <Box className="flex justify-between mb-4 gap-2">
+        <TextField
+          label="Buscar por nombre"
+          variant="outlined"
+          fullWidth
+          value={search}
+          onChange={handleSearchChange}
+          className="w-1/2"
+        />
+        <FormControl variant="outlined" className="w-1/2">
+          <InputLabel>Filtrar por tipo</InputLabel>
+          <Select
+            value={filter}
+            onChange={handleFilterChange}
+            label="Filtrar por tipo"
+          >
+            <MenuItem value="">
+              <em>Todos</em>
+            </MenuItem>
+            <MenuItem value="client">Cliente</MenuItem>
+            <MenuItem value="teacher">Profesor</MenuItem>
+            <MenuItem value="administrator">Administrador</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+      <Box className="flex justify-center mb-4 gap-2">
         <Button
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
           onClick={handleCreateUser}
+          className="w-[100%]"
         >
           Crear Usuario
         </Button>
       </Box>
-      <Box className="flex gap-2 mb-4">
+      <Box className="grid grid-cols-1 md:grid-cols-2 lg:flex justify-center gap-2 mb-4">
         <Button
           variant="outlined"
           startIcon={<SortIcon />}
           onClick={() => handleSortChange("nameAsc")}
+          className="w-full"
           sx={{
             backgroundColor: sort === "nameAsc" ? "primary.main" : "inherit",
             color: sort === "nameAsc" ? "white" : "primary.main",
@@ -329,6 +331,7 @@ const UserList = () => {
           variant="outlined"
           startIcon={<SortIcon />}
           onClick={() => handleSortChange("nameDesc")}
+          className="w-full"
           sx={{
             backgroundColor: sort === "nameDesc" ? "primary.main" : "inherit",
             color: sort === "nameDesc" ? "white" : "primary.main",
@@ -342,6 +345,7 @@ const UserList = () => {
           variant="outlined"
           startIcon={<SortIcon />}
           onClick={() => handleSortChange("dateAsc")}
+          className="w-full"
           sx={{
             backgroundColor: sort === "dateAsc" ? "primary.main" : "inherit",
             color: sort === "dateAsc" ? "white" : "primary.main",
@@ -355,6 +359,7 @@ const UserList = () => {
           variant="outlined"
           startIcon={<SortIcon />}
           onClick={() => handleSortChange("dateDesc")}
+          className="w-full"
           sx={{
             backgroundColor: sort === "dateDesc" ? "primary.main" : "inherit",
             color: sort === "dateDesc" ? "white" : "primary.main",
@@ -365,21 +370,37 @@ const UserList = () => {
           Fecha Desc
         </Button>
       </Box>
+
       <List>
         {paginatedUsers.map((user) => (
           <ListItem
             key={user.id}
             className="mb-2 bg-gray-100 rounded-lg shadow-md"
+            sx={{
+              padding: { xs: "8px 12px", md: "8px 16px" },
+            }}
           >
-            <ListItemAvatar>
+            <div className="pr-2 md:pr-4">
               {user.photo ? (
-                <Avatar src={user.photo} />
+                <Avatar
+                  src={user.photo}
+                  sx={{
+                    width: { xs: 30, sm: 32 },
+                    height: { xs: 30, sm: 32 },
+                  }}
+                />
               ) : (
-                <Avatar>
+                <Avatar
+                  sx={{
+                    width: { xs: 30, sm: 32 },
+                    height: { xs: 30, sm: 32 },
+                  }}
+                >
                   <PersonIcon />
                 </Avatar>
               )}
-            </ListItemAvatar>
+            </div>
+
             <ListItemText
               primary={
                 <Box component="span" className="flex items-center">
@@ -405,46 +426,53 @@ const UserList = () => {
                 </>
               }
             />
-            {user.userType === "client" && (
-              <IconButton
-                color="primary"
-                onClick={() => handleSendProduct(user)}
-              >
-                <SendIcon />
-              </IconButton>
-            )}
-            {loggedInUser && loggedInUser.id !== user.id && (
-              <Box display="flex" gap={1}>
+            <Box className="grid md:flex" gap={1}>
+              {user.userType === "client" && (
                 <IconButton
+                  sx={{ padding: { xs: 0, md: 1 } }}
                   color="primary"
-                  onClick={() => {
-                    setSelectedUserId(user.id);
-                    setConfirmDelete(true);
-                  }}
+                  onClick={() => handleSendProduct(user)}
                 >
-                  <DeleteIcon />
+                  <SendIcon />
                 </IconButton>
-                {user.status === "blocked" ? (
+              )}
+              {loggedInUser && loggedInUser.id !== user.id && (
+                <>
                   <IconButton
+                    sx={{ padding: { xs: 0, md: 1 } }}
                     color="primary"
-                    onClick={() => handleUnblockUser(user.id)}
-                  >
-                    <BlockIcon />
-                  </IconButton>
-                ) : (
-                  <IconButton
-                    sx={{ color: "primary" }}
                     onClick={() => {
                       setSelectedUserId(user.id);
-                      setConfirmBlock(true);
+                      setConfirmDelete(true);
                     }}
                   >
-                    <BlockIcon />
+                    <DeleteIcon />
                   </IconButton>
-                )}
-              </Box>
-            )}
-            
+                  {user.status === "blocked" ? (
+                    <IconButton
+                      sx={{ padding: { xs: 0, md: 1 } }}
+                      color="primary"
+                      onClick={() => handleUnblockUser(user.id)}
+                    >
+                      <BlockIcon />
+                    </IconButton>
+                  ) : (
+                    <IconButton
+                      sx={{
+                        color: "primary",
+                        padding: { xs: 0, md: 1 },
+                      }}
+                      onClick={() => {
+                        setSelectedUserId(user.id);
+                        setConfirmBlock(true);
+                      }}
+                    >
+                      <BlockIcon />
+                    </IconButton>
+                  )}
+                </>
+              )}
+            </Box>
           </ListItem>
         ))}
       </List>
