@@ -1,11 +1,12 @@
 {
   "development": {
-  "username": "tiferetuser",
-  "password": "integrador2024",
-  "database": "tiferet2",
-  "host": "mysqlaci",
-  "dialect": "mysql"
-},
+    "username": "tiferetuser",
+    "password": "integrador2024",
+    "database": "tiferet2",
+    "host": "20.242.176.32",
+    "port": 3306,
+    "dialect": "mysql"
+  },
   "test": {
     "username": "root",
     "password": null,
