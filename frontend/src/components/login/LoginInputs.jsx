@@ -12,6 +12,8 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import config from "../../utils/config.json";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginInputs = () => {
   const emailField = useRef();
@@ -44,11 +46,11 @@ const LoginInputs = () => {
     const email = emailField.current.value.trim();
     const pass = passField.current.value.trim();
     if (!email) {
-      setErrorMessage("El email es un campo obligatorio.");
+      toast.error("El email es un campo obligatorio.");
       return;
     }
     if (!pass) {
-      setErrorMessage("La contraseña es un campo obligatorio.");
+      toast.error("La contraseña es un campo obligatorio.");
       return;
     }
 
@@ -76,14 +78,15 @@ const LoginInputs = () => {
       }
 
       startSession(data.token, data.user);
+      toast.success("Inicio de sesión exitoso");
       navigate("/");
     } catch (error) {
       if (error.response) {
-        setErrorMessage(error.response.data.message || "Ocurrió un error. Inténtalo nuevamente.");
+        toast.error(error.response.data.message || "Ocurrió un error. Inténtalo nuevamente.");
       } else if (error.request) {
-        setErrorMessage("No se pudo conectar con el servidor. Por favor, inténtalo más tarde.");
+        toast.error("No se pudo conectar con el servidor. Por favor, inténtalo más tarde.");
       } else {
-        setErrorMessage("Ocurrió un error. Inténtalo nuevamente.");
+        toast.error("Ocurrió un error. Inténtalo nuevamente.");
       }
       setIsLoading(false);
     }
@@ -102,6 +105,7 @@ const LoginInputs = () => {
 
   return (
     <>
+      <ToastContainer />
       <form
         className="flex flex-col items-center p-3 gap-2 max-w-full w-full mx-auto"
         onKeyDown={handleKeyDown}

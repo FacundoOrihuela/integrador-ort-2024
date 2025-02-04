@@ -41,7 +41,6 @@ const PaymentStatus = () => {
     };
 
     const intervalId = setInterval(() => {
-      console.log(isHandledRef.current);
       if (user && !isHandledRef.current) {
         isHandledRef.current = true;
         handlePayment();

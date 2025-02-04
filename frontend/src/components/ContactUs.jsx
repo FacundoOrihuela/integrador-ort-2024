@@ -4,7 +4,6 @@ import Footer from './Footer';
 import config from "../utils/config.json";
 
 const ContactUs = () => {
-  // Estado para los campos del formulario
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -15,7 +14,6 @@ const ContactUs = () => {
 
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  // Función para manejar los cambios en los campos del formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -24,14 +22,12 @@ const ContactUs = () => {
     });
   };
 
-  // Función para manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormSubmitted(true);
 
-    // Enviar datos al backend
     try {
-      const response = await fetch(`${config.apiUrl}/api/contact`, {  // Asegúrate de que el backend esté corriendo en ese puerto
+      const response = await fetch(`${config.apiUrl}/api/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
