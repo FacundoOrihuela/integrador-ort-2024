@@ -9,8 +9,7 @@ import {
   Card,
   CardContent,
   Typography,
-  Button,
-  CircularProgress,
+
   Box,
   Tabs,
   Tab,
@@ -23,7 +22,8 @@ const MyActivities = () => {
   const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [registering, setRegistering] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+const [registering, setRegistering] = useState(false);
   const [tabIndex, setTabIndex] = useState(0);
 
   const fetchEvents = useCallback(async () => {
@@ -76,6 +76,7 @@ const MyActivities = () => {
     fetchRegistrations();
   }, [fetchEvents, fetchRegistrations]);
 
+  // eslint-disable-next-line no-unused-vars
   const handleRegister = async (eventId) => {
     if (!user) {
       toast.error("Por favor, inicia sesión para registrarte en una actividad.");

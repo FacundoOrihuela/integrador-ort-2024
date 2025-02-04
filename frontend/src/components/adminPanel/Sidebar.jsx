@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import {
   Drawer,
-  IconButton,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  useMediaQuery,
 } from "@mui/material";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";

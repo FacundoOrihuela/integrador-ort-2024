@@ -9,9 +9,8 @@ import {
   Avatar,
   Button,
   Grid,
-  IconButton,
+
 } from "@mui/material";
-import { ChevronRight, ChevronLeft } from "@mui/icons-material";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 

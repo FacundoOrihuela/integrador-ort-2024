@@ -3,7 +3,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemAvatar,
   Avatar,
   Paper,
   CircularProgress,

@@ -134,7 +134,6 @@ const Kabala = () => {
                 <Box
                   sx={{
                     display: "flex",
-                    flexDirection: "row",
                     alignItems: "center",
                     backgroundColor: "rgba(250, 250, 250, 0.95)",
                     boxShadow: "0px 6px 12px rgba(0, 0, 0, 0.15)",
