@@ -11,10 +11,7 @@ import {
   MenuItem,
   ListItemIcon,
   Drawer,
-  List,
-  ListItem,
-  Divider,
-} from "@mui/material";
+} from "@mui/material"; // Eliminamos List, ListItem, Divider
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Favorite from "@mui/icons-material/Favorite";
@@ -29,6 +26,7 @@ import { UserContext } from "../context/UserContext";
 import logoImg from "../components/img/logo.png";
 import RegisterAlert from "./RegisterAlert";
 
+// Eliminamos handleRestrictedClick si no es necesario
 const Header = ({ store }) => {
   const { user } = useContext(UserContext);
   const [showFav, setShowFav] = useState(false);
@@ -40,14 +38,6 @@ const Header = ({ store }) => {
   const location = useLocation();
   const profileButtonRef = useRef(null);
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
-
-  const handleRestrictedClick = (path) => {
-    if (!user) {
-      setShowAlert(true);
-    } else {
-      navigate(path);
-    }
-  };
 
   const handleMenuOpen = (event) => {
     setMenuAnchorEl(event.currentTarget);
