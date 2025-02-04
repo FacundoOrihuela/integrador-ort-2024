@@ -4,8 +4,10 @@ import { CartContext } from '../../context/CartContext';
 import { UserContext } from '../../context/UserContext';
 import { Box, Typography, Button, List, ListItem, ListItemText, Avatar, CircularProgress, Paper } from '@mui/material';
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Header from '../Header';
-import Footer from '../Footer'; // Asegúrate de tener un componente Footer
+import Footer from '../Footer';
 import config from "../../utils/config.json";
 
 const Checkout = () => {
@@ -49,10 +51,13 @@ const Checkout = () => {
             console.log("Respuesta de MercadoPago:", result);
 
             if (result.url) {
-                window.location.href = result.url; // Redirigir a la URL de pago de MercadoPago
+                window.location.href = result.url;
+            } else {
+                throw new Error("No se pudo obtener la URL de pago de MercadoPago.");
             }
         } catch (error) {
             console.error("Error al crear la sesión de MercadoPago:", error);
+            toast.error("No se pudo conectar con MercadoPago. Por favor, inténtalo más tarde.");
             setLoading(false);
         }
     };
@@ -64,8 +69,9 @@ const Checkout = () => {
     return (
         <div>
             <Header />
+            <ToastContainer />
             <Box display="flex" flexDirection="column" minHeight="100vh">
-                <Box display="flex" justifyContent="center"  flexGrow={1}>
+                <Box display="flex" justifyContent="center" flexGrow={1}>
                     <Paper className="p-10 m-4" sx={{ width: '60vw', minWidth: '800px' }}>
                         <Typography variant="h4" className="text-black font-bold mb-4">Resúmen</Typography>
                         {cart.length === 0 ? (
@@ -85,11 +91,8 @@ const Checkout = () => {
                             <>
                                 <List>
                                     {cart.map(item => {
-                                        // Extraer la ruta relativa de la URL de Cloudinary
                                         const cloudinaryUrl = new URL(item.Product.image);
                                         const relativePath = cloudinaryUrl.pathname;
-
-                                        // Construir la URL de Imgix basada en la ruta relativa
                                         const imgixUrl = `https://tiferet-689097844.imgix.net${relativePath}`;
 
                                         return (
