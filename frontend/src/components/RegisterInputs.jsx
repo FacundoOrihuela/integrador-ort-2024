@@ -99,7 +99,7 @@ const RegisterInputs = () => {
     <div className="div">
       <ToastContainer />
       <form
-        className="my-8 flex flex-col items-center justify-center p-6 w-full max-w-md border border-gray-300 bg-white shadow-md h-auto max-h-[97vh] rounded-lg gap-4 box-border transform transition-transform duration-300 ease-in-out"
+        className="my-8 flex flex-col items-center justify-center p-6 w-full max-w-md border border-gray-300 bg-white shadow-md h-auto max-h-[97vh] rounded-lg gap-3 box-border transform transition-transform duration-300 ease-in-out"
         onSubmit={handleRegister}
       >
         <figure className="w-1/4 mb-4">
