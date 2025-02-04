@@ -1,7 +1,6 @@
 import { useEffect, useId, useRef, useState, useContext } from "react";
 import { useDispatch } from "react-redux";
 import { saveSessionToken } from "../../features/loginSlice";
-import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
 import {
@@ -11,6 +10,7 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
+import axios from "axios";
 import config from "../../utils/config.json";
 
 const LoginInputs = () => {
@@ -27,6 +27,7 @@ const LoginInputs = () => {
   const { login } = useContext(UserContext);
   const [blockDialogOpen, setBlockDialogOpen] = useState(false);
   const [blockReason, setBlockReason] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     emailField.current.value = "admin@gmail.com";
@@ -42,46 +43,41 @@ const LoginInputs = () => {
   const loginHandler = async () => {
     const email = emailField.current.value.trim();
     const pass = passField.current.value.trim();
-    if (!email) return toast.error("El email es un campo obligatorio.");
-    if (!pass) return toast.error("La contraseña es un campo obligatorio.");
+    if (!email) {
+      setErrorMessage("El email es un campo obligatorio.");
+      return;
+    }
+    if (!pass) {
+      setErrorMessage("La contraseña es un campo obligatorio.");
+      return;
+    }
 
-    executeLogin({ email: email, password: pass });
+    await executeLogin({ email: email, password: pass });
   };
 
-  const executeLogin = (loginData) => {
+  const executeLogin = async (loginData) => {
     setIsLoading(true);
-    setTimeout(() => {
-      fetch(`${config.apiUrl}/api/auth/login`, {
-        method: "POST",
+    setErrorMessage(""); // Clear previous error message
+    try {
+      const response = await axios.post(`${config.apiUrl}/api/auth/login`, loginData, {
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(loginData),
-      })
-        .then((resp) => {
-          if (!resp.ok) {
-            if (resp.status === 401) {
-              return resp.json().then((data) => {
-                throw new Error(data.message);
-              });
-            }
-            throw new Error("Algo salió mal");
-          }
-          return resp.json();
-        })
-        .then((data) => {
-          if (data.user.status === "blocked") {
-            setBlockReason(data.user.blockReason);
-            setBlockDialogOpen(true);
-            setIsLoading(false);
-            return;
-          }
-          startSession(data.token, data.user);
-          navigate("/");
-        })
-        .catch((error) => {
-          toast.error(error.message);
-          setIsLoading(false);
-        });
-    }, 1500);
+      });
+
+      const data = response.data;
+
+      if (data.user.status === "blocked") {
+        setBlockReason(data.user.blockReason);
+        setBlockDialogOpen(true);
+        setIsLoading(false);
+        return;
+      }
+
+      startSession(data.token, data.user);
+      navigate("/");
+    } catch (error) {
+      setErrorMessage(error.response.data.message);
+      setIsLoading(false);
+    }
   };
 
   const startSession = (token, user) => {
@@ -145,7 +141,9 @@ const LoginInputs = () => {
             />
           </button>
         </div>
-
+        {errorMessage && (
+          <p className="text-red-500 text-sm mb-3">{errorMessage}</p>
+        )}
         <button
           type="button"
           className={`px-3 py-1.5 font-semibold rounded-md w-full text-[0.8em] transition-all duration-200 ease-in-out focus:outline-none ${

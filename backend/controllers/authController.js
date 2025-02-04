@@ -10,18 +10,17 @@ const login = async (req, res) => {
         const user = await User.findOne({ where: { email } });
 
         if (!user || user.status === 'deleted') {
-            return res.status(401).json({ message: 'Correo electrónico o contraseña incorrectos' });
+            return res.status(404).json({ message: 'No existe un usuario registrado con ese correo electrónico' });
         }
 
         if (user.userType === 'client' && !user.isVerified) {
             return res.status(403).json({ message: 'Cuenta no verificada. Por favor, verifica tu correo electrónico.' });
         }
 
-        // Verificar la contraseña
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
-            return res.status(401).json({ message: 'Correo electrónico o contraseña incorrectos' });
+            return res.status(401).json({ message: 'La contraseña es incorrecta' });
         }
 
         user.isActive = true;
