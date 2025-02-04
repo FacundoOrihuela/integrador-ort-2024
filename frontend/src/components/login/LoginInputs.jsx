@@ -57,14 +57,17 @@ const LoginInputs = () => {
 
   const executeLogin = async (loginData) => {
     setIsLoading(true);
-    setErrorMessage(""); // Clear previous error message
+    setErrorMessage("");
     try {
-      const response = await axios.post(`${config.apiUrl}/api/auth/login`, loginData, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await axios.post(
+        `${config.apiUrl}/api/auth/login`,
+        loginData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       const data = response.data;
-
       if (data.user.status === "blocked") {
         setBlockReason(data.user.blockReason);
         setBlockDialogOpen(true);
@@ -75,7 +78,13 @@ const LoginInputs = () => {
       startSession(data.token, data.user);
       navigate("/");
     } catch (error) {
-      setErrorMessage(error.response.data.message);
+      if (error.response) {
+        setErrorMessage(error.response.data.message || "Ocurrió un error. Inténtalo nuevamente.");
+      } else if (error.request) {
+        setErrorMessage("No se pudo conectar con el servidor. Por favor, inténtalo más tarde.");
+      } else {
+        setErrorMessage("Ocurrió un error. Inténtalo nuevamente.");
+      }
       setIsLoading(false);
     }
   };

@@ -23,6 +23,7 @@ const ProductPage = () => {
   const [ratingsLoaded, setRatingsLoaded] = useState(false);
   const fixedMinPrice = 0;
   const { user } = useContext(UserContext);
+
   useEffect(() => {
     // Fetch categories from the API
     fetch(`${config.apiUrl}/api/categories`)
@@ -98,7 +99,11 @@ const ProductPage = () => {
   };
 
   const handleShowMemberships = () => {
-    setShowMemberships(true);
+    if (user && user.userType === "client") {
+      setShowMemberships(true);
+    } else {
+      toast.error("Solo los clientes pueden comprar una membresía");
+    }
   };
 
   const filteredProducts = products.filter((product) => {

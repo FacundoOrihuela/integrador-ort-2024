@@ -1,9 +1,9 @@
 import React, { useEffect, useId, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { validateEmail, validatePassword } from "../utils/validateRegister";
 import "../index.css";
 import config from "../utils/config.json";
+import { toast } from "react-toastify";
 
 const RegisterInputs = () => {
   const user = useId();
@@ -18,39 +18,40 @@ const RegisterInputs = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleRegister = (e) => {
     e.preventDefault();
 
     if (!userField.current.value) {
-      toast.error("El campo de nombre está vacío");
+      setErrorMessage("El campo de nombre está vacío");
       return;
     }
     if (!emailField.current.value) {
-      toast.error("El campo de email está vacío");
+      setErrorMessage("El campo de email está vacío");
       return;
     }
     if (!validateEmail(emailField.current.value)) {
-      toast.error("Email no válido");
+      setErrorMessage("Email no válido");
       return;
     }
     if (!passField.current.value) {
-      toast.error("El campo de contraseña está vacío");
+      setErrorMessage("El campo de contraseña está vacío");
       return;
     }
     if (!validatePassword(passField.current.value)) {
-      toast.error(
+      setErrorMessage(
         "La contraseña debe tener al menos 8 caracteres, 1 número y una mayúscula"
       );
       return;
     }
     if (!repeatPassField.current.value) {
-      toast.error("El campo de repetir contraseña está vacío");
+      setErrorMessage("El campo de repetir contraseña está vacío");
       return;
     }
 
     if (passField.current.value !== repeatPassField.current.value) {
-      toast.error("Las contraseñas no coinciden");
+      setErrorMessage("Las contraseñas no coinciden");
       return;
     }
 
@@ -65,6 +66,7 @@ const RegisterInputs = () => {
 
   const registerUser = (newUser) => {
     setIsLoading(true);
+    setErrorMessage(""); // Clear previous error message
     fetch(`${config.apiUrl}/api/clients`, {
       method: "POST",
       headers: {
@@ -73,18 +75,20 @@ const RegisterInputs = () => {
       body: JSON.stringify(newUser),
     })
       .then((resp) => {
-        if (!resp.ok) throw new Error("Algo salió mal");
+        if (!resp.ok) {
+          return resp.json().then((data) => {
+            throw new Error(data.message || "Ocurrió un error. Inténtalo nuevamente.");
+          });
+        }
         return resp.json();
       })
       .then(() => {
-        toast.success(
-          "Registro exitoso! Te enviamos un correo electrónico para verificar tu email :)"
-        );
+        toast.success("Usuario registrado con éxito. Por favor, verifica tu correo electrónico.");
         navigate("/login");
       })
       .catch((error) => {
         console.error("Error al registrar:", error);
-        toast.error("Ocurrió un error. Inténtalo nuevamente.");
+        setErrorMessage(error.message || "Ocurrió un error. Inténtalo nuevamente.");
       })
       .finally(() => {
         setIsLoading(false);
@@ -96,7 +100,10 @@ const RegisterInputs = () => {
   }, [navigate]);
 
   return (
-    <form className="my-8 flex flex-col items-center justify-center p-6 w-full max-w-md border border-gray-300 bg-white shadow-md h-auto max-h-[97vh] rounded-lg gap-4 box-border transform transition-transform duration-300 ease-in-out" onSubmit={handleRegister}>
+    <form
+      className="my-8 flex flex-col items-center justify-center p-6 w-full max-w-md border border-gray-300 bg-white shadow-md h-auto max-h-[97vh] rounded-lg gap-4 box-border transform transition-transform duration-300 ease-in-out"
+      onSubmit={handleRegister}
+    >
       <figure className="w-1/4 mb-4">
         <img src="/svg/Logo.png" alt="logo-Tiféret" className="w-full" />
       </figure>
@@ -180,6 +187,9 @@ const RegisterInputs = () => {
           />
         </button>
       </div>
+      {errorMessage && (
+        <p className="text-red-500 text-sm mb-3">{errorMessage}</p>
+      )}
       <button
         type="submit"
         className={`w-full py-2 text-[0.8em] font-medium rounded-lg transition-all duration-200 ease-in-out focus:outline-none ${
