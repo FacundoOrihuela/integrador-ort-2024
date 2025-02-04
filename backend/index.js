@@ -74,9 +74,9 @@ app.use('/api/mercadoPago', mercadoPagoRoutes);
 app.use('/api/contact', contactRoutes);
 
 // Manejar todas las rutas con index.html
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
-});
+//app.get('*', (req, res) => {
+//  res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+//});
 
 // Error handling
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
