@@ -11,7 +11,7 @@ import {
   MenuItem,
   ListItemIcon,
   Drawer,
-} from "@mui/material"; // Eliminamos List, ListItem, Divider
+} from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Favorite from "@mui/icons-material/Favorite";
@@ -25,8 +25,8 @@ import Cart from "./ecommerce/Cart";
 import { UserContext } from "../context/UserContext";
 import logoImg from "../components/img/logo.png";
 import RegisterAlert from "./RegisterAlert";
+import MenuIcon from "@mui/icons-material/Menu";
 
-// Eliminamos handleRestrictedClick si no es necesario
 const Header = ({ store }) => {
   const { user } = useContext(UserContext);
   const [showFav, setShowFav] = useState(false);
@@ -54,7 +54,10 @@ const Header = ({ store }) => {
       <AppBar position="sticky" className="bg-colors-1 shadow-md">
         <Container maxWidth="lg" className="px-4 md:px-8">
           <Toolbar disableGutters className="flex justify-between items-center">
-            <IconButton className="flex items-center">
+            <IconButton
+              className="md:flex items-center"
+              sx={{ display: { xs: "none", md: "flex" } }}
+            >
               <Link to="/" className="flex items-center">
                 <img
                   src={logoImg}
@@ -64,21 +67,20 @@ const Header = ({ store }) => {
               </Link>
             </IconButton>
 
-            <div className="flex items-center gap-4 md:hidden">
-              <IconButton
-                color="inherit"
-                onClick={() => setDrawerOpen(true)}
-                className="bg-gray-300 px-4 py-2 rounded-lg border border-gray-400 shadow-sm hover:bg-gray-400 hover:shadow-md transition"
-                sx={{
-                  bgcolor: "rgba(260, 98, 30, 0.7)",
-                  border: "0.2px solid rgba(0, 0, 0, 0.8)",
-                }}
-              >
-                <span className="font-semibold text-lg text-gray-100">
-                  Menú
-                </span>
-              </IconButton>
-            </div>
+            <div className="flex items-center gap-2 md:hidden">
+  <IconButton
+    color="inherit"
+    onClick={() => setDrawerOpen(true)}
+    className="bg-gray-300 p-1 rounded-md border border-gray-400 shadow-sm hover:bg-gray-400 hover:shadow-md transition"
+    sx={{
+      bgcolor: "rgba(260, 98, 30, 0.7)",
+      border: "0.2px solid rgba(0, 0, 0, 0.8)",
+    }}
+  >
+    <MenuIcon className="text-gray-100" fontSize="small" />
+  </IconButton>
+</div>
+
 
             <nav className="hidden md:flex flex-1 justify-center space-x-6">
               <Link
