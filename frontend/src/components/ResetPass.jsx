@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { validatePassword } from "../utils/validateRegister";
 import "../index.css";
 import config from "../utils/config.json";
@@ -24,7 +24,6 @@ const ResetPass = () => {
 
   const handleResetPass = (e) => {
     e.preventDefault();
-
     if (!passField.current.value) {
       toast.error("El campo de contraseña está vacío");
       return;
@@ -66,8 +65,10 @@ const ResetPass = () => {
         return resp.json();
       })
       .then(() => {
-        toast.success("Cambio de contraseña exitoso");
-        navigate("/");
+        navigate("/login");
+        setTimeout(() => {
+          toast.success("Cambio de contraseña exitoso");
+        }, 10);
       })
       .catch((error) => {
         console.error("Error al registrar:", error);
@@ -89,6 +90,7 @@ const ResetPass = () => {
         backgroundSize: "cover",
       }}
     >
+      <ToastContainer />
       <form
         className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md"
         onSubmit={handleResetPass}
