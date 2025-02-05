@@ -4,6 +4,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
+import https from 'https';
 import './models/index.js';
 
 dotenv.config();
@@ -17,13 +18,6 @@ app.use(express.json());
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// Leer y parsear el archivo config.json
-const configPath = path.join(__dirname, 'config/config.json');
-const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-
-// Servir archivos estáticos del frontend
-app.use(express.static(path.join(__dirname, '../frontend/build')));
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -73,17 +67,23 @@ app.use('/api/news', newsRoutes);
 app.use('/api/mercadoPago', mercadoPagoRoutes);
 app.use('/api/contact', contactRoutes);
 
-// Manejar todas las rutas con index.html
-//app.get('*', (req, res) => {
-//  res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
-//});
-
 // Error handling
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
   res.status(500).json({ message: 'Error interno del servidor', error: err.message });
 });
 
-// Iniciar el servidor
-app.listen(port, () => {
-  console.log(`Servidor corriendo en ${config.apiUrl}`);
+// Leer los certificados SSL/TLS
+const privateKey = fs.readFileSync('C:/Users/Juan/server.key', 'utf8');
+const certificate = fs.readFileSync('C:/Users/Juan/server.cert', 'utf8');
+
+const credentials = {
+  key: privateKey,
+  cert: certificate
+};
+
+// Iniciar el servidor HTTPS
+const httpsServer = https.createServer(credentials, app);
+
+httpsServer.listen(port, () => {
+  console.log(`Servidor corriendo en https://localhost:${port}`);
 });
