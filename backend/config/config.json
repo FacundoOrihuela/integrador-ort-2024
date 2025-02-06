@@ -21,6 +21,6 @@
     "host": "${DB_HOST}",
     "dialect": "mysql"
   },
-  "apiUrl": "http://4.156.232.239:3001"
+  "apiUrl": "http://localhost:3001"
 
 }
