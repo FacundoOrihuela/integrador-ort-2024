@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useCallback } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -22,6 +22,8 @@ import EditGroup from "./EditGroup";
 import CommentSection from "./CommentSection";
 import config from "../../utils/config.json";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
 const GroupPanel = ({ group }) => {
   const [participants, setParticipants] = useState([]);
@@ -45,37 +47,67 @@ const GroupPanel = ({ group }) => {
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [commentsCount, setCommentsCount] = useState({});
-  const [commentImage, setCommentImage] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [commentImage, setCommentImage] = useState(null); // Estado para la imagen del comentario
+  const [isLoading, setIsLoading] = useState(false); // Estado para manejar la carga
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  const fetchParticipants = useCallback(async () => {
-    if (!group || !token) return;
+  const loadInfoAsync = async () => {
+    await fetchParticipants();
+    await fetchAllUsers();
+  };
 
-    try {
-      const response = await fetch(
-        `${config.apiUrl}/api/groups/${group.id}/users`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+  useEffect(() => {
+    const handleResize = () => {
+      const isSmallScreen = window.innerWidth < 768;
+      setIsMobile(isSmallScreen);
+      setIsSidebarOpen(!isSmallScreen);
+    };
 
-      if (response.ok) {
-        const data = await response.json();
-        setParticipants(data.data);
-      } else {
-        console.error(
-          "Error al obtener los participantes:",
-          response.statusText
-        );
-      }
-    } catch (error) {
-      console.error("Error al conectar con el servidor:", error);
-    }
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    loadInfoAsync();
   }, [group, token]);
 
-  const fetchAllUsers = useCallback(async () => {
+  useEffect(() => {
+    if (group) {
+      fetchPosts();
+    }
+  }, [group]);
+
+  useEffect(() => {
+    fetchCommentsCounts();
+  }, [posts, token]);
+
+  const fetchCommentsCounts = async () => {
+    try {
+      const counts = {};
+      for (const post of posts) {
+        const response = await axios.get(
+          `${config.apiUrl}/api/comments/post/${post.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        counts[post.id] = response.data.data.length;
+      }
+      setCommentsCount(counts);
+    } catch (error) {
+      console.error("Error fetching comments count:", error);
+    }
+  };
+
+  const fetchAllUsers = async () => {
     if (!token) return;
 
     try {
@@ -101,70 +133,34 @@ const GroupPanel = ({ group }) => {
     } catch (error) {
       console.error("Error al conectar con el servidor:", error);
     }
-  }, [token]);
+  };
 
-  const loadInfoAsync = useCallback(async () => {
-    await fetchParticipants();
-    await fetchAllUsers();
-  }, [fetchParticipants, fetchAllUsers]);
+  const fetchParticipants = async () => {
+    if (!group || !token) return;
 
-  useEffect(() => {
-    loadInfoAsync();
-  }, [group, token, loadInfoAsync]);
-
-  const fetchPosts = useCallback(async () => {
-    if (!group) return;
     try {
       const response = await fetch(
-        `${config.apiUrl}/api/posts/group/${group.id}`,
+        `${config.apiUrl}/api/groups/${group.id}/users`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
-        setPosts(data.data.reverse());
+        setParticipants(data.data);
       } else {
-        console.error("Error al obtener los posts:", response.statusText);
+        console.error(
+          "Error al obtener los participantes:",
+          response.statusText
+        );
       }
     } catch (error) {
       console.error("Error al conectar con el servidor:", error);
     }
-  }, [group, token]);
-
-  useEffect(() => {
-    if (group) {
-      fetchPosts();
-    }
-  }, [group, fetchPosts]);
-
-  const fetchCommentsCounts = useCallback(async () => {
-    try {
-      const counts = {};
-      for (const post of posts) {
-        const response = await axios.get(
-          `${config.apiUrl}/api/comments/post/${post.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        counts[post.id] = response.data.data.length;
-      }
-      setCommentsCount(counts);
-    } catch (error) {
-      console.error("Error fetching comments count:", error);
-    }
-  }, [posts, token]);
-
-  useEffect(() => {
-    fetchCommentsCounts();
-  }, [posts, token, fetchCommentsCounts]);
-
+  };
   const handleOpenParticipantModal = (participant) => {
     setSelectedParticipant(participant);
     setParticipantModalOpen(true);
@@ -193,7 +189,7 @@ const GroupPanel = ({ group }) => {
   const handleClosePostModal = () => {
     setSelectedPost(null);
     setPostModalOpen(false);
-    fetchCommentsCounts()
+    fetchCommentsCounts();
   };
 
   const handleCommentClick = (post) => {
@@ -204,6 +200,11 @@ const GroupPanel = ({ group }) => {
   const handleCommentModalClose = () => {
     setIsCommentModalOpen(false);
     setSelectedPost(null);
+  };
+
+  const handleCloseEditGroupModal = () => {
+    setEditGroupModalOpen(false);
+    fetchParticipants();
   };
 
   const handleCreateOrUpdatePost = async () => {
@@ -314,7 +315,7 @@ const GroupPanel = ({ group }) => {
       if (commentImage) {
         formData.append("image", commentImage);
       }
-  
+
       const response = await axios.post(
         `${config.apiUrl}/api/comments`,
         formData,
@@ -333,6 +334,30 @@ const GroupPanel = ({ group }) => {
       console.error("Error adding comment:", error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Obtener todos los posts del grupo
+  const fetchPosts = async () => {
+    if (!group) return;
+    try {
+      const response = await fetch(
+        `${config.apiUrl}/api/posts/group/${group.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        setPosts(data.data.reverse());
+      } else {
+        console.error("Error al obtener los posts:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error al conectar con el servidor:", error);
     }
   };
 
@@ -446,7 +471,7 @@ const GroupPanel = ({ group }) => {
   if (!group) {
     return (
       <div className="p-2 flex flex-col items-center">
-        <h2 className="text-2xl font-bold">
+        <h2 className="text-2xl font-bold mx-5">
           Selecciona un grupo para ver su información.
         </h2>
       </div>
@@ -454,7 +479,7 @@ const GroupPanel = ({ group }) => {
   }
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-full">
       <div className="mt-1 flex-grow flex flex-col h-full">
         <div className="bg-gray-100 p-2 flex flex-col items-center">
           <h2 className="text-2xl font-bold">{group.name}</h2>
@@ -541,9 +566,7 @@ const GroupPanel = ({ group }) => {
                         const now = new Date();
                         const createdDate = new Date(post.createdAt);
                         const diffMs = now - createdDate;
-                        const diffHours = Math.floor(
-                          diffMs / (1000 * 60 * 60)
-                        );
+                        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
                         const diffMinutes = Math.floor(diffMs / (1000 * 60));
 
                         if (diffHours < 1) {
@@ -648,43 +671,111 @@ const GroupPanel = ({ group }) => {
         </div>
       </div>
 
-      <div className="bg-gray-100 shadow p-4 rounded-r flex flex-col items-center">
-        {group && user && group.userId === user.id && (
-          <button
-            onClick={() => setConfigModalOpen(true)}
-            className="flex items-center space-x-2 border border-black rounded-md py-2 px-4 mb-4 w-full justify-center"
-          >
-            <SettingsIcon />
-            <p className="text-sm font-semibold">Configurar grupo</p>
-          </button>
+      <div className="relative" style={{ minHeight: "calc(100vh - 60px)" }}>
+        {isMobile && (
+          <div className="relative">
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className={`absolute top-[20px] ${
+                isSidebarOpen ? "right-[200px]" : "right-0"
+              } bg-gray-300 text-black border border-black py-2 rounded-l-md z-10 flex items-center justify-center transition-all duration-300`}
+            >
+              {isSidebarOpen ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            </button>
+
+            <div
+              className={`overflow-y-auto top-[50px] pb-[76px] p-4 bg-gray-100 fixed right-0 h-full z-20 transition-transform duration-300 ${
+                isSidebarOpen
+                  ? "transform translate-x-0"
+                  : "transform translate-x-full"
+              }`}
+            >
+              {group && user && group.userId === user.id && (
+                <button
+                  onClick={() => setConfigModalOpen(true)}
+                  className="flex items-center space-x-2 border border-black rounded-md py-2 px-4 mb-4 w-full justify-center"
+                >
+                  <SettingsIcon />
+                  <p className="text-sm font-semibold">Configurar grupo</p>
+                </button>
+              )}
+
+              <h3 className="text-sm font-semibold mb-4">Participantes</h3>
+              <div className="flex flex-col gap-4 overflow-y-auto max-h-[calc(100vh-60px-80px)]">
+                {participants?.map((participant) => (
+                  <div
+                    key={participant.id}
+                    className="flex flex-col items-center"
+                  >
+                    <motion.div
+                      className="relative rounded-full overflow-hidden shadow-lg cursor-pointer"
+                      whileHover={{ scale: 1.1 }}
+                      onClick={() => handleOpenParticipantModal(participant)}
+                    >
+                      {participant.photo ? (
+                        <Avatar
+                          src={participant.photo}
+                          alt="Profile Photo"
+                          className="h-full w-full"
+                          sx={{ width: 20, height: 20 }}
+                        />
+                      ) : (
+                        <AccountCircleIcon className="w-full h-full" />
+                      )}
+                    </motion.div>
+                    <p className="text-xs font-bold text-gray-700">
+                      {participant.name}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         )}
 
-        <h3 className="text-sm font-semibold mb-4">Participantes</h3>
-        <div className="flex flex-col gap-4">
-          {participants?.map((participant) => (
-            <div key={participant.id} className="flex flex-col items-center">
-              <motion.div
-                className="relative rounded-full overflow-hidden shadow-lg cursor-pointer"
-                whileHover={{ scale: 1.1 }}
-                onClick={() => handleOpenParticipantModal(participant)}
+        {!isMobile && (
+          <div className="bg-gray-100 shadow p-4 rounded-r flex flex-col items-center h-full">
+            {group && user && group.userId === user.id && (
+              <button
+                onClick={() => setConfigModalOpen(true)}
+                className="flex items-center space-x-2 border border-black rounded-md py-2 px-4 mb-4 w-full justify-center"
               >
-                {participant.photo ? (
-                  <Avatar
-                    src={participant.photo}
-                    alt="Profile Photo"
-                    className="h-full w-full"
-                    sx={{ width: 20, height: 20 }}
-                  />
-                ) : (
-                  <AccountCircleIcon className="w-full h-full" />
-                )}
-              </motion.div>
-              <p className="text-xs font-bold text-gray-700">
-                {participant.name}
-              </p>
+                <SettingsIcon />
+                <p className="text-sm font-semibold">Configurar grupo</p>
+              </button>
+            )}
+
+            <h3 className="text-sm font-semibold mb-4">Participantes</h3>
+            <div className="flex flex-col gap-4">
+              {participants?.map((participant) => (
+                <div
+                  key={participant.id}
+                  className="flex flex-col items-center"
+                >
+                  <motion.div
+                    className="relative rounded-full overflow-hidden shadow-lg cursor-pointer"
+                    whileHover={{ scale: 1.1 }}
+                    onClick={() => handleOpenParticipantModal(participant)}
+                  >
+                    {participant.photo ? (
+                      <Avatar
+                        src={participant.photo}
+                        alt="Profile Photo"
+                        className="h-full w-full"
+                        sx={{ width: 20, height: 20 }}
+                      />
+                    ) : (
+                      <AccountCircleIcon className="w-full h-full" />
+                    )}
+                  </motion.div>
+                  <p className="text-xs font-bold text-gray-700">
+                    {participant.name}
+                  </p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Modal de Configuración del Grupo */}
@@ -720,12 +811,18 @@ const GroupPanel = ({ group }) => {
       {/* Modal para editar el grupo */}
       <Modal
         open={editGroupModalOpen}
-        onClose={() => setEditGroupModalOpen(false)}
+        onClose={() => {
+          setEditGroupModalOpen(false);
+          window.location.reload(); // Recarga la página al cerrar el modal
+        }}
       >
         <div className="flex justify-center items-center h-full bg-gray-500 bg-opacity-50">
           <div className="bg-white p-6 rounded-lg w-96 relative">
             <CloseIcon
-              onClick={() => setEditGroupModalOpen(false)}
+              onClick={() => {
+                setEditGroupModalOpen(false);
+                window.location.reload(); // Recarga la página al hacer clic en el icono de cerrar
+              }}
               className="absolute top-2 right-2 cursor-pointer text-black"
               style={{ fontSize: 30 }}
             />
@@ -733,7 +830,7 @@ const GroupPanel = ({ group }) => {
               editData={group}
               isUpdate={true}
               handleUpdateOrCreate={() => {
-                fetchParticipants();
+                window.location.reload(); // Recarga la página después de la actualización
                 setEditGroupModalOpen(false);
               }}
             />
