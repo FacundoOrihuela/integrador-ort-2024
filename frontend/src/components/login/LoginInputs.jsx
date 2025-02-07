@@ -103,6 +103,11 @@ const LoginInputs = () => {
     }
   };
 
+  const goToContact = () => {
+    setBlockDialogOpen(false)
+    navigate("/contact");
+  };
+
   return (
     <>
       <form
@@ -203,10 +208,13 @@ const LoginInputs = () => {
       <Dialog open={blockDialogOpen} onClose={() => setBlockDialogOpen(false)}>
         <DialogTitle>Usuario Bloqueado</DialogTitle>
         <DialogContent>
-          <p>Tu cuenta ha sido bloqueada.</p>
+          <p>Tu cuenta ha sido bloqueada indefinidamente. Puedes mandar contactarte con nosotros si crees que esto es un error.</p>
           <p>Razón: {blockReason}</p>
         </DialogContent>
         <DialogActions>
+        <Button onClick={goToContact} color="primary">
+            Contacto
+          </Button>
           <Button onClick={() => setBlockDialogOpen(false)} color="primary">
             Cerrar
           </Button>
