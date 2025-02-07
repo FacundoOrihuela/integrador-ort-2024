@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { validateEmail, validatePassword } from "../utils/validateRegister";
 import "../index.css";
 import config from "../utils/config.json";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 const RegisterInputs = () => {
@@ -97,7 +97,6 @@ const RegisterInputs = () => {
 
   return (
     <div className="div">
-      <ToastContainer />
       <form
         className="my-8 flex flex-col items-center justify-center p-6 w-full max-w-md border border-gray-300 bg-white shadow-md h-auto max-h-[97vh] rounded-lg gap-3 box-border transform transition-transform duration-300 ease-in-out"
         onSubmit={handleRegister}

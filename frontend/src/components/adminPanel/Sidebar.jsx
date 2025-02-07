@@ -66,7 +66,7 @@ const Sidebar = ({ onSelect, selectedComponent }) => {
         onClose={toggleSidebar}
         className="z-[100] bg-gray-100 shadow-md"
         PaperProps={{
-          className: "w-60 mt-[65px]",
+          className: "w-60 md:mt-[70px] mt-[50px]",
         }}
       >
         <List className="flex flex-col gap-1">

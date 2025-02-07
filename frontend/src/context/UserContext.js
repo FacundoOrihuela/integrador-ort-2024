@@ -1,7 +1,6 @@
 import React from 'react';
 import { createContext, useState, useEffect, useCallback } from 'react';
-import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 import config from "../utils/config.json";
 
@@ -49,9 +48,7 @@ export const UserProvider = ({ children }) => {
 
     return (
         <UserContext.Provider value={{ user, login, logout, fetchUser }}>
-            <ToastContainer/>
             {children}
-
         </UserContext.Provider>
     );
 };

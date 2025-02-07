@@ -4,7 +4,7 @@ import { CartContext } from '../../context/CartContext';
 import { UserContext } from '../../context/UserContext';
 import { Box, Typography, Button, List, ListItem, ListItemText, Avatar, CircularProgress, Paper } from '@mui/material';
 import axios from 'axios';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from '../Header';
 import Footer from '../Footer';
@@ -69,7 +69,6 @@ const Checkout = () => {
     return (
         <div>
             <Header />
-            <ToastContainer />
             <Box display="flex" flexDirection="column" minHeight="100vh">
                 <Box display="flex" justifyContent="center" flexGrow={1}>
                     <Paper className="p-10 m-4" sx={{ width: '60vw', minWidth: '800px' }}>

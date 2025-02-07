@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { validateEmail } from "../utils/validateRegister";
 import fondoImg from "./img/fondo.jpg";
 import "../index.css";
@@ -66,7 +66,6 @@ const ForgotPass = () => {
       }}
     >
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md m-4 max-h-[97%] min-h-[80%]">
-        <ToastContainer />
         <form className="flex flex-col items-center p-3 gap-2 w-full" onSubmit={handleReset}>
           <figure className="w-2/3 md:w-1/2 p-3 mb-4">
             <img src="/svg/Logo.png" alt="logo-Tiféret" className="w-full" />

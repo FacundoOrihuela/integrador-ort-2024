@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { validatePassword } from "../utils/validateRegister";
 import "../index.css";
 import config from "../utils/config.json";
@@ -90,7 +90,6 @@ const ResetPass = () => {
         backgroundSize: "cover",
       }}
     >
-      <ToastContainer />
       <form
         className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md"
         onSubmit={handleResetPass}

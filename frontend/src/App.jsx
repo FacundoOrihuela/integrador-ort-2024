@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import "./estilos.css";
 import Login from "./components/login/Login";
 import Register from "./components/Register";
@@ -26,8 +26,8 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "./theme";
 import ProtectedRoute from "./components/ProtectedRoute";
-import UserProfile from './components/UserProfile';
-import ProductDetail from './components/ecommerce/ProductDetail';
+import UserProfile from "./components/UserProfile";
+import ProductDetail from "./components/ecommerce/ProductDetail";
 import ContactUs from "./components/ContactUs";
 import AboutTiferet from "./components/AboutTiferet";
 import Members from "./components/Members";
@@ -39,7 +39,7 @@ import MyActivities from "./components/MyActivites";
 
 function App() {
   useEffect(() => {
-    window.addEventListener('beforeinstallprompt', (e) => {
+    window.addEventListener("beforeinstallprompt", (e) => {
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
       // Stash the event so it can be triggered later.
@@ -50,7 +50,9 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <BrowserRouter
+        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+      >
         <UserProvider>
           <Provider store={store}>
             <CartProvider>
@@ -63,36 +65,54 @@ function App() {
                   <Route path="/forgotPassword" element={<ForgotPass />} />
                   <Route path="/reset-password" element={<ResetPass />} />
                   <Route path="/login" element={<Login />} />
-                  
+
                   {/* Rutas protegidas */}
-                  <Route path="/groups" element={<ProtectedRoute><Groups /></ProtectedRoute>} />
-                  <Route path="/myActivities" element={<ProtectedRoute><MyActivities /></ProtectedRoute>} />
+                  <Route
+                    path="/groups"
+                    element={
+                      <ProtectedRoute>
+                        <Groups />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/myActivities"
+                    element={
+                      <ProtectedRoute>
+                        <MyActivities />
+                      </ProtectedRoute>
+                    }
+                  />
                   {/* ----- */}
-                  
+
                   <Route path="/store" element={<ProductPage />} />
                   <Route path="/actividades" element={<Event />} />
                   <Route path="/admin-panel" element={<AdminPanel />} />
                   <Route path="/create-product" element={<ProductFormPage />} />
-                  <Route path="/purchase-history" element={<PurchaseHistory />} />
+                  <Route
+                    path="/purchase-history"
+                    element={<PurchaseHistory />}
+                  />
                   <Route path="/checkout" element={<Checkout />} />
                   <Route path="/profile/:userId" element={<UserProfile />} />
-                  <Route path="/product/detail/:id" element={<ProductDetail />} />
+                  <Route
+                    path="/product/detail/:id"
+                    element={<ProductDetail />}
+                  />
                   <Route path="/payment-status" element={<PaymentStatus />} />
 
-                  <Route path="/contact" element={<ContactUs/>} />
+                  <Route path="/contact" element={<ContactUs />} />
                   <Route path="/aboutTiferet" element={<AboutTiferet />} />
                   <Route path="/members" element={<Members />} />
                   <Route path="/history" element={<History />} />
                   <Route path="/together" element={<SoloJuntos />} />
                   <Route path="/news" element={<New />} />
-
-
                 </Routes>
-                <ToastContainer />
               </FavoriteProvider>
             </CartProvider>
           </Provider>
         </UserProvider>
+        <ToastContainer />
       </BrowserRouter>
     </ThemeProvider>
   );

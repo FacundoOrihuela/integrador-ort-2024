@@ -7,7 +7,7 @@ import { CartProvider } from "../../context/CartContext";
 import { UserContext } from "../../context/UserContext";
 import { Container, Button, Box } from "@mui/material";
 import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import config from "../../utils/config.json";
 
@@ -118,7 +118,6 @@ const ProductPage = () => {
     <CartProvider>
       <div>
         <Header store />
-        <ToastContainer />
         <Box className="flex flex-col">
           {!showMemberships && (
             <Box

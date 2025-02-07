@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { toast} from 'react-toastify';
 import axios from 'axios';
 import '../index.css';
 import config from "../utils/config.json";
+import 'react-toastify/dist/ReactToastify.css';
 
 const VerifyEmail = () => {
   const [token, setToken] = useState('');
@@ -24,7 +25,8 @@ const VerifyEmail = () => {
         }
       });
       console.log(response.data.message);
-      toast.success("Validado con éxito");
+
+      localStorage.setItem("toastMessage", "Validado con éxito");
       navigate("/login");
     } catch (error) {
       const errorMessage = error.response?.data?.message || "Ocurrió un error. Inténtalo nuevamente.";

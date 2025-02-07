@@ -14,6 +14,7 @@ const Login = () => {
 
   return (
     <section
+    
       className="flex justify-center items-center h-screen w-screen bg-cover bg-colors-1 p-4 md:p-0"
       style={{
         backgroundImage: `url(${fondoImg})`,

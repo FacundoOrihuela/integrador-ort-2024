@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import config from "../../utils/config.json";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 const LoginInputs = () => {
@@ -79,7 +79,7 @@ const LoginInputs = () => {
 
       startSession(data.token, data.user);
       navigate("/");
-      //toast.success("Inicio de sesión exitoso");
+      toast.success("Inicio de sesión exitoso");
     } catch (error) {
       if (error.response) {
         toast.error(error.response.data.message || "Ocurrió un error. Inténtalo nuevamente.");
@@ -105,7 +105,6 @@ const LoginInputs = () => {
 
   return (
     <>
-      <ToastContainer />
       <form
         className="flex flex-col items-center p-3 gap-2 max-w-full w-full mx-auto"
         onKeyDown={handleKeyDown}
