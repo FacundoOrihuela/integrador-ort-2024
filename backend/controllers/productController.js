@@ -45,7 +45,7 @@ const getProductsByCategory = async (req, res) => {
         if (!category) {
             return res.status(404).json({ message: `Categoría con id ${categoryId} no encontrada` });
         }
-        const products = await Product.findAll({ where: { categoryId } });
+        const products = await Product.findAll({ where: { categoryId, eliminado: false } });
         res.json({ message: 'Lista de productos de la categoría', data: products });
     } catch (error) {
         console.error('Error al obtener los productos de la categoría:', error);
@@ -64,6 +64,11 @@ const createProduct = async (req, res) => {
         const category = await Category.findByPk(categoryId);
         if (!category) {
             return res.status(400).json({ message: 'La categoría especificada no existe' });
+        }
+
+        // Verificar que la imagen y el archivo estén presentes
+        if (!image || !file) {
+            return res.status(400).json({ message: 'La imagen y el archivo son obligatorios' });
         }
 
         // Subir la imagen a Cloudinary
@@ -118,6 +123,11 @@ const updateProduct = async (req, res) => {
         const category = await Category.findByPk(categoryId);
         if (!category) {
             return res.status(400).json({ message: 'La categoría especificada no existe' });
+        }
+
+        // Verificar que la imagen y el archivo estén presentes
+        if (!image || !file) {
+            return res.status(400).json({ message: 'La imagen y el archivo son obligatorios' });
         }
 
         // Subir la nueva imagen a Cloudinary si existe

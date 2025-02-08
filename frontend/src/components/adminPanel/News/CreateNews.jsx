@@ -31,7 +31,20 @@ const CreateNews = ({ handleUpdateOrCreate, editData, setEditData, isUpdate, set
     }
   };
 
+  const validateForm = () => {
+    if (!formData.title.trim() || !formData.content.trim()) {
+      setError("El título y el contenido no pueden estar vacíos.");
+      return false;
+    }
+    setError("");
+    return true;
+  };
+
   const handleSaveNews = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
     const url = isUpdate
       ? `${config.apiUrl}/api/news/${editData.id}`
       : `${config.apiUrl}/api/news`;
@@ -103,10 +116,10 @@ const CreateNews = ({ handleUpdateOrCreate, editData, setEditData, isUpdate, set
               onChange={handleFileChange}
               className="w-full p-2 border rounded"
             />
-            {formData.image && (
+            {formData.photo && (
               <img
-                src={formData.image}
-                alt="Product"
+                src={formData.photo}
+                alt="Noticia"
                 className="mt-2 w-full h-auto object-cover"
               />
             )}

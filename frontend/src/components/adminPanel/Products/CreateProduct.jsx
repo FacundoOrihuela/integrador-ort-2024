@@ -21,6 +21,7 @@ const CreateProduct = ({
   const [message, setLocalMessage] = useState("");
   const [error, setError] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null); // Nuevo estado para la imagen
 
   useEffect(() => {
     if (isUpdate && editData.id) {
@@ -57,7 +58,35 @@ const CreateProduct = ({
     }
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+    }
+  };
+
+  const validateForm = () => {
+    if (
+      !formData.name ||
+      !formData.description ||
+      !formData.price ||
+      !formData.stock ||
+      !formData.categoryId ||
+      !selectedImage ||
+      !selectedFile
+    ) {
+      setError("Por favor, completa todos los campos.");
+      return false;
+    }
+    setError("");
+    return true;
+  };
+
   const handleSaveProduct = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
     const url = isUpdate
       ? `${config.apiUrl}/api/products/${editData.id}`
       : `${config.apiUrl}/api/products`;
@@ -70,8 +99,11 @@ const CreateProduct = ({
     productFormData.append("price", formData.price);
     productFormData.append("stock", formData.stock);
     productFormData.append("categoryId", formData.categoryId);
+    if (selectedImage) {
+      productFormData.append("image", selectedImage);
+    }
     if (selectedFile) {
-      productFormData.append("image", selectedFile);
+      productFormData.append("file", selectedFile);
     }
 
     try {
@@ -85,14 +117,26 @@ const CreateProduct = ({
       });
 
       if (response.status === 200 || response.status === 201) {
-        setLocalMessage(isUpdate ? "Producto actualizado exitosamente!" : "Producto creado exitosamente!");
+        setLocalMessage(
+          isUpdate
+            ? "Producto actualizado exitosamente!"
+            : "Producto creado exitosamente!"
+        );
         handleUpdateOrCreate();
         setIsModalOpen(false);
       } else {
         setError(`${response.data.message || "Algo salió mal"}`);
       }
     } catch (error) {
-      setError("Error al conectar con el servidor.");
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setError(error.response.data.message);
+      } else {
+        setError("Error al conectar con el servidor.");
+      }
     }
   };
 
@@ -167,7 +211,7 @@ const CreateProduct = ({
             <label className="block text-sm font-medium">Imagen</label>
             <input
               type="file"
-              onChange={handleFileChange}
+              onChange={handleImageChange}
               className="w-full p-2 border rounded"
             />
             {formData.image && (
@@ -177,6 +221,14 @@ const CreateProduct = ({
                 className="mt-2 w-full h-auto object-cover"
               />
             )}
+          </div>
+          <div>
+            <label className="block text-sm font-medium">Archivo</label>
+            <input
+              type="file"
+              onChange={handleFileChange}
+              className="w-full p-2 border rounded"
+            />
           </div>
         </div>
         <button

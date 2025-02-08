@@ -210,9 +210,13 @@ const ProductList = () => {
         {paginatedProducts.map((product) => (
           <ListItem key={product.id} className="mb-2 bg-gray-100 rounded-lg shadow-md">
             <ListItemAvatar>
-              <Avatar>
-                <ProductIcon />
-              </Avatar>
+              {product.image ? (
+                <Avatar src={product.image} alt={product.name} />
+              ) : (
+                <Avatar>
+                  <ProductIcon />
+                </Avatar>
+              )}
             </ListItemAvatar>
             <ListItemText
               primary={

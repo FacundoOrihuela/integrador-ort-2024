@@ -1,5 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper, CircularProgress, Box, Button, TextField, Pagination, IconButton, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import {
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+  Paper,
+  CircularProgress,
+  Box,
+  Button,
+  TextField,
+  Pagination,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
 import CategoryIcon from "@mui/icons-material/Category";
 import ErrorIcon from "@mui/icons-material/Error";
 import AddIcon from "@mui/icons-material/Add";
@@ -8,6 +25,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CreateCategory from "./CreateCategory";
 import axios from "axios";
 import config from "../../../utils/config.json";
+import { toast } from "react-toastify";
 
 const CategoryList = () => {
   const [categories, setCategories] = useState([]);
@@ -42,26 +60,39 @@ const CategoryList = () => {
 
   const handleDelete = async (id) => {
     try {
-      const productsResponse = await axios.get(`${config.apiUrl}/api/products/category/${id}`);
+      const productsResponse = await axios.get(
+        `${config.apiUrl}/api/products/category/${id}`
+      );
       const productsData = productsResponse.data;
+      console.log("Product data", productsData);
+      // Filtrar productos que no están eliminados lógicamente
+      const activeProducts = productsData.data.filter(
+        (product) => product.eliminado !== 1
+      );
+      console.log("Active products", activeProducts);
+      
 
-      if (productsData.data.length > 0) {
-        alert("No se puede eliminar la categoría porque tiene productos asignados.");
+      if (activeProducts.length > 0) {
+        toast.error(
+          "No se puede eliminar la categoría porque tiene productos asignados."
+        );
         return;
       }
 
-      const response = await axios.delete(`${config.apiUrl}/api/categories/${id}`);
+      const response = await axios.delete(
+        `${config.apiUrl}/api/categories/${id}`
+      );
 
       if (response.status === 200) {
         setCategories(categories.filter((category) => category.id !== id));
-        alert("Categoría eliminada exitosamente.");
+        toast.success("Categoría eliminada exitosamente.");
       } else {
         setError(response.data.message || "Error al eliminar la categoría");
-        alert(response.data.message || "Error al eliminar la categoría");
+        toast.error(response.data.message || "Error al eliminar la categoría");
       }
     } catch (error) {
       setError("Error al conectar con el servidor.");
-      alert("Error al conectar con el servidor.");
+      toast.error("Error al conectar con el servidor.");
     }
   };
 
@@ -72,18 +103,21 @@ const CategoryList = () => {
 
   const openProductsModal = async (categoryId) => {
     try {
-      const response = await axios.get(`${config.apiUrl}/api/products/category/${categoryId}`);
+      const response = await axios.get(
+        `${config.apiUrl}/api/products/category/${categoryId}`
+      );
       setSelectedCategoryProducts(response.data.data);
       setIsProductsModalOpen(true);
     } catch (error) {
       setError("Error al obtener los productos de la categoría");
-      alert("Error al obtener los productos de la categoría");
+      toast.error("Error al obtener los productos de la categoría");
     }
   };
 
   const toggleCreateModal = () => setIsCreateModalOpen(!isCreateModalOpen);
   const toggleEditModal = () => setIsEditModalOpen(!isEditModalOpen);
-  const toggleProductsModal = () => setIsProductsModalOpen(!isProductsModalOpen);
+  const toggleProductsModal = () =>
+    setIsProductsModalOpen(!isProductsModalOpen);
 
   const handleUpdateOrCreate = () => {
     setIsCreateModalOpen(false);
@@ -104,7 +138,10 @@ const CategoryList = () => {
     return category.name.toLowerCase().includes(search.toLowerCase());
   });
 
-  const paginatedCategories = filteredCategories.slice((page - 1) * categoriesPerPage, page * categoriesPerPage);
+  const paginatedCategories = filteredCategories.slice(
+    (page - 1) * categoriesPerPage,
+    page * categoriesPerPage
+  );
 
   // Mostrar un mensaje si ocurre un error
   if (error) {
@@ -151,7 +188,12 @@ const CategoryList = () => {
       </Box>
       <List>
         {paginatedCategories.map((category) => (
-          <ListItem key={category.id} className="mb-2 bg-gray-100 rounded-lg shadow-md" onClick={() => openProductsModal(category.id)} sx={{ cursor: 'pointer' }}>
+          <ListItem
+            key={category.id}
+            className="mb-2 bg-gray-100 rounded-lg shadow-md"
+            onClick={() => openProductsModal(category.id)}
+            sx={{ cursor: "pointer" }}
+          >
             <ListItemAvatar>
               <Avatar>
                 <CategoryIcon />
@@ -165,10 +207,21 @@ const CategoryList = () => {
               }
             />
             <Box display="flex" gap={1}>
-              <IconButton onClick={(e) => { e.stopPropagation(); openEditModal(category); }}>
+              <IconButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openEditModal(category);
+                }}
+              >
                 <EditIcon />
               </IconButton>
-              <IconButton color="error" onClick={(e) => { e.stopPropagation(); handleDelete(category.id); }}>
+              <IconButton
+                color="error"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(category.id);
+                }}
+              >
                 <DeleteIcon />
               </IconButton>
             </Box>
@@ -193,7 +246,10 @@ const CategoryList = () => {
             >
               ✕
             </button>
-            <CreateCategory handleUpdateOrCreate={handleUpdateOrCreate} setIsModalOpen={setIsCreateModalOpen} />
+            <CreateCategory
+              handleUpdateOrCreate={handleUpdateOrCreate}
+              setIsModalOpen={setIsCreateModalOpen}
+            />
           </div>
         </div>
       )}
@@ -219,7 +275,12 @@ const CategoryList = () => {
       )}
 
       {isProductsModalOpen && (
-        <Dialog open={isProductsModalOpen} onClose={toggleProductsModal} maxWidth="md" fullWidth>
+        <Dialog
+          open={isProductsModalOpen}
+          onClose={toggleProductsModal}
+          maxWidth="md"
+          fullWidth
+        >
           <DialogTitle>Productos de la Categoría</DialogTitle>
           <DialogContent>
             <List>

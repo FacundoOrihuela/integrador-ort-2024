@@ -25,7 +25,20 @@ const CreateCategory = ({
     }
   }, [editData, isUpdate]);
 
+  const validateForm = () => {
+    if (!formData.name.trim()) {
+      setError("El nombre de la categoría no puede estar vacío.");
+      return false;
+    }
+    setError("");
+    return true;
+  };
+
   const handleSaveCategory = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
     const url = isUpdate
       ? `${config.apiUrl}/api/categories/${editData.id}`
       : `${config.apiUrl}/api/categories`;

@@ -58,12 +58,17 @@ const CreateActivity = ({editData ,isUpdate ,handleUpdateOrCreate ,setIsModalOpe
       setError("Por favor, completa todos los campos.");
       return false;
     }
-
+  
     if (formData.eventType !== "recurring" && (new Date(formData.startDateTime) >= new Date(formData.endDateTime))) {
       setError("La fecha de inicio debe ser anterior a la fecha de fin.");
       return false;
     }
-
+  
+    if (formData.eventType === "recurring" && (formData.recurrencePattern.startTime >= formData.recurrencePattern.endTime)) {
+      setError("La hora de inicio debe ser anterior a la hora de fin.");
+      return false;
+    }
+  
     setError("");
     return true;
   };

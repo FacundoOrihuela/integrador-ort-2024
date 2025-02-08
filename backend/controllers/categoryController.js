@@ -3,7 +3,7 @@ import Category from '../models/Category.js';
 // Obtener todas las categorías
 const getCategories = async (req, res) => {
     try {
-        const categories = await Category.findAll();
+        const categories = await Category.findAll({ where: { eliminado: false } });
         res.json({ message: 'Lista de categorías', data: categories });
     } catch (error) {
         console.error('Error al obtener las categorías:', error);
@@ -54,14 +54,16 @@ const updateCategory = async (req, res) => {
     }
 };
 
-// Eliminar una categoría
+// Eliminar una categoría (borrado lógico)
 const deleteCategory = async (req, res) => {
     const { id } = req.params;
     try {
-        const deleted = await Category.destroy({ where: { id } });
-        if (deleted === 0) {
+        const category = await Category.findByPk(id);
+        if (!category) {
             return res.status(404).json({ message: `Categoría con id ${id} no encontrada` });
         }
+        category.eliminado = true;
+        await category.save();
         res.json({ message: 'Categoría eliminada con éxito' });
     } catch (error) {
         console.error('Error al eliminar la categoría:', error);

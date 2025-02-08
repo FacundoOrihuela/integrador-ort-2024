@@ -11,6 +11,10 @@ const Category = sequelize.define('Category', {
         type: DataTypes.STRING(45),
         allowNull: false,
     },
+    eliminado: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+    },
 }, {
     tableName: 'category',
     timestamps: false,
