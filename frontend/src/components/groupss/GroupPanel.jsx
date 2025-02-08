@@ -48,8 +48,8 @@ const GroupPanel = ({ group }) => {
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [commentsCount, setCommentsCount] = useState({});
-  const [commentImage, setCommentImage] = useState(null); // Estado para la imagen del comentario
-  const [isLoading, setIsLoading] = useState(false); // Estado para manejar la carga
+  const [commentImage, setCommentImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
@@ -406,6 +406,7 @@ const GroupPanel = ({ group }) => {
 
       if (response.ok) {
         await fetchPosts();
+        setNewPostImage(null)
       } else {
         const errorData = await response.json();
         console.error("Error al crear el post:", errorData.message);
@@ -1188,7 +1189,7 @@ const GroupPanel = ({ group }) => {
               <button
                 type="submit"
                 className="py-1 px-4 bg-colors-1 text-white text-sm font-medium rounded-md hover:bg-colors-1 hover:brightness-90 transition"
-                disabled={isLoading} // Deshabilitar el botón mientras se carga
+                disabled={isLoading}
               >
                 {isLoading ? (
                   <div className="flex justify-center items-center space-x-2">

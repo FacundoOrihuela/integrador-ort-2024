@@ -316,7 +316,7 @@ const CommentSection = ({ postId, token, group }) => {
                 </>
               ) : (
                 <>
-                  <p className="text-gray-700">{comment.content}</p>
+                  <p className="text-gray-700 flex">{comment.content}</p>
                   {comment.photo && (
                     <div>
                       <img
