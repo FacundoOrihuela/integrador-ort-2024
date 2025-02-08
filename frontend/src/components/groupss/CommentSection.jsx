@@ -9,6 +9,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
+import { toast } from "react-toastify";
 
 const CommentSection = ({ postId, token, group }) => {
   const [comments, setComments] = useState([]);
@@ -58,27 +59,28 @@ const CommentSection = ({ postId, token, group }) => {
       if (commentImage) {
         formData.append("image", commentImage);
       }
-
-      await axios.post(
-        `${config.apiUrl}/api/comments`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+  
+      await axios.post(`${config.apiUrl}/api/comments`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
       fetchComments();
       setNewComment("");
       setCommentImage(null);
     } catch (error) {
       console.error("Error adding comment:", error);
+      if (error.response && error.response.data && error.response.data.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Error al agregar el comentario");
+      }
     } finally {
       setIsLoading(false);
     }
   };
-
+  
   const updateComment = async (commentId, newContent) => {
     try {
       setIsLoading(true);
@@ -90,20 +92,21 @@ const CommentSection = ({ postId, token, group }) => {
         formData.append("image", editedCommentImage);
       }
   
-      await axios.put(
-        `${config.apiUrl}/api/comments/${commentId}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      await axios.put(`${config.apiUrl}/api/comments/${commentId}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
       fetchComments();
       setEditedCommentImage(null);
     } catch (error) {
       console.error("Error updating comment:", error);
+      if (error.response && error.response.data && error.response.data.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Error al actualizar el comentario");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -128,7 +131,7 @@ const CommentSection = ({ postId, token, group }) => {
     const file = e.target.files[0];
     setCommentImage(file);
   };
-  
+
   const handleEditFileChange = (e) => {
     const file = e.target.files[0];
     setEditedCommentImage(file);
@@ -143,7 +146,7 @@ const CommentSection = ({ postId, token, group }) => {
     setImageModalOpen(false);
     setSelectedImage(null);
   };
-  
+
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white border-t">
       <h3 className="text-2xl font-semibold mb-4 text-gray-800">Comentarios</h3>
@@ -290,7 +293,9 @@ const CommentSection = ({ postId, token, group }) => {
                       onChange={handleEditFileChange}
                     />
                     <IconButton
-                      onClick={() => updateComment(comment.id, comment.editedContent)}
+                      onClick={() =>
+                        updateComment(comment.id, comment.editedContent)
+                      }
                     >
                       <CheckIcon />
                     </IconButton>
@@ -312,23 +317,18 @@ const CommentSection = ({ postId, token, group }) => {
               ) : (
                 <>
                   <p className="text-gray-700">{comment.content}</p>
-                  {comment.image && (
+                  {comment.photo && (
                     <div>
                       <img
-                        src={`${config.apiUrl}/uploads/comments/${comment.image}`}
+                        src={comment.photo}
                         alt="Comentario"
                         className="mt-2 cursor-pointer max-w-[150px]"
-                        onClick={() =>
-                          handleImageClick(
-                            `${config.apiUrl}/uploads/comments/${comment.image}`
-                          )
-                        }
+                        onClick={() => handleImageClick(comment.photo)}
                       />
                     </div>
                   )}
                   <div className="flex gap-2 justify-end mt-2">
-                    {(user.id === comment.User.id ||
-                      group === "admin") && (
+                    {(user.id === comment.User.id || group === "admin") && (
                       <>
                         <IconButton
                           onClick={() => {
@@ -343,9 +343,7 @@ const CommentSection = ({ postId, token, group }) => {
                         >
                           <EditIcon />
                         </IconButton>
-                        <IconButton
-                          onClick={() => deleteComment(comment.id)}
-                        >
+                        <IconButton onClick={() => deleteComment(comment.id)}>
                           <DeleteIcon />
                         </IconButton>
                       </>

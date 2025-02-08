@@ -24,6 +24,7 @@ import config from "../../utils/config.json";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import { toast } from 'react-toastify';
 
 const GroupPanel = ({ group }) => {
   const [participants, setParticipants] = useState([]);
@@ -216,7 +217,7 @@ const GroupPanel = ({ group }) => {
       }
       handleCloseCreatePostModal();
     } else {
-      alert("El contenido del post no puede estar vacío.");
+      toast.error("El contenido del post no puede estar vacío.");
     }
   };
 
@@ -315,7 +316,7 @@ const GroupPanel = ({ group }) => {
       if (commentImage) {
         formData.append("image", commentImage);
       }
-
+  
       const response = await axios.post(
         `${config.apiUrl}/api/comments`,
         formData,
@@ -332,6 +333,11 @@ const GroupPanel = ({ group }) => {
       setCommentImage(null);
     } catch (error) {
       console.error("Error adding comment:", error);
+      if (error.response && error.response.data && error.response.data.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Error al agregar el comentario");
+      }
     } finally {
       setIsLoading(false);
     }

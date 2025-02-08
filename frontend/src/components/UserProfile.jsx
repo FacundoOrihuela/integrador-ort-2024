@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Button, TextField, CardContent, Typography, CircularProgress, Box, Paper, IconButton, Avatar, Alert } from '@mui/material';
 import { Edit as EditIcon, AccountCircle as AccountCircleIcon } from '@mui/icons-material';
+import { toast } from 'react-toastify';
 import Header from './Header';
 import Footer from './Footer';
 import { UserContext } from '../context/UserContext';
@@ -123,7 +124,11 @@ const UserProfile = () => {
             setProfile(updatedUser);
             setIsEditing(false);
         } catch (error) {
-            console.error('Error updating profile:', error);
+            if (error.response && error.response.data && error.response.data.message) {
+                toast.error(error.response.data.message);
+            } else {
+                console.error('Error updating profile:', error);
+            }
         }
     };
 
