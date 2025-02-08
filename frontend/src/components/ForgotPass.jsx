@@ -1,15 +1,17 @@
-import React, { useEffect, useId, useRef } from "react";
+import React, { useEffect, useId, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { validateEmail } from "../utils/validateRegister";
 import fondoImg from "./img/fondo.jpg";
 import "../index.css";
 import config from "../utils/config.json";
+import { CircularProgress } from "@mui/material";
 
 const ForgotPass = () => {
   const email = useId();
   const navigate = useNavigate();
   const emailField = useRef();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (window.localStorage.getItem("idUsuarioLogueado") !== null)
@@ -36,6 +38,7 @@ const ForgotPass = () => {
   };
 
   const forgotPass = (user) => {
+    setIsLoading(true);
     fetch(`${config.apiUrl}/api/password/request-reset`, {
       method: "POST",
       headers: {
@@ -44,15 +47,21 @@ const ForgotPass = () => {
       body: JSON.stringify(user),
     })
       .then((resp) => {
-        if (!resp.ok) throw new Error("Algo salió mal");
+        if (!resp.ok) {
+          return resp.json().then((error) => {
+            throw new Error(error.message || "Algo salió mal");
+          });
+        }
         return resp.json();
       })
       .then(() => {
         toast.success("Email de recuperación enviado");
       })
       .catch((error) => {
-        console.error("Error al solicitar recuperación:", error);
-        toast.error("Ocurrió un error. Inténtalo nuevamente.");
+        toast.error(error.message || "Ocurrió un error. Inténtalo nuevamente.");
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -84,8 +93,9 @@ const ForgotPass = () => {
           <button
             type="submit"
             className="px-3 py-1.5 font-semibold rounded-md w-full text-[0.8em] transition-all duration-200 ease-in-out focus:outline-none bg-colors-1 text-white focus:ring-2 focus:ring-colors-1"
+            disabled={isLoading}
           >
-            Enviar recuperación
+            {isLoading ? <CircularProgress size={24} color="inherit" /> : "Enviar recuperación"}
           </button>
           <Link
             to="/login"

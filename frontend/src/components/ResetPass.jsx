@@ -15,12 +15,38 @@ const ResetPass = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [token, setToken] = useState("");
+  const [isTokenValid, setIsTokenValid] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
     setToken(token);
-  }, []);
+
+    // Verificar la validez del token
+    const verifyToken = async () => {
+      try {
+        const response = await fetch(`${config.apiUrl}/api/password/verify-reset-token`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token }),
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.message || "Token inválido o expirado");
+        }
+
+        setIsTokenValid(true);
+      } catch (error) {
+        toast.error(error.message || "Token inválido o expirado");
+        navigate("/login");
+      }
+    };
+
+    verifyToken();
+  }, [navigate]);
 
   const handleResetPass = (e) => {
     e.preventDefault();
@@ -61,7 +87,11 @@ const ResetPass = () => {
       body: JSON.stringify(pass),
     })
       .then((resp) => {
-        if (!resp.ok) throw new Error("Algo salió mal");
+        if (!resp.ok) {
+          return resp.json().then((error) => {
+            throw new Error(error.message || "Algo salió mal");
+          });
+        }
         return resp.json();
       })
       .then(() => {
@@ -71,8 +101,7 @@ const ResetPass = () => {
         }, 10);
       })
       .catch((error) => {
-        console.error("Error al registrar:", error);
-        toast.error("Ocurrió un error. Inténtalo nuevamente.");
+        toast.error(error.message || "Ocurrió un error. Inténtalo nuevamente.");
       });
   };
 
@@ -80,6 +109,10 @@ const ResetPass = () => {
     if (window.localStorage.getItem("idUsuarioLogueado") !== null)
       navigate("/principal");
   }, [navigate]);
+
+  if (!isTokenValid) {
+    return null; // No renderizar nada mientras se verifica el token
+  }
 
   return (
     <section

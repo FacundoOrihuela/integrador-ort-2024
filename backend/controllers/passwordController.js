@@ -26,14 +26,34 @@ const requestPasswordReset = async (req, res) => {
     }
 };
 
-const resetPassword = async (req, res) => {
-    const { token, password } = req.body;
+const verifyResetToken = async (req, res) => {
+    const { token } = req.body;
 
     try {
         const user = await User.findOne({ where: { passwordResetToken: token } });
 
         if (!user) {
             return res.status(400).json({ message: 'Token inválido o expirado' });
+        }
+
+        res.json({ message: 'Token válido' });
+    } catch (error) {
+        console.error('Error al verificar el token:', error);
+        res.status(500).json({ message: 'Error al verificar el token', error: error.message });
+    }
+};
+
+const resetPassword = async (req, res) => {
+    const { token, password } = req.body;
+    try {
+        const user = await User.findOne({ where: { passwordResetToken: token } });
+
+        if (!user) {
+            return res.status(400).json({ message: 'Token inválido o expirado' });
+        }
+
+        if (user.passwordResetToken !== token) {
+            return res.status(400).json({ message: 'Este código ya caducó. Por favor, solicite otro.' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -48,4 +68,4 @@ const resetPassword = async (req, res) => {
     }
 };
 
-export { requestPasswordReset, resetPassword };
+export { requestPasswordReset, verifyResetToken, resetPassword };
