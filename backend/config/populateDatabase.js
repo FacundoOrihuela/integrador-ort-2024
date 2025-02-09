@@ -144,6 +144,15 @@ const populateDatabase = async () => {
         })));
         console.log('Profesores creados correctamente.');
 
+        // Crear 3 usuarios
+        const users = await Promise.all([
+            User.create({ name: 'Diego Mazas', email: 'diegomazas@gmail.com', password: hashedPassword, userType: 'user' }),
+            User.create({ name: 'Juan Nuñez', email: 'juannuñez@gmail.com', password: hashedPassword, userType: 'user' }),
+            User.create({ name: 'Facundo Orihuela', email: 'facundoorihuela@gmail.com', password: hashedPassword, userType: 'user' }),
+        ]);
+
+        console.log('Usuarios creados correctamente.');
+
         // Crear 3 eventos recurrentes
         const daysOptions = [
             ["Lunes", "Miércoles", "Viernes"],
