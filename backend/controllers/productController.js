@@ -119,19 +119,26 @@ const updateProduct = async (req, res) => {
     const file = req.files?.file ? req.files.file[0].buffer : null;
 
     try {
+
+        // Obtener el producto existente
+        const existingProduct = await Product.findByPk(id);
+        if (!existingProduct) {
+            return res.status(404).json({ message: `Producto con id ${id} no encontrado` });
+        }
+
         // Verificar si la categoría existe
         const category = await Category.findByPk(categoryId);
         if (!category) {
             return res.status(400).json({ message: 'La categoría especificada no existe' });
         }
 
-        // Verificar que la imagen y el archivo estén presentes
-        if (!image || !file) {
-            return res.status(400).json({ message: 'La imagen y el archivo son obligatorios' });
-        }
+        // // Verificar que la imagen y el archivo estén presentes
+        // if (!image || !file) {
+        //     return res.status(400).json({ message: 'La imagen y el archivo son obligatorios' });
+        // }
 
         // Subir la nueva imagen a Cloudinary si existe
-        let imageUrl = null;
+        let imageUrl = existingProduct.image;
         if (image) {
             const result = await new Promise((resolve, reject) => {
                 const stream = cloudinary.uploader.upload_stream({ folder: 'products', resource_type: 'image' }, (error, result) => {
@@ -147,7 +154,7 @@ const updateProduct = async (req, res) => {
         }
 
         // Subir el nuevo archivo a Cloudinary si existe
-        let fileUrl = null;
+        let fileUrl = existingProduct.file;
         if (file) {
             const result = await new Promise((resolve, reject) => {
                 const stream = cloudinary.uploader.upload_stream({ folder: 'product_files', resource_type: 'auto' }, (error, result) => {
@@ -162,7 +169,7 @@ const updateProduct = async (req, res) => {
             fileUrl = result.secure_url;
         }
 
-        const [updated] = await Product.update({ name, description, price, stock, categoryId, image: imageUrl, file: fileUrl }, { where: { id } });
+        const [updated] = await Product.update({ name, description, price, stock, categoryId, image: imageUrl, file: fileUrl }, { where: { id }, returning: true });
         if (updated === 0) {
             return res.status(404).json({ message: `Producto con id ${id} no encontrado` });
         }

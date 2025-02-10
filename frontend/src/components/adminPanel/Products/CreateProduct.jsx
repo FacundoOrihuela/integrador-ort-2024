@@ -10,6 +10,7 @@ const CreateProduct = ({ editData, isUpdate, handleUpdateOrCreate, setIsModalOpe
     stock: "",
     categoryId: "",
     image: "",
+    file:"",
   });
   const [categories, setCategories] = useState([]);
   const [message, setLocalMessage] = useState("");
@@ -19,6 +20,7 @@ const CreateProduct = ({ editData, isUpdate, handleUpdateOrCreate, setIsModalOpe
 
   useEffect(() => {
     if (isUpdate && editData.id) {
+      console.log(editData)
       setFormData({
         name: editData.name,
         description: editData.description,
@@ -26,7 +28,10 @@ const CreateProduct = ({ editData, isUpdate, handleUpdateOrCreate, setIsModalOpe
         stock: editData.stock,
         categoryId: editData.categoryId,
         image: editData.image,
+        file: editData.file,
       });
+      setSelectedImage(editData.image)
+      setSelectedFile(editData.file)
     }
   }, [editData, isUpdate]);
 
@@ -112,7 +117,7 @@ const CreateProduct = ({ editData, isUpdate, handleUpdateOrCreate, setIsModalOpe
           <div>
             <label className="block text-sm font-medium">Imagen</label>
             <input type="file" onChange={handleImageChange} className="w-full p-2 border rounded w-full" />
-            {formData.image && <img src={formData.image} alt="Product" className="mt-2 w-[50%] h-auto object-cover" />}
+            {/*formData.image && <img src={formData.image} alt="Product" className="mt-2 w-[50%] h-[50%] object-cover" />*/}
           </div>
           <div>
             <label className="block text-sm font-medium">Archivo</label>

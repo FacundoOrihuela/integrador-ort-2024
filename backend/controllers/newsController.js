@@ -68,7 +68,14 @@ const updateNews = async (req, res) => {
     const photo = req.file ? req.file.buffer : null;
 
     try {
-        let photoUrl = null;
+
+        // Obtener la noticia existente
+        const existingNew = await News.findByPk(id);
+        if (!existingNew) {
+            return res.status(404).json({ message: `Noticia con id ${id} no encontrada` });
+        }
+
+        let photoUrl = existingNew.photo;
         if (photo) {
             const result = await new Promise((resolve, reject) => {
                 const stream = cloudinary.uploader.upload_stream({ folder: 'news', resource_type: 'image' }, (error, result) => {
@@ -83,7 +90,7 @@ const updateNews = async (req, res) => {
             photoUrl = result.secure_url;
         }
 
-        const [updated] = await News.update({ title, content, photo: photoUrl }, { where: { id } });
+        const [updated] = await News.update({ title, content, photo: photoUrl }, { where: { id }, returning: true });
         if (updated === 0) {
             return res.status(404).json({ message: `Noticia con id ${id} no encontrada` });
         }
