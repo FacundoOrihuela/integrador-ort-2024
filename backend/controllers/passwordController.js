@@ -33,7 +33,7 @@ const verifyResetToken = async (req, res) => {
         const user = await User.findOne({ where: { passwordResetToken: token } });
 
         if (!user) {
-            return res.status(400).json({ message: 'Token inválido o expirado' });
+            return res.status(400).json({ message: 'Verificación expirada' });
         }
 
         res.json({ message: 'Token válido' });
@@ -49,7 +49,7 @@ const resetPassword = async (req, res) => {
         const user = await User.findOne({ where: { passwordResetToken: token } });
 
         if (!user) {
-            return res.status(400).json({ message: 'Token inválido o expirado' });
+            return res.status(400).json({ message: "Sesión expirada" });
         }
 
         if (user.passwordResetToken !== token) {

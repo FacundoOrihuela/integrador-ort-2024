@@ -79,7 +79,6 @@ const LoginInputs = () => {
 
       startSession(data.token, data.user);
       navigate("/");
-      toast.success("Inicio de sesión exitoso");
     } catch (error) {
       if (error.response) {
         toast.error(error.response.data.message || "Ocurrió un error. Inténtalo nuevamente.");

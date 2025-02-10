@@ -21,11 +21,11 @@ export const UserProvider = ({ children }) => {
                         "Content-Type": "application/json",
                     },
                 });
-                if (!response.ok) throw new Error("Token inválido o expirado");
+                if (!response.ok) throw new Error("Sesión expirada");
                 const data = await response.json();
                 setUser(data.user);
             } catch (err) {
-                toast.error("El token ha expirado. Por favor, inicia sesión nuevamente.");
+                toast.error("Sesión expirada. Por favor, inicia sesión nuevamente.");
                 logout();
                 navigate("/login");
             }

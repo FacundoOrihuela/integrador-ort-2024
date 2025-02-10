@@ -35,12 +35,12 @@ const ResetPass = () => {
 
         if (!response.ok) {
           const error = await response.json();
-          throw new Error(error.message || "Token inválido o expirado");
+          throw new Error(error.message);
         }
 
         setIsTokenValid(true);
       } catch (error) {
-        toast.error(error.message || "Token inválido o expirado");
+        toast.error(error.message || "Sesión expirada");
         navigate("/login");
       }
     };
