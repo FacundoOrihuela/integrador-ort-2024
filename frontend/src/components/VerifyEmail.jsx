@@ -43,7 +43,6 @@ const VerifyEmail = () => {
 
   return (
     <div>
-      <h1>Error en la verificación</h1>
       <Link to="/" className="mt-3 text-colors-1 hover:text-colors-1 text-sm font-medium">Atrás</Link>
     </div>
   );
